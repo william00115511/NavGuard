@@ -85,7 +85,7 @@
 
 ```json
 {
-  "place_id",
+  "place_id": "xxx",
   "category": "street_light",
   "lat": 25.0478,
   "lng": 121.5319,
