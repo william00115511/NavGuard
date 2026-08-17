@@ -346,34 +346,41 @@ JSON，前端自己組文案）。上面「不要說『這條路很安全』」�
 
 前端只需跟對話端點互動，後端把整條流程包成黑箱，前後端可各自獨立開發測試。
 
-### 6.1 `client_id`（取代 session_id，無需先呼叫任何端點交換）
+### 6.1 `session_id`（先呼叫 `POST /api/session` 交換）
 
-舊版需要先呼叫 `POST /api/session` 交換一個後端配發的 `session_id`，才能開始
-對話。這個兩段式交握已移除：
+⚠️ **修訂**：曾經試過改用固定裝置編號 `client_id`（`"1"`～`"N"`，不需交換
+就能直接對話），但展示場景之外的部署裝置數不固定、前端也一直維持著呼叫
+`POST /api/session` 的實作，兩邊契約對不上，所以改回兩段式交握：
 
-- 展示場景是固定的 N 台裝置，`client_id` 就是裝置編號 `"1"`～`"N"`（純數字
-  字串），由部署時分配好，不是前端自行產生的 UUID，也不需要跟後端要。
-- 每次呼叫 `POST /api/chat`（§6.2）時直接帶上這個 `client_id`；後端第一次
-  看到某個 `client_id` 時就自動建立新的對話狀態，不會回「session 不存在」
-  這種錯誤。
-- 因為 `client_id` 的範圍就是固定的 `1`～`N`，後端直接一次配好 N 個
-  session（`client_count`，可設定，見 §6.6），不需要 LRU 之類的容量逐出
-  機制。
-- 使用者想「開始新的路線規劃」（清空對話歷史）時，前端呼叫
-  `POST /api/chat/clear`（§6.2.1），不需要換新的 `client_id`。
+- 前端必須先呼叫 `POST /api/session`（選填 `user_location`），後端動態配發
+  一個新的 `session_id`（格式 `sess_` + 12 碼 hex，不是連續整數，避免被
+  猜測到別人的 session）：
+  ```json
+  { "session_id": "sess_ac1726bf8f93", "created_at": "2026-08-18T02:00:00+08:00" }
+  ```
+- 之後每次呼叫 `POST /api/chat`（§6.2）都要帶上這個 `session_id`。
+  `session_id` 不存在或已過期（超過 TTL 未使用，或被 §6.6 的定時回收清掉）
+  時，後端回系統層級 `404 SESSION_NOT_FOUND`（§6.5）——這不是業務邏輯失敗，
+  前端收到後要重新呼叫 `POST /api/session` 換一個新的 `session_id`，不是
+  重試原請求。
+- 使用者想「開始新的路線規劃」（清空對話歷史，但沿用同一個 `session_id`）
+  時，前端呼叫 `POST /api/chat/clear`（§6.2.1），不需要換新的
+  `session_id`；對不存在或已過期的 `session_id` 呼叫一律視為 no-op、回
+  `200`，不是錯誤——這是使用者主動要求的清空動作，沒有「session 必須先
+  存在」的前提。
 
 ### 6.2 `POST /api/chat`（核心端點）
 
 Request：
 ```json
 {
-  "client_id": "1",
+  "session_id": "sess_ac1726bf8f93",
   "message": "我想從台北車站走到公館夜市，希望盡量安全",
   "user_location": {"lat": 25.0330, "lng": 121.5654},
   "priority_alpha": 0.6
 }
 ```
-`client_id` 見 §6.1，前端自帶、不需要跟後端交換。`priority_alpha` 由前端滑桿等 UI 直接提供（§5.1），選填，未帶時後端用預設值 0.6；這個值不經 Gemini，後端觸發 `calculate_safe_route` 時直接代入。
+`session_id` 見 §6.1，須先呼叫 `POST /api/session` 換到。`priority_alpha` 由前端滑桿等 UI 直接提供（§5.1），選填，未帶時後端用預設值 0.6；這個值不經 Gemini，後端觸發 `calculate_safe_route` 時直接代入。
 
 Response 依進度分三種 `status`：
 
@@ -446,18 +453,18 @@ Response 依進度分三種 `status`：
 
 ### 6.2.1 `POST /api/chat/clear`
 
-使用者按「開始新的路線規劃」、想清掉目前對話歷史時呼叫，不需要換新的 `client_id`（§6.1）。
+使用者按「開始新的路線規劃」、想清掉目前對話歷史時呼叫，不需要換新的 `session_id`（§6.1）。
 
 Request：
 ```json
-{ "client_id": "1" }
+{ "session_id": "sess_ac1726bf8f93" }
 ```
 
 Response：
 ```json
 { "status": "ok" }
 ```
-對不存在或已經過期的 `client_id` 呼叫一樣回 200（視為 no-op），不是錯誤。
+對不存在或已經過期的 `session_id` 呼叫一樣回 200（視為 no-op），不是錯誤。
 
 ### 6.3 `POST /api/route/calculate`（除錯／進階模式）
 
@@ -483,22 +490,32 @@ Response：與 6.2 `route_ready` 的 `route` / `dynamic_hazards_considered` 部�
 ### 6.5 錯誤與狀態碼慣例
 
 - **業務邏輯失敗**（聽不懂地點、資訊不足、超出覆蓋範圍）一律回 HTTP 200，body 用 `status: "error"`。請求本身有效，只是這次對話結果失敗。
-- **系統層級錯誤**才用 HTTP 錯誤碼：`400`（request 格式錯）、`500`（後端內部錯誤）、`504`（Gemini 或 geocoding 逾時）。統一格式：
+- **系統層級錯誤**才用 HTTP 錯誤碼：`400`（request 格式錯）、`404`（`session_id` 不存在或已過期，見 §6.1）、`500`（後端內部錯誤）、`504`（Gemini 或 geocoding 逾時）。統一格式：
   ```json
   { "status": "error", "error_code": "BAD_REQUEST", "message": "..." }
   ```
-  移除 `session_id` 兩段式交握後（§6.1），不再有「session 不存在」這種系統層級錯誤——任何 `client_id` 第一次出現都直接可用。
 
-### 6.6 Session 儲存
+### 6.6 Session 儲存與定時回收
 
-MVP 用 process 內記憶體 dict（`client_id` → 對話歷史 + 動態點位），這代表**後端必須是單一 process**；多 instance 部署會導致對話歷史隨機遺失。
+MVP 用 process 內記憶體 dict（`session_id` → 對話歷史 + 動態點位 + `user_location` + `last_access_at`），這代表**後端必須是單一 process**；多 instance 部署會導致對話歷史隨機遺失。
 
-`client_id` 的範圍是固定的 `"1"`～`"N"`（§6.1），所以後端在啟動時就直接配好
-`client_count`（可設定，建議 50，需對齊實際部署的裝置數 N）個 session，不需要
-LRU 之類「容量滿了就逐出」的機制。仍保留 TTL（`session_ttl_seconds`，建議 30
-分鐘）：對話閒置超過這個時間後，該 `client_id` 的 session 會就地清空歷史，
-下一則訊息當成新對話開始（不是錯誤，見 §6.1），但 session 本身不會被移除。
-使用者主動要清掉歷史時用 `POST /api/chat/clear`（§6.2.1），不需要等 TTL。
+`session_id` 由 `POST /api/session`（§6.1）動態配發，數量不固定，所以沒有
+「一次配好 N 個」這種預先分配，靠 TTL 過期 + 背景定時回收控制記憶體用量：
+
+- **`session_ttl_seconds`**（可設定，建議 30 分鐘）：對話閒置超過這個時間
+  即視為過期。過期判斷有兩層：
+  1. **存取觸發**：`POST /api/chat` 拿到已過期的 `session_id` 時，直接回
+     `404 SESSION_NOT_FOUND`（§6.5），不會靜默重置成新對話——因為
+     `session_id` 是動態配發的亂數字串而非固定裝置編號，過期後應該讓前端
+     明確重新走一次 `POST /api/session` 交握，而不是讓同一個 ID 在背景悄悄
+     換了一份新對話。
+  2. **定時回收**：後端啟動時起一個背景排程（`session_reap_interval_seconds`，
+     可設定，建議 5 分鐘），週期性掃過所有 session、清掉已過期的，釋放記憶體。
+     這一層不依賴任何請求觸發，就算某個 `session_id` 建立後完全沒有後續
+     請求，也會在下一次排程時被回收，避免記憶體隨時間無限成長。
+- 使用者主動要清掉歷史時用 `POST /api/chat/clear`（§6.2.1）：只清空該
+  `session_id` 的對話歷史，`session_id` 本身、TTL 計時都保留，不需要等
+  TTL 也不需要重新交握。
 
 ### 6.7 延遲
 
