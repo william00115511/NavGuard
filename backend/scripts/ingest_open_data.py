@@ -193,13 +193,17 @@ def ingest_police_station(client: httpx.Client, districts: set[str] | None) -> l
 
 def _overpass_query(districts: list[str] | None) -> str:
     if districts:
-        district_areas = "".join(
-            f'  area(area.city)["boundary"="administrative"]["name"="{d}"];\n' for d in districts
-        )
+        # 注意：不能寫成 `area(area.city)["name"="X"]`——那個寫法不會真的按
+        # 「屬於 area.city 範圍內」過濾，同名行政區會全部混進來（例如「信義區」
+        # 臺北市、基隆市都有，曾經把基隆信義區的店家也抓進來）。正確做法是先用
+        # `relation[...](area.city)` 過濾出屬於臺北市的 relation，
+        # 再用 `map_to_area` 轉成後續查詢可用的 area。
+        district_names = "|".join(districts)
         return (
             "[out:json][timeout:60];\n"
             'area["name"="臺北市"]["boundary"="administrative"]->.city;\n'
-            f"(\n{district_areas})->.districts;\n"
+            f'relation["boundary"="administrative"]["name"~"^({district_names})$"](area.city)->.rel;\n'
+            ".rel map_to_area->.districts;\n"
             'node["shop"="convenience"](area.districts);\n'
             "out body;"
         )
