@@ -1,38 +1,385 @@
 [
   {
-    "id": "danger_00001",
+    "id": "hazard_00001",
     "category": "night_club_hazard",
-    "lat": 25.035421,
-    "lng": 121.566231,
-    "source": "OpenStreetMap(amenity=nightclub,bar)",
+    "lat": 25.028524,
+    "lng": 121.557093,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 1.0,
+    "confidence": 0.9,
     "meta": {
-      "name": "松壽路夜店街後巷",
-      "summary": "⚠️ 松壽路夜店酒吧街：深夜醉漢與酒客群聚鬧事熱點"
+      "name": "綠洲信義",
+      "summary": "⚠️ 綠洲信義：深夜醉漢與酒客群聚高發區",
+      "osm_id": 2775768374
     }
   },
   {
-    "id": "danger_00002",
-    "category": "underpass_hazard",
-    "lat": 25.034182,
-    "lng": 121.563819,
-    "source": "OpenStreetMap(tunnel=yes)",
+    "id": "hazard_00002",
+    "category": "night_club_hazard",
+    "lat": 25.037204,
+    "lng": 121.569284,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 1.0,
+    "confidence": 0.9,
     "meta": {
-      "name": "基隆路地下穿越道",
-      "summary": "⚠️ 基隆路地下穿越道：夜間封閉空間與逃生盲區"
+      "name": "柏克金啤酒餐廳",
+      "summary": "⚠️ 柏克金啤酒餐廳：深夜醉漢與酒客群聚高發區",
+      "osm_id": 3278033042
     }
   },
   {
-    "id": "danger_00003",
+    "id": "hazard_00003",
+    "category": "night_club_hazard",
+    "lat": 25.03499,
+    "lng": 121.567747,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Marsalis Home Taipei",
+      "summary": "⚠️ Marsalis Home Taipei：深夜醉漢與酒客群聚高發區",
+      "osm_id": 3692994193
+    }
+  },
+  {
+    "id": "hazard_00004",
+    "category": "night_club_hazard",
+    "lat": 25.03518,
+    "lng": 121.566117,
+    "source": "OpenStreetMap(nightclub，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "IOIO",
+      "summary": "⚠️ IOIO：深夜醉漢與酒客群聚高發區",
+      "osm_id": 3939157977
+    }
+  },
+  {
+    "id": "hazard_00005",
+    "category": "night_club_hazard",
+    "lat": 25.03521,
+    "lng": 121.567392,
+    "source": "OpenStreetMap(pub，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Brass Monkey",
+      "summary": "⚠️ Brass Monkey：深夜醉漢與酒客群聚高發區",
+      "osm_id": 4115302788
+    }
+  },
+  {
+    "id": "hazard_00006",
+    "category": "night_club_hazard",
+    "lat": 25.035015,
+    "lng": 121.568005,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "CIGAR GALLERY雪茄館",
+      "summary": "⚠️ CIGAR GALLERY雪茄館：深夜醉漢與酒客群聚高發區",
+      "osm_id": 4255504790
+    }
+  },
+  {
+    "id": "hazard_00007",
+    "category": "night_club_hazard",
+    "lat": 25.035638,
+    "lng": 121.566791,
+    "source": "OpenStreetMap(nightclub，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Babe 18",
+      "summary": "⚠️ Babe 18：深夜醉漢與酒客群聚高發區",
+      "osm_id": 4631622289
+    }
+  },
+  {
+    "id": "hazard_00008",
+    "category": "night_club_hazard",
+    "lat": 25.028649,
+    "lng": 121.557168,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "The Oasis Tavern",
+      "summary": "⚠️ The Oasis Tavern：深夜醉漢與酒客群聚高發區",
+      "osm_id": 4742463122
+    }
+  },
+  {
+    "id": "hazard_00009",
+    "category": "night_club_hazard",
+    "lat": 25.026142,
+    "lng": 121.554882,
+    "source": "OpenStreetMap(pub，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "夜店/酒吧街",
+      "summary": "⚠️ 夜店/酒吧街：深夜醉漢與酒客群聚高發區",
+      "osm_id": 4837986442
+    }
+  },
+  {
+    "id": "hazard_00010",
+    "category": "night_club_hazard",
+    "lat": 25.030166,
+    "lng": 121.557611,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "mousse",
+      "summary": "⚠️ mousse：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5110348188
+    }
+  },
+  {
+    "id": "hazard_00011",
+    "category": "night_club_hazard",
+    "lat": 25.033724,
+    "lng": 121.559749,
+    "source": "OpenStreetMap(pub，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "王牌 巴賽隆納",
+      "summary": "⚠️ 王牌 巴賽隆納：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5110348784
+    }
+  },
+  {
+    "id": "hazard_00012",
+    "category": "night_club_hazard",
+    "lat": 25.031668,
+    "lng": 121.558072,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "隱寺餐酒館",
+      "summary": "⚠️ 隱寺餐酒館：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5174460921
+    }
+  },
+  {
+    "id": "hazard_00013",
+    "category": "night_club_hazard",
+    "lat": 25.03566,
+    "lng": 121.566028,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Frank",
+      "summary": "⚠️ Frank：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5480864321
+    }
+  },
+  {
+    "id": "hazard_00014",
+    "category": "night_club_hazard",
+    "lat": 25.035416,
+    "lng": 121.56619,
+    "source": "OpenStreetMap(nightclub，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Club Myst",
+      "summary": "⚠️ Club Myst：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5544082322
+    }
+  },
+  {
+    "id": "hazard_00015",
+    "category": "night_club_hazard",
+    "lat": 25.035507,
+    "lng": 121.566141,
+    "source": "OpenStreetMap(nightclub，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "FRANK",
+      "summary": "⚠️ FRANK：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5544090023
+    }
+  },
+  {
+    "id": "hazard_00016",
+    "category": "night_club_hazard",
+    "lat": 25.032552,
+    "lng": 121.562913,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Alchemy",
+      "summary": "⚠️ Alchemy：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5544090025
+    }
+  },
+  {
+    "id": "hazard_00017",
+    "category": "night_club_hazard",
+    "lat": 25.037912,
+    "lng": 121.567288,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "掌門精釀啤酒",
+      "summary": "⚠️ 掌門精釀啤酒：深夜醉漢與酒客群聚高發區",
+      "osm_id": 5784825496
+    }
+  },
+  {
+    "id": "hazard_00018",
+    "category": "night_club_hazard",
+    "lat": 25.045568,
+    "lng": 121.567826,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "啤痞微型精釀啤酒吧",
+      "summary": "⚠️ 啤痞微型精釀啤酒吧：深夜醉漢與酒客群聚高發區",
+      "osm_id": 6278511286
+    }
+  },
+  {
+    "id": "hazard_00019",
+    "category": "night_club_hazard",
+    "lat": 25.032276,
+    "lng": 121.558952,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Ron Xinyi",
+      "summary": "⚠️ Ron Xinyi：深夜醉漢與酒客群聚高發區",
+      "osm_id": 6703689885
+    }
+  },
+  {
+    "id": "hazard_00020",
+    "category": "night_club_hazard",
+    "lat": 25.040255,
+    "lng": 121.566556,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Fancy Hip Tiger Bar",
+      "summary": "⚠️ Fancy Hip Tiger Bar：深夜醉漢與酒客群聚高發區",
+      "osm_id": 6874269785
+    }
+  },
+  {
+    "id": "hazard_00021",
+    "category": "night_club_hazard",
+    "lat": 25.042248,
+    "lng": 121.564803,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "言吧",
+      "summary": "⚠️ 言吧：深夜醉漢與酒客群聚高發區",
+      "osm_id": 11271183163
+    }
+  },
+  {
+    "id": "hazard_00022",
+    "category": "night_club_hazard",
+    "lat": 25.031342,
+    "lng": 121.557617,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "tei by OBOND",
+      "summary": "⚠️ tei by OBOND：深夜醉漢與酒客群聚高發區",
+      "osm_id": 12745981606
+    }
+  },
+  {
+    "id": "hazard_00023",
+    "category": "night_club_hazard",
+    "lat": 25.035,
+    "lng": 121.567368,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "FakeSober",
+      "summary": "⚠️ FakeSober：深夜醉漢與酒客群聚高發區",
+      "osm_id": 13149266015
+    }
+  },
+  {
+    "id": "hazard_00024",
+    "category": "night_club_hazard",
+    "lat": 25.030073,
+    "lng": 121.557988,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Placebo Taipei 安慰劑小酒館",
+      "summary": "⚠️ Placebo Taipei 安慰劑小酒館：深夜醉漢與酒客群聚高發區",
+      "osm_id": 13408715502
+    }
+  },
+  {
+    "id": "hazard_00025",
+    "category": "night_club_hazard",
+    "lat": 25.03767,
+    "lng": 121.568022,
+    "source": "OpenStreetMap(bar，Overpass API，ODbL 1.0)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Tipsy Sparrow",
+      "summary": "⚠️ Tipsy Sparrow：深夜醉漢與酒客群聚高發區",
+      "osm_id": 13758820376
+    }
+  },
+  {
+    "id": "hazard_00026",
     "category": "danger_zone",
     "lat": 25.030474,
     "lng": 121.565463,
-    "source": "臺北市治安斑點示範資料",
+    "source": "臺北市政府警察局婦幼安全警示地點",
     "source_type": "static_local",
     "expires_at": null,
     "confidence": 1.0,
@@ -42,31 +389,17 @@
     }
   },
   {
-    "id": "danger_00004",
+    "id": "hazard_00027",
     "category": "danger_zone",
-    "lat": 25.036120,
-    "lng": 121.568450,
-    "source": "臺北市治安斑點示範資料",
+    "lat": 25.03612,
+    "lng": 121.56845,
+    "source": "臺北市政府警察局婦幼安全警示地點",
     "source_type": "static_local",
     "expires_at": null,
     "confidence": 1.0,
     "meta": {
       "name": "松高路背光死角",
       "summary": "⚠️ 松高路高牆背光面：夜間視線死角與人流稀少區"
-    }
-  },
-  {
-    "id": "danger_00005",
-    "category": "danger_zone",
-    "lat": 25.031850,
-    "lng": 121.567820,
-    "source": "臺北市治安斑點示範資料",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "松德路狹窄通道",
-      "summary": "⚠️ 松德路交界狹長走道：夜間無監視器覆蓋死角"
     }
   }
 ]
