@@ -28,8 +28,9 @@ from interfaces import (
 SESSION_TTL = timedelta(minutes=30)
 
 # 展示範圍內的固定起訖點，讓假回覆也跑一次真實引擎（而不是硬編路徑數值）。
-_DEMO_ORIGIN = LatLng(lat=25.048, lng=121.531)
-_DEMO_DESTINATION = LatLng(lat=25.013, lng=121.535)
+# 座標對應信義區真實 OSM 路網（見 tests/test_pathfinding.py 開頭的節點說明）。
+_DEMO_ORIGIN = LatLng(lat=25.01848, lng=121.557416)
+_DEMO_DESTINATION = LatLng(lat=25.04478, lng=121.584105)
 
 
 @dataclass
@@ -73,7 +74,7 @@ class FakeChatService(ChatService):
         except OutOfCoverageError:
             return ChatResult(
                 status=ChatStatus.ERROR,
-                reply_text="你的位置目前不在這次展示涵蓋的範圍內，這個版本只支援台北車站到公館一帶。",
+                reply_text="你的位置目前不在這次展示涵蓋的範圍內，這個版本只支援台北市信義區一帶。",
                 error_code=OUT_OF_COVERAGE,
             )
         except NoRouteFoundError:

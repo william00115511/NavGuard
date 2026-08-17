@@ -4,8 +4,11 @@ from app.main import app
 
 client = TestClient(app)
 
-_ORIGIN = {"lat": 25.048, "lng": 121.531}
-_DESTINATION = {"lat": 25.013, "lng": 121.535}
+# 信義區真實 OSM 路網（見 tests/test_pathfinding.py 開頭的節點說明）上的兩個點，
+# 中間 fastest 路線會經過 25.030474, 121.565463 這個節點（台北 101 一帶）。
+_ORIGIN = {"lat": 25.01848, "lng": 121.557416}
+_DESTINATION = {"lat": 25.04478, "lng": 121.584105}
+_ON_ROUTE_LOCATION = {"lat": 25.030474, "lng": 121.565463}
 
 
 def _calculate(**overrides):
@@ -103,7 +106,7 @@ def test_route_calculate_rejects_invalid_alpha():
 
 
 def test_same_origin_and_destination_does_not_crash():
-    response = _calculate(destination={"lat": 25.0481, "lng": 121.5311})
+    response = _calculate(destination={"lat": 25.018481, "lng": 121.557417})
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
 
@@ -114,7 +117,7 @@ def test_unknown_hazard_category_falls_back_instead_of_being_ignored():
         dynamic_hazards=[
             {
                 "category": "alien_invasion",
-                "location": {"lat": 25.034, "lng": 121.533},
+                "location": _ON_ROUTE_LOCATION,
                 "summary": "測試用未知類別",
                 "confidence": 0.6,
                 "valid_hours": 5,
@@ -135,7 +138,7 @@ def test_expired_hazard_is_not_counted():
         dynamic_hazards=[
             {
                 "category": "fire_incident",
-                "location": {"lat": 25.034, "lng": 121.533},
+                "location": _ON_ROUTE_LOCATION,
                 "summary": "已經過期的火警",
                 "expires_at": "2000-01-01T00:00:00+00:00",
             }
@@ -155,7 +158,7 @@ def test_hazard_lowers_safety_score_of_affected_route():
         dynamic_hazards=[
             {
                 "category": "fire_incident",
-                "location": {"lat": 25.034, "lng": 121.535},
+                "location": _ON_ROUTE_LOCATION,
                 "summary": "路線上的火警",
                 "confidence": 1.0,
                 "valid_hours": 6,
