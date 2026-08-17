@@ -2,18 +2,21 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     dir: 'backend'
     secretEnv: ['ENV_FILE', 'KEY_JSON']
+    env:
+      - 'DOCKER_BUILDKIT=1'  # 👈 開啟 BuildKit 支援
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         mkdir -p /tmp/secrets
-        echo "$$ENV_FILE" > /tmp/secrets/ENV_FILE
-        echo "$$KEY_JSON" > /tmp/secrets/KEY_JSON
+        printf "%s" "$$ENV_FILE" > /tmp/secrets/ENV_FILE
+        printf "%s" "$$KEY_JSON" > /tmp/secrets/KEY_JSON
         docker build \
           -f Dockerfile.gcp \
           --secret id=ENV_FILE,src=/tmp/secrets/ENV_FILE \
           --secret id=KEY_JSON,src=/tmp/secrets/KEY_JSON \
           -t asia-east1-docker.pkg.dev/288900657769/my-repo/fastapi-backend:$COMMIT_SHA .
+        rm -rf /tmp/secrets  # 建置完成後清理暫存檔
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'asia-east1-docker.pkg.dev/288900657769/my-repo/fastapi-backend:$COMMIT_SHA']
