@@ -329,6 +329,13 @@ h(n) = haversine(n, goal) × (1 - α)
 把數值轉成文字（§6.2 的 `route_ready` 不帶 `reply_text`，資料已經是結構化
 JSON，前端自己組文案）。上面「不要說『這條路很安全』」這類措辭規範，現在
 只約束 `collecting_info`／`error` 這兩種仍然需要 Gemini 產生對話文字的情境。
+
+⚠️ **修訂（地點消歧）**：新增一條規則，讓 Gemini 在呼叫 `calculate_safe_route`
+前自行判斷連鎖品牌／多分店地標是否需要追問。能從既有資訊（另一端地點、
+使用者提過的城市或區域、分店彼此距離很近）合理判斷時直接選用該分店繼續，
+不追問；只有真的無法判斷時才詢問，且只列出少數幾個（2～4 個）最可能的
+選項，不列出全部分店。實際文字見 `google_genai_gateway.py` 的
+`SYSTEM_INSTRUCTION`（本節範例文字未同步逐字更新，以程式碼為準）。
 ---
 
 ## 6. 後端 API 合約
@@ -382,7 +389,6 @@ Response 依進度分三種 `status`：
   "route": {
     "path_coordinates": [[25.0478, 121.5319], [25.0481, 121.5325], "..."],
     "alpha_used": 0.6,
-    "confidence": "medium",
     "metrics": {
       "distance_m": 1420,
       "duration_min_est": 18,
