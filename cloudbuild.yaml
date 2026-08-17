@@ -1,0 +1,40 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'backend'
+    secretEnv: ['ENV_FILE', 'KEY_JSON']
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        mkdir -p /tmp/secrets
+        echo "$ENV_FILE" > /tmp/secrets/ENV_FILE
+        echo "$KEY_JSON" > /tmp/secrets/KEY_JSON
+
+        docker build \
+          -f Dockerfile.gcp \
+          --secret id=ENV_FILE,src=/tmp/secrets/ENV_FILE \
+          --secret id=KEY_JSON,src=/tmp/secrets/KEY_JSON \
+          -t asia-east1-docker.pkg.dev/$PROJECT_ID/my-repo/fastapi-backend:$COMMIT_SHA .
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia-east1-docker.pkg.dev/$PROJECT_ID/my-repo/fastapi-backend:$COMMIT_SHA']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'fastapi-backend'
+      - '--image=asia-east1-docker.pkg.dev/$PROJECT_ID/my-repo/fastapi-backend:$COMMIT_SHA'
+      - '--region=asia-east1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--set-secrets=/app/.env=ENV_FILE:latest'
+      - '--set-secrets=/app/google-credentials.json=KEY_JSON:latest'
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/ENV_FILE/versions/latest
+      env: 'ENV_FILE'
+    - versionName: projects/$PROJECT_ID/secrets/KEY_JSON/versions/latest
+      env: 'KEY_JSON'
