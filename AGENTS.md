@@ -99,7 +99,7 @@
 - `source_type`：`static_local`（本地離線資料）或 `dynamic_realtime`（3.4 節 Gemini 即時搜尋加入）
 - `expires_at`：靜態固定 `null`（永久）；動態需 ISO 時間字串，過期後計算自動忽略
 - `confidence`：靜態政府資料固定 1.0；動態新聞來源可 < 1.0（如 0.6），讓公式知道可信度較低而自動打折
-- `place_id`：來自 Google Places API 的資料才有值（目前是 `police_station`、`convenience_store`），其餘類別固定 `null`
+- `place_id`：這筆點位的唯一識別欄位（不再另外維護一個內部 `id`）。Google Places 來源（目前是 `police_station`、`convenience_store`）用 Google 回傳的真實 place_id；其餘類別用資料轉換腳本／引擎自行產生的穩定字串（例如 `streetlight_00001`、`hazard_00026`），一律有值，不是 `null`
 
 不同類別各自一檔案（`street_light.json`、`police_station.json`、`danger_zone.json`…），啟動時掃描整個目錄自動載入符合 schema 的檔案。**新增點位類型只需新增資料檔 + 在 `categories.json` 登記一筆設定，完全不用改程式邏輯。**
 
@@ -139,7 +139,7 @@
 
 路徑計算需道路網路圖（節點 = 路口，邊 = 路段）。政府路燈／警局資料無法提供，需另外準備：
 
-- **主要方案**：OSM 路網，針對展示範圍用 `osmnx` 預先擷取（`network_type="walk"`）存本地圖檔（GraphML／pickle），放 `/data/graph/`，執行期直接讀取。
+- **主要方案**：OSM 路網，針對展示範圍用 `osmnx` 預先擷取（`graph_from_bbox`，`network_type="walk"`）。目前實作把 osmnx 的輸出轉成精簡的 `{nodes, edges}` JSON（放 `backend/data/road_network.json`），不是原生 GraphML／pickle——這個轉換只發生在離線腳本 `scripts/build_road_network.py`，`app/engine/graph.py` 不依賴 osmnx。
 - **備援方案**（時間緊迫）：手動建簡化網格圖或幾條主要道路節點圖，僅供 Demo。
 
 ⚠️ **動工前必須先確認展示範圍**（哪個行政區／多大範圍），據此決定路網精細度。這是目前唯一的前置阻塞項。
@@ -226,7 +226,7 @@ h(n) = haversine(n, goal) × (1 - α)
 | `lit_coverage_ratio` | 採樣點中 30m 內有路燈資料的比例（無路燈資料時為 `null`） |
 | `convenience_stores` | 沿線 80m（同 `categories.json` 的 `radius_m`）內 24 小時超商的**具體點位列表**（`place_id`/`lat`/`lng`/`name`），該類別無資料時為 `null`（§6.2 修訂） |
 | `police_stations` | 沿線 150m 內警察局的**具體點位列表**，格式同上，該類別無資料時為 `null`（§6.2 修訂） |
-| `danger_zones` | 沿線 80m 內危險點位的**具體點位列表**（`place_id` 固定為 `null`／`lat`/`lng`/`name`/`summary`），該類別無資料時為 `null`（§6.2 修訂） |
+| `danger_zones` | 沿線 80m 內危險點位的**具體點位列表**（`place_id`／`lat`/`lng`/`name`/`summary`），一律以負面權重（`categories.json` 的 `effect: negative`）計入安全分數；該類別無資料時為 `null`（§6.2 修訂）。這是官方公告／OSM 標記的警示路段，非受害者個資，維持具體點位呈現，不做 grid/density 聚合 |
 | `passed_landmarks` | 其餘類別（路燈等）經過數量的 dict；`police_station`／`convenience_store`／`danger_zone` 已用上面三個具體點位列表取代，不再重複列在這裡計數 |
 | `detour_vs_fastest_min` | 相較 α=0 路線多花的分鐘數 |
 | `data_coverage` | 本次實際有資料的類別清單 |
@@ -257,6 +257,17 @@ h(n) = haversine(n, goal) × (1 - α)
 | `destination` | 是 | 終點文字描述 |
 
 ⚠️ **`priority_alpha`（安全優先權重）不是 slot filling 的一部分，由前端直接提供，不經 Gemini 判斷。** 前端用 UI（例如滑桿）讓使用者自己調整安全 vs 速度的權重，每次 `/api/chat` 請求都帶上這個數值（§6.2），未調整時預設 0.6；後端觸發 `calculate_safe_route`（§5.3）時直接代入這個值。原因：強迫使用者在對話中回答「你希望多安全」會產生尷尬的追問（「那你大概想走多快？」），使用者通常也答不出來；讓 Gemini 從語氣猜測數值更是不精確、不可重現。改由前端 UI 提供，使用者可隨時滑動重算，也更符合「安全相關數值一律 deterministic」的精神（原則 2）。
+
+⚠️ **現況（暫緩實作）**：`report_dynamic_hazard`（§5.4）與即時新聞搜尋（§3.4）
+這條資料流目前**刻意未接上**——`google_genai_gateway.py` 只宣告
+`calculate_safe_route` 一個 function，`gemini_chat_service.py` 也只處理單一
+tool call。`route_engine.py` 內對應的後端規則（unknown category fallback、
+去重）雖然都已實作，但因為上游從不產生 `DynamicHazard`，這段邏輯目前只有
+`POST /api/route/calculate`（§6.3，直接吃座標，不經 Gemini）會用到。之後要
+啟用這條資料流時，除了在 Gemini 端補宣告 function、加 Google Search
+grounding 工具外，也要把 `_handle_session_message` 改成能處理同一輪的多個
+tool call（目前只取 `tool_calls[0]`），並在 session 狀態裡加一個累積動態
+點位的欄位。
 
 ### 5.2 執行順序
 
@@ -416,7 +427,7 @@ Response 依進度分三種 `status`：
         { "place_id": "xxx", "lat": 25.0481, "lng": 121.5327, "name": "大安分局" }
       ],
       "danger_zones": [
-        { "place_id": null, "lat": 25.0481, "lng": 121.5327, "name": "綠洲信義", "summary": "深夜醉漢與酒客群聚高發區" }
+        { "place_id": "hazard_00026", "lat": 25.0481, "lng": 121.5327, "name": "綠洲信義", "summary": "深夜醉漢與酒客群聚高發區" }
       ],
       "passed_landmarks": {"street_light": 14},
       "detour_vs_fastest_min": 4,
