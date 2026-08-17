@@ -8,7 +8,7 @@
 
 ## 0. 一句話定義
 
-使用者透過對話說出「我想從 A 走到 B，希望安全一點」，系統在**自建的本地路網圖**上，以夜間照明、可求助據點、危險點位加權計算，回傳一條**可解釋原因**的較安全步行路線，並與最快路線並列比較。
+使用者透過對話說出「我想從 A 走到 B，希望安全一點」，系統在**自建的本地路網圖**上，以夜間照明、可求助據點、危險點位加權計算，回傳一條依前端安全參數（`priority_alpha`）算出的**可解釋原因**的較安全步行路線（結構化數值，而非後端組好的文字敘述）；引擎內部仍以最快路線作對照算出額外時間等指標，只是不再對外並列回傳兩條路線。
 
 ---
 
@@ -37,7 +37,7 @@
 │ - 對話框 UI（訊息氣泡 + 路線摘要卡片）       │
 │ - 安全／速度優先滑桿（priority_alpha）       │
 └──────────────────┬───────────────────────────┘
-                   │ HTTPS  POST /api/session, /api/chat
+                   │ HTTPS  POST /api/chat, /api/chat/clear
                    ▼
 ┌──────────────────────────────────────────────┐
 │ FastAPI Backend                              │
@@ -159,7 +159,8 @@
     → 依 α 合成 edge cost
     → A* 找起訖點間成本最低路徑
     → 同時以 α=0 算一條最快路線作為對照
-    → 回傳兩條路線 + metrics + reasons + warnings
+    → 引擎回傳兩條路線 + metrics + warnings（供內部比較與 §7 URL 簡化）；
+      API 層只對外回傳其中一條，見 §6.2 修訂
 ```
 
 ### 4.2 Edge 安全原始分數
@@ -230,8 +231,8 @@ h(n) = haversine(n, goal) × (1 - α)
 ### 4.7 confidence 與 warnings
 
 - `confidence` 取 `high` / `medium` / `low`：依 `data_coverage` 涵蓋比例與動態點位佔比決定
-- 任何類別無覆蓋 → 該權重從公式移除、其餘權重重新正規化、產生一則 `warning`，例如：
-  `"路燈資料在此區沒有覆蓋，未將照明納入評分"`
+- 任何類別無覆蓋 → 該權重從公式移除、其餘權重重新正規化、產生一則結構化 `warning`：
+  `{ "code": "missing_data_category", "category": "street_light" }`（前端自行查表組文案，見 §6.2）
 - 起訖點超出路網範圍 → 回錯誤，不做外插
 
 ---
@@ -254,7 +255,8 @@ h(n) = haversine(n, goal) × (1 - α)
   → （視需要）Google Search 搜尋路線附近近期事件
   → 對每則事件呼叫一次 report_dynamic_hazard（0 至多次）
   → 呼叫 calculate_safe_route
-  → 用回傳結果撰寫自然語言回覆
+  → 工具回傳後直接結束這一輪：結果是結構化資料（§6.2 route_ready），
+    不需要 Gemini 再撰寫自然語言回覆
 ```
 
 ### 5.3 Function：`calculate_safe_route`
@@ -320,94 +322,80 @@ h(n) = haversine(n, goal) × (1 - α)
 若使用者表示自己正遭遇危險，立即停止一般導航流程，優先建議聯絡當地
 緊急服務、前往最近明亮且有人員的公共場所。
 ```
+
+⚠️ **修訂**：`calculate_safe_route` 工具回傳結果後，後端不再多打一次 Gemini
+把數值轉成文字（§6.2 的 `route_ready` 不帶 `reply_text`，資料已經是結構化
+JSON，前端自己組文案）。上面「不要說『這條路很安全』」這類措辭規範，現在
+只約束 `collecting_info`／`error` 這兩種仍然需要 Gemini 產生對話文字的情境。
 ---
 
 ## 6. 後端 API 合約
 
 前端只需跟對話端點互動，後端把整條流程包成黑箱，前後端可各自獨立開發測試。
 
-### 6.1 `POST /api/session`
+### 6.1 `client_id`（取代 session_id，無需先呼叫任何端點交換）
 
-使用者打開對話框或按「開始新的路線規劃」時呼叫一次。
+舊版需要先呼叫 `POST /api/session` 交換一個後端配發的 `session_id`，才能開始
+對話。這個兩段式交握已移除：
 
-Request：
-```json
-{ "user_location": {"lat": 25.0330, "lng": 121.5654} }
-```
-`user_location` 選填，用於 geocoding bias 與 `origin: "current_location"` 的解析。
-
-Response：
-```json
-{ "session_id": "sess_8f2a1c", "created_at": "2026-08-17T20:00:00+08:00" }
-```
+- 前端在裝置上自行產生並持久化一個識別碼（例如安裝時建立一次的 UUID），
+  作為 `client_id`，不需要跟後端要。
+- 每次呼叫 `POST /api/chat`（§6.2）時直接帶上這個 `client_id`；後端第一次
+  看到某個 `client_id` 時就自動建立新的對話狀態，不會回「session 不存在」
+  這種錯誤。
+- 後端只保留最多 N 個活躍對話（`max_active_sessions`，可設定，見 §6.6）；
+  超過時逐出最久未使用的一個。對使用者而言差異不大——除非同時開著遠超過
+  N 個裝置/分頁在對話，否則感覺不到自己的對話被清掉。
+- 使用者想「開始新的路線規劃」（清空對話歷史）時，前端呼叫
+  `POST /api/chat/clear`（§6.2.1），不需要換新的 `client_id`。
 
 ### 6.2 `POST /api/chat`（核心端點）
 
 Request：
 ```json
 {
-  "session_id": "sess_8f2a1c",
+  "client_id": "3f9c1e2a-...",
   "message": "我想從台北車站走到公館夜市，希望盡量安全",
   "user_location": {"lat": 25.0330, "lng": 121.5654},
   "priority_alpha": 0.6
 }
 ```
-`priority_alpha` 由前端滑桿等 UI 直接提供（§5.1），選填，未帶時後端用預設值 0.6；這個值不經 Gemini，後端觸發 `calculate_safe_route` 時直接代入。
+`client_id` 見 §6.1，前端自帶、不需要跟後端交換。`priority_alpha` 由前端滑桿等 UI 直接提供（§5.1），選填，未帶時後端用預設值 0.6；這個值不經 Gemini，後端觸發 `calculate_safe_route` 時直接代入。
 
 Response 依進度分三種 `status`：
 
 **A. `collecting_info`**
 ```json
 {
-  "session_id": "sess_8f2a1c",
   "status": "collecting_info",
   "reply_text": "好的，你現在人在台北車站附近嗎？還是要從別的地方出發？"
 }
 ```
 
-**B. `route_ready`**
+**B. `route_ready`**——不帶 `reply_text`。路上遇到的警局、求助據點、額外時間等數值資料已經是 §4.6 的結構化 `metrics`，警告訊息也是結構化的 `code`（見下方 warning 說明），前端自行組文案／多語系，不需要後端組好的中文句子。同一個原因，這裡也只回傳**一條路線**——依前端這次帶的 `priority_alpha` 算出來的那一條，不再像舊版一樣把 `fastest` 對照組路線一起塞進回應（引擎內部仍會算 `fastest` 供 `detour_vs_fastest_min` 與 §7 URL 簡化使用，只是不對外暴露成第二條路線）：
 ```json
 {
-  "session_id": "sess_8f2a1c",
   "status": "route_ready",
-  "reply_text": "幫你規劃了一條較安全的路線，會經過 1 個派出所跟 5 個營業中的可求助據點，比最快路線多走約 4 分鐘。羅斯福路口目前有火警管制，路線已避開。這是依公開資料的輔助建議，無法保證安全。",
   "disclaimer": "此建議依公開資料與即時資訊產生，無法保證安全；緊急狀況請立即撥打 110 或 119。",
-  "selected_route_id": "safest",
-  "routes": [
-    {
-      "id": "safest",
-      "label": "推薦的較安全路線",
-      "path_coordinates": [[25.0478, 121.5319], [25.0481, 121.5325], "..."],
-      "alpha_used": 0.6,
-      "confidence": "medium",
-      "metrics": {
-        "distance_m": 1420,
-        "duration_min_est": 18,
-        "avg_safety_score": 0.78,
-        "lit_coverage_ratio": 0.71,
-        "help_points_within_50m": 5,
-        "police_within_150m": 1,
-        "passed_landmarks": {"street_light": 14, "police_station": 1},
-        "detour_vs_fastest_min": 4,
-        "data_coverage": ["street_light", "police_station", "help_point"]
-      },
-      "reasons": [
-        "沿途 5 個營業中可求助據點",
-        "比最快路線多 4 分鐘，但避開 2 段照明不足路段"
-      ],
-      "warnings": []
+  "route": {
+    "path_coordinates": [[25.0478, 121.5319], [25.0481, 121.5325], "..."],
+    "alpha_used": 0.6,
+    "confidence": "medium",
+    "metrics": {
+      "distance_m": 1420,
+      "duration_min_est": 18,
+      "avg_safety_score": 0.78,
+      "lit_coverage_ratio": 0.71,
+      "help_points_within_50m": 5,
+      "police_within_150m": 1,
+      "passed_landmarks": {"street_light": 14, "police_station": 1},
+      "detour_vs_fastest_min": 4,
+      "data_coverage": ["street_light", "police_station", "help_point"]
     },
-    {
-      "id": "fastest",
-      "label": "最快路線",
-      "path_coordinates": ["..."],
-      "alpha_used": 0.0,
-      "confidence": "medium",
-      "metrics": { "distance_m": 1180, "duration_min_est": 14, "avg_safety_score": 0.52, "...": "..." },
-      "reasons": [],
-      "warnings": ["部分路段缺乏路燈資料，照明未納入評分"]
-    }
-  ],
+    "warnings": [
+      { "code": "missing_data_category", "category": "danger_zone" }
+    ]
+  },
   "dynamic_hazards_considered": [
     {
       "category": "fire_incident",
@@ -420,11 +408,16 @@ Response 依進度分三種 `status`：
   "google_maps_url": "https://www.google.com/maps/dir/?api=1&origin=...&travelmode=walking"
 }
 ```
+`route.warnings` 的 `code` 目前有三種，`category`／`summary` 依 code 才有值：
+| code | 說明 | 附帶欄位 |
+|---|---|---|
+| `missing_data_category` | 某靜態類別在此區沒有覆蓋，未納入評分（§4.7） | `category`：類別 key（如 `street_light`） |
+| `unknown_hazard_category` | Gemini 回報的即時事件類別未登記，已用 `dynamic_unknown` 低權重計入（§5.4 規則 2） | `category`：原始（未登記的）類別 key |
+| `hazard_expired` | 即時事件已過期，未納入本次計算 | `summary`：該事件的簡述 |
 
 **C. `error`**
 ```json
 {
-  "session_id": "sess_8f2a1c",
   "status": "error",
   "error_code": "GEOCODING_FAILED",
   "reply_text": "抱歉，我找不到「公館夜市那邊」這個地點，可以講詳細一點的地標或地址嗎？"
@@ -433,7 +426,22 @@ Response 依進度分三種 `status`：
 
 常見 `error_code`：`GEOCODING_FAILED`、`OUT_OF_COVERAGE`（起訖點超出路網範圍）、`NO_ROUTE_FOUND`、`UPSTREAM_TIMEOUT`。
 
-**前端行為**：不論哪個 status，先把 `reply_text` 當作助手訊息顯示在對話框；`route_ready` 時額外在地圖畫出 `routes` 的 polyline（推薦路線與最快路線用不同顏色）、標出 `passed_landmarks` 的 marker，並顯示可展開的路線摘要卡片與「在 Google Maps 開啟導航」按鈕。
+**前端行為**：`collecting_info` 與 `error` 把 `reply_text` 當作助手訊息顯示在對話框；`route_ready` 沒有 `reply_text`，前端依 `route.metrics` 與 `route.warnings` 自行組文案、在地圖畫出 `route.path_coordinates` 的 polyline、標出 `passed_landmarks` 的 marker，並顯示可展開的路線摘要卡片與「在 Google Maps 開啟導航」按鈕。
+
+### 6.2.1 `POST /api/chat/clear`
+
+使用者按「開始新的路線規劃」、想清掉目前對話歷史時呼叫，不需要換新的 `client_id`（§6.1）。
+
+Request：
+```json
+{ "client_id": "3f9c1e2a-..." }
+```
+
+Response：
+```json
+{ "status": "ok" }
+```
+對不存在或已經被逐出的 `client_id` 呼叫一樣回 200（視為 no-op），不是錯誤。
 
 ### 6.3 `POST /api/route/calculate`（除錯／進階模式）
 
@@ -450,7 +458,7 @@ Request：
 ```
 `dynamic_hazards` 此處直接吃**座標**（`DynamicHazard` 內部型別），因為 geocoding 屬於 Function Calling handler 的職責，不屬於引擎。
 
-Response：與 6.2 的 `routes` / `dynamic_hazards_considered` 部分相同結構。
+Response：與 6.2 `route_ready` 的 `route` / `dynamic_hazards_considered` 部分相同結構（外層多一個 `status: "ok"`）。
 
 ### 6.4 `GET /healthz`
 
@@ -459,14 +467,17 @@ Response：與 6.2 的 `routes` / `dynamic_hazards_considered` 部分相同結�
 ### 6.5 錯誤與狀態碼慣例
 
 - **業務邏輯失敗**（聽不懂地點、資訊不足、超出覆蓋範圍）一律回 HTTP 200，body 用 `status: "error"`。請求本身有效，只是這次對話結果失敗。
-- **系統層級錯誤**才用 HTTP 錯誤碼：`400`（request 格式錯）、`404`（`session_id` 不存在）、`500`（後端內部錯誤）、`504`（Gemini 或 geocoding 逾時）。統一格式：
+- **系統層級錯誤**才用 HTTP 錯誤碼：`400`（request 格式錯）、`500`（後端內部錯誤）、`504`（Gemini 或 geocoding 逾時）。統一格式：
   ```json
-  { "status": "error", "error_code": "SESSION_NOT_FOUND", "message": "..." }
+  { "status": "error", "error_code": "BAD_REQUEST", "message": "..." }
   ```
+  移除 `session_id` 兩段式交握後（§6.1），不再有「session 不存在」這種系統層級錯誤——任何 `client_id` 第一次出現都直接可用。
 
 ### 6.6 Session 儲存
 
-MVP 用 process 內記憶體 dict（`session_id` → 對話歷史 + 動態點位）。這代表**後端必須是單一 process**；多 instance 部署會導致 session 隨機遺失。加 TTL（建議 30 分鐘）避免記憶體無限增長。
+MVP 用 process 內記憶體 dict（`client_id` → 對話歷史 + 動態點位），這代表**後端必須是單一 process**；多 instance 部署會導致對話歷史隨機遺失。
+
+固定大小的 LRU pool 取代舊版單純的 TTL 字典：`max_active_sessions`（可設定，建議 50）限制同時活躍的對話數，超過時逐出最久未使用的一個；同時仍保留 TTL（建議 30 分鐘）讓長時間沒動靜的對話自動視為過期、下一則訊息當成新對話開始（不是錯誤，見 §6.1）。使用者主動要清掉歷史時用 `POST /api/chat/clear`（§6.2.1），不需要等 TTL 或被 LRU 逐出。
 
 ### 6.7 延遲
 
