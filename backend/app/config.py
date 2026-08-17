@@ -65,6 +65,8 @@ class Settings(BaseSettings):
         "gemini-3.5-flash",
         "gemini-3.6-flash",
     ]
+    # 同時支援 maps_api_key / geocoding_api_key / routes_api_key
+    maps_api_key: SecretStr = SecretStr("")
     geocoding_api_key: SecretStr = SecretStr("")
     routes_api_key: SecretStr = SecretStr("")
     session_ttl_seconds: float = Field(default=30 * 60, gt=0)
