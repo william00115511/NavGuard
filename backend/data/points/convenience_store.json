@@ -1,2102 +1,1484 @@
 [
   {
-    "id": "helppoint_00001",
+    "place_id": "ChIJiZOMirOrQjQReV4-8cWYABs",
     "category": "convenience_store",
-    "lat": 25.028378,
-    "lng": 121.568216,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.019857,
+    "lng": 121.557585,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 300215481
+      "name": "全家便利商店 六張黎店",
+      "address": "110臺北市信義區黎忠里和平東路三段387號"
     }
   },
   {
-    "id": "helppoint_00002",
+    "place_id": "ChIJ8de3t77WDRQRK8In7_vhYWY",
     "category": "convenience_store",
-    "lat": 25.028434,
-    "lng": 121.568829,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.018607,
+    "lng": 121.558981,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 300215482
+      "name": "7-ELEVEN 麟運門市",
+      "address": "110臺北市信義區黎忠里和平東路三段461號"
     }
   },
   {
-    "id": "helppoint_00003",
+    "place_id": "ChIJYbEOagCrQjQRsN0MjkHIsxs",
     "category": "convenience_store",
-    "lat": 25.02316,
-    "lng": 121.569488,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.018593,
+    "lng": 121.571146,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 569944557
+      "name": "7-ELEVEn 泰興門市",
+      "address": "110臺北市信義區泰和里吳興街600巷94號"
     }
   },
   {
-    "id": "helppoint_00004",
+    "place_id": "ChIJwRE9jDaqQjQRDdfh9u-99QU",
     "category": "convenience_store",
-    "lat": 25.021983,
-    "lng": 121.568865,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.021866,
+    "lng": 121.556561,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 569944558
+      "name": "OK便利商店 台北富陽門市",
+      "address": "110臺北市信義區黎平里富陽街65、67號1樓"
     }
   },
   {
-    "id": "helppoint_00005",
+    "place_id": "ChIJM2c7PjSqQjQRQR_G7wth8fw",
     "category": "convenience_store",
-    "lat": 25.024863,
-    "lng": 121.56923,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.023995,
+    "lng": 121.555603,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 569944559
+      "name": "7-ELEVEN 崇德門市",
+      "address": "110臺北市信義區崇德街104號 106號1樓"
     }
   },
   {
-    "id": "helppoint_00006",
+    "place_id": "ChIJIUCG0TSrQjQRF4HoV69nj4Y",
     "category": "convenience_store",
-    "lat": 25.024998,
-    "lng": 121.569477,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.020384,
+    "lng": 121.558359,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "家樂福超市",
-      "brand": "家樂福超市",
-      "osm_id": 569944560
+      "name": "7-ELEVEN 鑫麟門市",
+      "address": "110臺北市信義區和平東路三段391巷22號 24號1樓及地下室一樓"
     }
   },
   {
-    "id": "helppoint_00007",
+    "place_id": "ChIJCRsSbACrQjQRRrJ7SlcyJ6g",
     "category": "convenience_store",
-    "lat": 25.024102,
-    "lng": 121.570413,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.020495,
+    "lng": 121.557003,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 569944562
+      "name": "萊爾富便利商店 信義和平東",
+      "address": "110臺北市信義區黎忠里和平東路三段355號"
     }
   },
   {
-    "id": "helppoint_00008",
+    "place_id": "ChIJRZcA9jaqQjQRGruEqwOUnvM",
     "category": "convenience_store",
-    "lat": 25.041293,
-    "lng": 121.566704,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.023329,
+    "lng": 121.563312,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 1501340090
+      "name": "OK便利商店 信義雙和門市",
+      "address": "110臺北市信義區雙和里吳興街284巷21弄2號"
     }
   },
   {
-    "id": "helppoint_00009",
+    "place_id": "ChIJo2kiT02qQjQR6adeNElT7js",
     "category": "convenience_store",
-    "lat": 25.025811,
-    "lng": 121.566351,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.022161,
+    "lng": 121.568874,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2073029315
+      "name": "7-ELEVEN 惠安門市",
+      "address": "110臺北市信義區惠安里吳興街520號1樓"
     }
   },
   {
-    "id": "helppoint_00010",
+    "place_id": "ChIJk13dE02qQjQRBy58Wjtb1IA",
     "category": "convenience_store",
-    "lat": 25.023993,
-    "lng": 121.555652,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.023364,
+    "lng": 121.569758,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2218962072
+      "name": "7-ELEVEN 總站門市",
+      "address": "110臺北市信義區吳興街486號 488號1樓"
     }
   },
   {
-    "id": "helppoint_00011",
+    "place_id": "ChIJ3ws5cIqrQjQR5HwACc73jcc",
     "category": "convenience_store",
-    "lat": 25.028014,
-    "lng": 121.556798,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.020341,
+    "lng": 121.569859,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2302317276
+      "name": "全家便利商店 挹翠店",
+      "address": "110臺北市信義區泰和里吳興街600巷56號"
     }
   },
   {
-    "id": "helppoint_00012",
+    "place_id": "ChIJxXTkyLSrQjQRDahbN3PwawU",
     "category": "convenience_store",
-    "lat": 25.041798,
-    "lng": 121.563748,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.02409,
+    "lng": 121.57042,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2377138792
+      "name": "全家便利商店 祥和店",
+      "address": "110臺北市信義區六合里信義路五段150巷401弄31號"
     }
   },
   {
-    "id": "helppoint_00013",
+    "place_id": "ChIJxT_5liiqQjQRmmc2e2GMB9A",
     "category": "convenience_store",
-    "lat": 25.040836,
-    "lng": 121.562479,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.024385,
+    "lng": 121.553756,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2377138833
+      "name": "全家便利商店 崇德店",
+      "address": "110臺北市信義區黎順里崇德街29號"
     }
   },
   {
-    "id": "helppoint_00014",
+    "place_id": "ChIJh89ejjSqQjQRUZ3m_BJvVdM",
     "category": "convenience_store",
-    "lat": 25.030935,
-    "lng": 121.560266,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.025754,
+    "lng": 121.554401,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 2406793658
+      "name": "7-ELEVEN 喬治門市",
+      "address": "110臺北市信義區基隆路二段155號1樓"
     }
   },
   {
-    "id": "helppoint_00015",
+    "place_id": "ChIJ3wBC0zSqQjQRPSzpHvRgIm8",
     "category": "convenience_store",
-    "lat": 25.025787,
-    "lng": 121.554399,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.028003,
+    "lng": 121.556734,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2410688006
+      "name": "7-ELEVEN 昌隆門市",
+      "address": "110臺北市信義區嘉興里基隆路二段131-4號"
     }
   },
   {
-    "id": "helppoint_00016",
+    "place_id": "ChIJD6J15G2rQjQR0lvLK6a4C1k",
     "category": "convenience_store",
-    "lat": 25.040402,
-    "lng": 121.563199,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.028616,
+    "lng": 121.557196,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2617568610
+      "name": "全家便利商店 財盛店",
+      "address": "110臺北市信義區嘉興里基隆路二段113號"
     }
   },
   {
-    "id": "helppoint_00017",
+    "place_id": "ChIJwy8ibwCrQjQR1Gn9ciFYSrk",
     "category": "convenience_store",
-    "lat": 25.031237,
-    "lng": 121.561105,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.027343,
+    "lng": 121.55872,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2638283930
+      "name": "7-ELEVEN 犁耘門市",
+      "address": "110臺北市信義區景勤里信安街29號"
     }
   },
   {
-    "id": "helppoint_00018",
+    "place_id": "ChIJO7glEEuqQjQRKH8oMzuNyW4",
     "category": "convenience_store",
-    "lat": 25.031709,
-    "lng": 121.566906,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.0246,
+    "lng": 121.563528,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2672528907
+      "name": "7-ELEVEN 吳興門市",
+      "address": "110臺北市信義區吳興街284巷18弄2號"
     }
   },
   {
-    "id": "helppoint_00019",
+    "place_id": "ChIJxXTkyLSrQjQRPkfmzL69Qv0",
     "category": "convenience_store",
-    "lat": 25.023356,
-    "lng": 121.563347,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.02753,
+    "lng": 121.564878,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "OK超商",
-      "brand": "OK超商",
-      "osm_id": 2672538244
+      "name": "全家便利商店 莊敬店",
+      "address": "110臺北市信義區三張里莊敬路374號"
     }
   },
   {
-    "id": "helppoint_00020",
+    "place_id": "ChIJl_m-5bSrQjQRBCJlvUprAhY",
     "category": "convenience_store",
-    "lat": 25.024585,
-    "lng": 121.563547,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.028451,
+    "lng": 121.563382,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2672538247
+      "name": "全家便利商店 莊新店",
+      "address": "110臺北市信義區景新里莊敬路307號"
     }
   },
   {
-    "id": "helppoint_00021",
+    "place_id": "ChIJxXTkyLSrQjQRWKj-mXB-MEA",
     "category": "convenience_store",
-    "lat": 25.025191,
-    "lng": 121.571375,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.026967,
+    "lng": 121.563833,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "小雜貨店",
-      "brand": null,
-      "osm_id": 2672539795
+      "name": "全家便利商店 北醫店",
+      "address": "110臺北市信義區三張里吳興街263號"
     }
   },
   {
-    "id": "helppoint_00022",
+    "place_id": "ChIJK6Q5IrOrQjQRMcWDrgGspHk",
     "category": "convenience_store",
-    "lat": 25.035823,
-    "lng": 121.578565,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.027083,
+    "lng": 121.563759,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2672864421
+      "name": "7-ELEVEN 醫學門市",
+      "address": "110臺北市信義區吳興街257號259號"
     }
   },
   {
-    "id": "helppoint_00023",
+    "place_id": "ChIJ0RTWU7KrQjQRh4Sl3haCVjg",
     "category": "convenience_store",
-    "lat": 25.027542,
-    "lng": 121.564892,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.028435,
+    "lng": 121.568846,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 2677242556
+      "name": "全家便利商店 松仁店",
+      "address": "110臺北市信義區三犁里信義路五段150巷221號"
     }
   },
   {
-    "id": "helppoint_00024",
+    "place_id": "ChIJK6Q5IrOrQjQRxVMN9iEqwsk",
     "category": "convenience_store",
-    "lat": 25.027015,
-    "lng": 121.563835,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.02691,
+    "lng": 121.568599,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 2677242558
+      "name": "7-ELEVEN 松仁門市",
+      "address": "110臺北市信義區松仁路213號"
     }
   },
   {
-    "id": "helppoint_00025",
+    "place_id": "ChIJx6bqskyqQjQRes13yqPaxa0",
     "category": "convenience_store",
-    "lat": 25.027147,
-    "lng": 121.563723,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.025831,
+    "lng": 121.566325,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2677242560
+      "name": "7-ELEVEN 信醫門市",
+      "address": "110臺北市信義區吳興街346號348號"
     }
   },
   {
-    "id": "helppoint_00026",
+    "place_id": "ChIJaerCTwCrQjQRixWuCZs-neg",
     "category": "convenience_store",
-    "lat": 25.026235,
-    "lng": 121.566095,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.027425,
+    "lng": 121.565452,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 2677242562
+      "name": "7-ELEVEn 莊敬路門市",
+      "address": "110臺北市信義區三張里莊敬路390號"
     }
   },
   {
-    "id": "helppoint_00027",
+    "place_id": "ChIJKapc5pOrQjQRxuVj1Zbac6Q",
     "category": "convenience_store",
-    "lat": 25.045495,
-    "lng": 121.569003,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.024858,
+    "lng": 121.5692,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2954089276
+      "name": "全家便利商店 新安興店",
+      "address": "110臺北市信義區六合里松仁路240巷2號"
     }
   },
   {
-    "id": "helppoint_00028",
+    "place_id": "ChIJxXTkyLSrQjQRDDoH3Xqldlg",
     "category": "convenience_store",
-    "lat": 25.043138,
-    "lng": 121.565875,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.026114,
+    "lng": 121.566127,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2962740496
+      "name": "全家便利商店 盛興店",
+      "address": "110臺北市信義區三張里吳興街334號"
     }
   },
   {
-    "id": "helppoint_00029",
+    "place_id": "ChIJ_0HVnGmrQjQR7gzC_mmta68",
     "category": "convenience_store",
-    "lat": 25.047305,
-    "lng": 121.566503,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.024544,
+    "lng": 121.569424,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2963985747
+      "name": "7-ELEVEN 富比世門市",
+      "address": "110臺北市信義區松仁路246號248號1樓"
     }
   },
   {
-    "id": "helppoint_00030",
+    "place_id": "ChIJOe5GGACrQjQRittGg3J7W0E",
     "category": "convenience_store",
-    "lat": 25.047148,
-    "lng": 121.566765,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.027567,
+    "lng": 121.565701,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2965492497
+      "name": "萊爾富便利商店 信義三張犁",
+      "address": "110臺北市信義區三張里莊敬路393號"
     }
   },
   {
-    "id": "helppoint_00031",
+    "place_id": "ChIJSyNQEcqrQjQR1sB36-X-zyc",
     "category": "convenience_store",
-    "lat": 25.041286,
-    "lng": 121.565227,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.031988,
+    "lng": 121.558769,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 2987200649
+      "name": "7-ELEVEN 中興門市",
+      "address": "110臺北市信義區基隆路二段22號"
     }
   },
   {
-    "id": "helppoint_00032",
+    "place_id": "ChIJxXTkyLSrQjQRXK0E1IHNpGI",
     "category": "convenience_store",
-    "lat": 25.038887,
-    "lng": 121.585931,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.031767,
+    "lng": 121.5595,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": "萊爾富",
-      "osm_id": 3024920769
+      "name": "全家便利商店 三興店",
+      "address": "110臺北市信義區景聯里吳興街7號"
     }
   },
   {
-    "id": "helppoint_00033",
+    "place_id": "ChIJ1WsqEb6rQjQRbtLLz88D_Ek",
     "category": "convenience_store",
-    "lat": 25.038713,
-    "lng": 121.585996,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.031678,
+    "lng": 121.559579,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3024920770
+      "name": "7-ELEVEn 松敬門市",
+      "address": "110臺北市信義區吳興街11號1樓"
     }
   },
   {
-    "id": "helppoint_00034",
+    "place_id": "ChIJxXTkyLSrQjQR0WxMTMfUDM0",
     "category": "convenience_store",
-    "lat": 25.037709,
-    "lng": 121.583325,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.032192,
+    "lng": 121.557646,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3024920771
+      "name": "全家便利商店 復昌店",
+      "address": "110臺北市信義區中興里光復南路505號"
     }
   },
   {
-    "id": "helppoint_00035",
+    "place_id": "ChIJWQUy67WrQjQRSVhTKWRNQgQ",
     "category": "convenience_store",
-    "lat": 25.042805,
-    "lng": 121.583404,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.031216,
+    "lng": 121.561109,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3024920795
+      "name": "7-ELEVEN 興貿門市",
+      "address": "110臺北市信義區景新里莊敬路178巷2號"
     }
   },
   {
-    "id": "helppoint_00036",
+    "place_id": "ChIJBe9vDbWrQjQRAkytVA7aGAI",
     "category": "convenience_store",
-    "lat": 25.040629,
-    "lng": 121.58507,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.029122,
+    "lng": 121.56144,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3024920797
+      "name": "7-ELEVEN 三興門市",
+      "address": "110臺北市信義區景勤里吳興街156巷2弄2號"
     }
   },
   {
-    "id": "helppoint_00037",
+    "place_id": "ChIJQbwzY7SrQjQRziyF4NhmHYg",
     "category": "convenience_store",
-    "lat": 25.044795,
-    "lng": 121.580956,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.029143,
+    "lng": 121.564767,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": null,
-      "brand": null,
-      "osm_id": 3024921106
+      "name": "7-ELEVEN 松智門市",
+      "address": "110臺北市信義區莊敬路325巷43號"
     }
   },
   {
-    "id": "helppoint_00038",
+    "place_id": "ChIJX-OO4dGrQjQRAJUy86ZkJjk",
     "category": "convenience_store",
-    "lat": 25.02439,
-    "lng": 121.553844,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.030755,
+    "lng": 121.561136,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3082513510
+      "name": "全家便利商店 景聯店",
+      "address": "110臺北市信義區景聯里莊敬路190號1號1號樓及B1樓"
     }
   },
   {
-    "id": "helppoint_00039",
+    "place_id": "ChIJrS0bl42rQjQRR9Btn9327ns",
     "category": "convenience_store",
-    "lat": 25.040663,
-    "lng": 121.565069,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.028772,
+    "lng": 121.561005,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3186195000
+      "name": "全家便利商店 富興店",
+      "address": "110301臺北市信義區景勤里吳興街156巷16弄1號"
     }
   },
   {
-    "id": "helppoint_00040",
+    "place_id": "ChIJ-7UKA6-rQjQRyrYlmfXBuos",
     "category": "convenience_store",
-    "lat": 25.026837,
-    "lng": 121.568567,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.032428,
+    "lng": 121.574641,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3198269374
+      "name": "全家便利商店 新信德店",
+      "address": "110臺北市信義區松友里松德路283號"
     }
   },
   {
-    "id": "helppoint_00041",
+    "place_id": "ChIJxXTkyLSrQjQRYrbTQo_2318",
     "category": "convenience_store",
-    "lat": 25.026178,
-    "lng": 121.557384,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.035196,
+    "lng": 121.557729,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3219971765
+      "name": "全家便利商店 光復南路店",
+      "address": "110臺北市信義區正和里光復南路447之2號"
     }
   },
   {
-    "id": "helppoint_00042",
+    "place_id": "ChIJxXTkyLSrQjQRzAuBhywqAEw",
     "category": "convenience_store",
-    "lat": 25.036931,
-    "lng": 121.569103,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.033368,
+    "lng": 121.558891,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3278033043
+      "name": "全家便利商店 新貿店",
+      "address": "110臺北市信義區中興里信義路四段407號1 樓"
     }
   },
   {
-    "id": "helppoint_00043",
+    "place_id": "ChIJZRmBOMirQjQRSIcCXJGPXsw",
     "category": "convenience_store",
-    "lat": 25.040111,
-    "lng": 121.571834,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.036568,
+    "lng": 121.558476,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3347475194
+      "name": "7-ELEVEN 仁和門市",
+      "address": "110臺北市信義區正和里光復南路419巷41號"
     }
   },
   {
-    "id": "helppoint_00044",
+    "place_id": "ChIJTbM1VSurQjQRn4_zJDIm9GE",
     "category": "convenience_store",
-    "lat": 25.035364,
-    "lng": 121.567701,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.033737,
+    "lng": 121.557749,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3379237115
+      "name": "7-ELEVEN 光復門市",
+      "address": "110臺北市信義區光復南路471號"
     }
   },
   {
-    "id": "helppoint_00045",
+    "place_id": "ChIJk0q1lLerQjQRq4Yzav9-_KE",
     "category": "convenience_store",
-    "lat": 25.037927,
-    "lng": 121.574552,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.035963,
+    "lng": 121.561097,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 3514374815
+      "name": "萊爾富便利商店 信義興隆(信彩)",
+      "address": "110臺北市信義區興隆里基隆路一段350-41號"
     }
   },
   {
-    "id": "helppoint_00046",
+    "place_id": "ChIJl64om7CrQjQRG1-HhA8Jffc",
     "category": "convenience_store",
-    "lat": 25.034806,
-    "lng": 121.573647,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.035447,
+    "lng": 121.567678,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3514374827
+      "name": "全家便利商店 建鑫店",
+      "address": "110臺北市信義區西村里松壽路24號1樓"
     }
   },
   {
-    "id": "helppoint_00047",
+    "place_id": "ChIJ8VAWibqrQjQR5QJeA7Fe99k",
     "category": "convenience_store",
-    "lat": 25.018678,
-    "lng": 121.558946,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.037106,
+    "lng": 121.569238,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3554214093
+      "name": "7-ELEVEN 宏泰門市",
+      "address": "110臺北市信義區安康里松仁路91-1號"
     }
   },
   {
-    "id": "helppoint_00048",
+    "place_id": "ChIJ5ebzhq-rQjQRa7y_NXimxrs",
     "category": "convenience_store",
-    "lat": 25.034402,
-    "lng": 121.562086,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.034568,
+    "lng": 121.573596,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3568469799
+      "name": "全家便利商店 信安店",
+      "address": "110臺北市信義區安康里松德路200巷13號"
     }
   },
   {
-    "id": "helppoint_00049",
+    "place_id": "ChIJo87wfaWrQjQRDgTgdG0LO28",
     "category": "convenience_store",
-    "lat": 25.034442,
-    "lng": 121.575532,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.034798,
+    "lng": 121.573609,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3633921319
+      "name": "7-ELEVEN 信德門市",
+      "address": "110臺北市信義區松德路200巷10號"
     }
   },
   {
-    "id": "helppoint_00050",
+    "place_id": "ChIJ3aXmDa-rQjQRbjS5QtloB6w",
     "category": "convenience_store",
-    "lat": 25.033259,
-    "lng": 121.558919,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.032881,
+    "lng": 121.574677,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3690933419
+      "name": "7-ELEVEN 松義門市",
+      "address": "110臺北市信義區松德路271號"
     }
   },
   {
-    "id": "helppoint_00051",
+    "place_id": "ChIJ80w2cyurQjQRgL2hxiC9xI8",
     "category": "convenience_store",
-    "lat": 25.040663,
-    "lng": 121.577067,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.035255,
+    "lng": 121.577016,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3699812821
+      "name": "全家便利商店-松友店",
+      "address": "110臺北市信義區松友里信義路六段78號"
     }
   },
   {
-    "id": "helppoint_00052",
+    "place_id": "ChIJQ2mfgqarQjQR2BcnGPaBiQU",
     "category": "convenience_store",
-    "lat": 25.040676,
-    "lng": 121.576868,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.037204,
+    "lng": 121.577168,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3699813185
+      "name": "7-ELEVEN 信林門市",
+      "address": "110臺北市信義區國業里虎林街222巷7號"
     }
   },
   {
-    "id": "helppoint_00053",
+    "place_id": "ChIJcafiXaarQjQRD65fkYaYpqI",
     "category": "convenience_store",
-    "lat": 25.031663,
-    "lng": 121.55957,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.035809,
+    "lng": 121.578501,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3700532676
+      "name": "7-ELEVEN 松家門市",
+      "address": "110臺北市信義區松山路608號610號"
     }
   },
   {
-    "id": "helppoint_00054",
+    "place_id": "ChIJsY0-OuqrQjQRYD-FtxDRTHQ",
     "category": "convenience_store",
-    "lat": 25.032186,
-    "lng": 121.557603,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040421,
+    "lng": 121.56315,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3700536512
+      "name": "7-ELEVEN 新三連門市",
+      "address": "110臺北市信義區逸仙路42巷25號1樓"
     }
   },
   {
-    "id": "helppoint_00055",
+    "place_id": "ChIJhSslcG2rQjQRYJtKYtdy14s",
     "category": "convenience_store",
-    "lat": 25.031935,
-    "lng": 121.558716,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040945,
+    "lng": 121.564719,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3700536514
+      "name": "7-ELEVEN 市捷門市",
+      "address": "110臺北市信義區興雅里忠孝東路五段6號"
     }
   },
   {
-    "id": "helppoint_00056",
+    "place_id": "ChIJI78t9b-rQjQRZcQjDgDBZdE",
     "category": "convenience_store",
-    "lat": 25.031696,
-    "lng": 121.55946,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.038063,
+    "lng": 121.561975,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3700536515
+      "name": "7-ELEVEN 市議會門市",
+      "address": "110臺北市信義區興隆里仁愛路四段507號B1"
     }
   },
   {
-    "id": "helppoint_00057",
+    "place_id": "ChIJPVYmWiurQjQRVXUsNlDUXEA",
     "category": "convenience_store",
-    "lat": 25.040719,
-    "lng": 121.574111,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.039773,
+    "lng": 121.565016,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3714843277
+      "name": "7-11智FUN&咖啡智FUN機(統一國際大樓20樓)",
+      "address": "110臺北市信義區興雅里松高路11號20樓"
     }
   },
   {
-    "id": "helppoint_00058",
+    "place_id": "ChIJAXtVBhmrQjQR6-8NSmUAHeI",
     "category": "convenience_store",
-    "lat": 25.040776,
-    "lng": 121.582659,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.041773,
+    "lng": 121.567204,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3732996378
+      "name": "全家便利商店-新忠隆店",
+      "address": "110臺北市信義區興雅里忠孝東路五段71巷8號"
     }
   },
   {
-    "id": "helppoint_00059",
+    "place_id": "ChIJuxc7WrmrQjQREKmCb7G6mPM",
     "category": "convenience_store",
-    "lat": 25.037372,
-    "lng": 121.575138,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.041315,
+    "lng": 121.565208,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3738821430
+      "name": "7-ELEVEN 松捷門市",
+      "address": "110臺北市信義區興雅里忠孝東路五段"
     }
   },
   {
-    "id": "helppoint_00060",
+    "place_id": "ChIJV46ZkVCrQjQRd0r8NT_iVKQ",
     "category": "convenience_store",
-    "lat": 25.034572,
-    "lng": 121.573639,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.041682,
+    "lng": 121.567231,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3742340190
+      "name": "7-ELEVEN 忠隆門市",
+      "address": "110臺北市信義區忠孝東路五段71巷6號1樓"
     }
   },
   {
-    "id": "helppoint_00061",
+    "place_id": "ChIJwd58naOrQjQRdDlHmC2o0-s",
     "category": "convenience_store",
-    "lat": 25.041718,
-    "lng": 121.567248,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040744,
+    "lng": 121.574094,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3769904737
+      "name": "7-ELEVEN 松山門市",
+      "address": "110臺北市信義區忠孝東路五段386號"
     }
   },
   {
-    "id": "helppoint_00062",
+    "place_id": "ChIJwd58naOrQjQR-IpPsY3Y3FI",
     "category": "convenience_store",
-    "lat": 25.035163,
-    "lng": 121.557725,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040338,
+    "lng": 121.571825,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3887825435
+      "name": "7-ELEVEN 新工農門市",
+      "address": "110臺北市信義區廣居里忠孝東路五段236巷6-1號1樓"
     }
   },
   {
-    "id": "helppoint_00063",
+    "place_id": "ChIJE93jgaOrQjQR2bBxGEPHolA",
     "category": "convenience_store",
-    "lat": 25.033746,
-    "lng": 121.557732,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040242,
+    "lng": 121.574106,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3887825767
+      "name": "全家便利商店 海華店",
+      "address": "110臺北市信義區廣居里虎林街132巷81號"
     }
   },
   {
-    "id": "helppoint_00064",
+    "place_id": "ChIJxxIiWqSrQjQR0K2zklMCLKs",
     "category": "convenience_store",
-    "lat": 25.039682,
-    "lng": 121.577943,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.037936,
+    "lng": 121.574526,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3939158516
+      "name": "萊爾富便利商店 信義中全公園(信德)",
+      "address": "110臺北市信義區安康里虎林街164巷60弄2號"
     }
   },
   {
-    "id": "helppoint_00065",
+    "place_id": "ChIJkXe8CqarQjQRvSf3DDtIsw0",
     "category": "convenience_store",
-    "lat": 25.032508,
-    "lng": 121.574652,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.041112,
+    "lng": 121.575451,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 3997541428
+      "name": "全家便利商店 忠信店",
+      "address": "110臺北市信義區富台里忠孝東路五段425號及地下室"
     }
   },
   {
-    "id": "helppoint_00066",
+    "place_id": "ChIJPy3fn7-rQjQRns73BX3U9xg",
     "category": "convenience_store",
-    "lat": 25.032805,
-    "lng": 121.574659,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.041034,
+    "lng": 121.577122,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 3997541443
+      "name": "全家便利商店 松安店",
+      "address": "110臺北市信義區富台里忠孝東路五段465號1樓"
     }
   },
   {
-    "id": "helppoint_00067",
+    "place_id": "ChIJvWje_qOrQjQRWmw0NrMIExg",
     "category": "convenience_store",
-    "lat": 25.035179,
-    "lng": 121.577014,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.039545,
+    "lng": 121.576748,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4058075213
+      "name": "7-ELEVEN（慶林門市）",
+      "address": "110臺北市信義區廣居里虎林街151號153號"
     }
   },
   {
-    "id": "helppoint_00068",
+    "place_id": "ChIJxSdO56CrQjQRmAT8NwO3_-8",
     "category": "convenience_store",
-    "lat": 25.03918,
-    "lng": 121.576592,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.039175,
+    "lng": 121.576511,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4058075214
+      "name": "全家便利商店 忠林店",
+      "address": "110臺北市信義區安康里虎林街166號一樓"
     }
   },
   {
-    "id": "helppoint_00069",
+    "place_id": "ChIJK6Q5IrOrQjQR4RcyfsNai0A",
     "category": "convenience_store",
-    "lat": 25.042328,
-    "lng": 121.563582,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040657,
+    "lng": 121.576851,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4058075215
+      "name": "7-ELEVEN 忠林門市",
+      "address": "110臺北市信義區忠孝東路五段470號1樓"
     }
   },
   {
-    "id": "helppoint_00070",
+    "place_id": "ChIJxV4s0aarQjQRkIMm5bWgBvg",
     "category": "convenience_store",
-    "lat": 25.028428,
-    "lng": 121.563385,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.038253,
+    "lng": 121.579442,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4325693436
+      "name": "7-ELEVEN 萊福門市",
+      "address": "110臺北市信義區林口街48號"
     }
   },
   {
-    "id": "helppoint_00071",
+    "place_id": "ChIJl9Vuv6arQjQRhn7IT6k9H7E",
     "category": "convenience_store",
-    "lat": 25.042479,
-    "lng": 121.566175,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.037798,
+    "lng": 121.579531,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4325693437
+      "name": "萊爾富便利商店 信義松德市場(北市林口店）",
+      "address": "110臺北市信義區大仁里林口街36號"
     }
   },
   {
-    "id": "helppoint_00072",
+    "place_id": "ChIJl9Vuv6arQjQRxkMby-O5xmw",
     "category": "convenience_store",
-    "lat": 25.043348,
-    "lng": 121.562886,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.037857,
+    "lng": 121.578275,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 4325693920
+      "name": "萊爾富便利商店 信義腰花店",
+      "address": "110臺北市信義區松光里松山路537號及541巷1號"
     }
   },
   {
-    "id": "helppoint_00073",
+    "place_id": "ChIJ8UYUaQCrQjQRwwiMxf5Mpb8",
     "category": "convenience_store",
-    "lat": 25.03782,
-    "lng": 121.578264,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040974,
+    "lng": 121.577196,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 4325694185
+      "name": "7-ELEVEN 春捷門市",
+      "address": "110臺北市信義區忠孝東路五段469號1樓"
     }
   },
   {
-    "id": "helppoint_00074",
+    "place_id": "ChIJoQ2SdJmrQjQRA-7iUG24dlU",
     "category": "convenience_store",
-    "lat": 25.029116,
-    "lng": 121.56474,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.038687,
+    "lng": 121.581015,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 4325694231
+      "name": "7-ELEVEN 廣林門市（直營）",
+      "address": "110臺北市信義區福德街84巷52號1樓"
     }
   },
   {
-    "id": "helppoint_00075",
+    "place_id": "ChIJQ4mSFg2rQjQRuqf8paUnWS8",
     "category": "convenience_store",
-    "lat": 25.043596,
-    "lng": 121.572209,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040762,
+    "lng": 121.582642,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4328118413
+      "name": "全家便利商店 大道店",
+      "address": "110臺北市信義區大道里大道路79號"
     }
   },
   {
-    "id": "helppoint_00076",
+    "place_id": "ChIJuU-70USrQjQR-Yr_N--BMO8",
     "category": "convenience_store",
-    "lat": 25.042027,
-    "lng": 121.568582,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.039636,
+    "lng": 121.583143,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 4328118623
+      "name": "7-ELEVEN 廣慈門市",
+      "address": "110臺北市信義區大道路115號 117號1樓"
     }
   },
   {
-    "id": "helppoint_00077",
+    "place_id": "ChIJxxUy-AmrQjQRx5Mx33xKwtc",
     "category": "convenience_store",
-    "lat": 25.043444,
-    "lng": 121.568859,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.037667,
+    "lng": 121.583313,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 4328118625
+      "name": "7-ELEVEN 福中門市",
+      "address": "110臺北市信義區福德街159號 161號1樓"
     }
   },
   {
-    "id": "helppoint_00078",
+    "place_id": "ChIJhWU1VgCrQjQRiYoaKSLMfAU",
     "category": "convenience_store",
-    "lat": 25.029162,
-    "lng": 121.561434,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.041196,
+    "lng": 121.579495,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 4524863655
+      "name": "萊爾富便利商店 信義野牡丹",
+      "address": "110臺北市信義區松光里忠孝東路五段524巷1弄1號"
     }
   },
   {
-    "id": "helppoint_00079",
+    "place_id": "ChIJQ8pC-wqrQjQRDzWoCv1GrO8",
     "category": "convenience_store",
-    "lat": 25.027148,
-    "lng": 121.562302,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.040558,
+    "lng": 121.585092,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 4524863660
+      "name": "全家便利商店 新中坡店",
+      "address": "110臺北市信義區中行里中坡南路229號"
     }
   },
   {
-    "id": "helppoint_00080",
-    "category": "convenience_store",
-    "lat": 25.023047,
-    "lng": 121.555471,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "OK超商",
-      "brand": "OK超商",
-      "osm_id": 4574573815
-    }
-  },
-  {
-    "id": "helppoint_00081",
-    "category": "convenience_store",
-    "lat": 25.022512,
-    "lng": 121.569105,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "超偉便利商店",
-      "brand": null,
-      "osm_id": 4756039059
-    }
-  },
-  {
-    "id": "helppoint_00082",
-    "category": "convenience_store",
-    "lat": 25.028494,
-    "lng": 121.557055,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4837986443
-    }
-  },
-  {
-    "id": "helppoint_00083",
-    "category": "convenience_store",
-    "lat": 25.045003,
-    "lng": 121.580825,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 4850880822
-    }
-  },
-  {
-    "id": "helppoint_00084",
-    "category": "convenience_store",
-    "lat": 25.04626,
-    "lng": 121.57707,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 5074815521
-    }
-  },
-  {
-    "id": "helppoint_00085",
-    "category": "convenience_store",
-    "lat": 25.042259,
-    "lng": 121.574163,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 5110348195
-    }
-  },
-  {
-    "id": "helppoint_00086",
-    "category": "convenience_store",
-    "lat": 25.043046,
-    "lng": 121.578017,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 5110348199
-    }
-  },
-  {
-    "id": "helppoint_00087",
-    "category": "convenience_store",
-    "lat": 25.043379,
-    "lng": 121.576198,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 5110348216
-    }
-  },
-  {
-    "id": "helppoint_00088",
-    "category": "convenience_store",
-    "lat": 25.045829,
-    "lng": 121.570179,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 5110348563
-    }
-  },
-  {
-    "id": "helppoint_00089",
-    "category": "convenience_store",
-    "lat": 25.021911,
-    "lng": 121.556602,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "OK超商",
-      "brand": "OK超商",
-      "osm_id": 5110348624
-    }
-  },
-  {
-    "id": "helppoint_00090",
-    "category": "convenience_store",
-    "lat": 25.047257,
-    "lng": 121.577587,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 5110348789
-    }
-  },
-  {
-    "id": "helppoint_00091",
-    "category": "convenience_store",
-    "lat": 25.025847,
-    "lng": 121.562057,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 5365289460
-    }
-  },
-  {
-    "id": "helppoint_00092",
-    "category": "convenience_store",
-    "lat": 25.045241,
-    "lng": 121.578941,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "台灣菸酒",
-      "brand": null,
-      "osm_id": 5569304661
-    }
-  },
-  {
-    "id": "helppoint_00093",
-    "category": "convenience_store",
-    "lat": 25.041657,
-    "lng": 121.578974,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 5585775159
-    }
-  },
-  {
-    "id": "helppoint_00094",
-    "category": "convenience_store",
-    "lat": 25.043514,
-    "lng": 121.578016,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "義美食品",
-      "brand": "義美食品",
-      "osm_id": 5585946723
-    }
-  },
-  {
-    "id": "helppoint_00095",
-    "category": "convenience_store",
-    "lat": 25.034303,
-    "lng": 121.560061,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 5614713798
-    }
-  },
-  {
-    "id": "helppoint_00096",
-    "category": "convenience_store",
-    "lat": 25.04697,
-    "lng": 121.566737,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "X-store",
-      "brand": "7-Eleven",
-      "osm_id": 6139315494
-    }
-  },
-  {
-    "id": "helppoint_00097",
-    "category": "convenience_store",
-    "lat": 25.042374,
-    "lng": 121.564857,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 6139315495
-    }
-  },
-  {
-    "id": "helppoint_00098",
-    "category": "convenience_store",
-    "lat": 25.030157,
-    "lng": 121.560999,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "OK超商",
-      "brand": "OK超商",
-      "osm_id": 6284503807
-    }
-  },
-  {
-    "id": "helppoint_00099",
-    "category": "convenience_store",
-    "lat": 25.039456,
-    "lng": 121.576665,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 6795607646
-    }
-  },
-  {
-    "id": "helppoint_00100",
-    "category": "convenience_store",
-    "lat": 25.04642,
-    "lng": 121.577946,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 7278675534
-    }
-  },
-  {
-    "id": "helppoint_00101",
+    "place_id": "ChIJYctOsQurQjQR_FVg03kSZBI",
     "category": "convenience_store",
     "lat": 25.039493,
-    "lng": 121.565234,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lng": 121.585891,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 8118207165
+      "name": "萊爾富便利商店 信義福德店",
+      "address": "110臺北市信義區中行里福德街268巷18號"
     }
   },
   {
-    "id": "helppoint_00102",
+    "place_id": "ChIJ6Q3NqcmrQjQR_argI8rIs44",
     "category": "convenience_store",
-    "lat": 25.038774,
-    "lng": 121.566853,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042179,
+    "lng": 121.562983,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 8118207166
+      "name": "7-ELEVEN 巨東門市",
+      "address": "110臺北市信義區新仁里忠孝東路四段553巷6弄2號"
     }
   },
   {
-    "id": "helppoint_00103",
+    "place_id": "ChIJxSdO56CrQjQRROgDgx7B_oI",
     "category": "convenience_store",
-    "lat": 25.04066,
-    "lng": 121.567025,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042325,
+    "lng": 121.563571,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 8118207167
+      "name": "全家便利商店 聯合店",
+      "address": "110臺北市信義區新仁里忠孝東路四段553巷6弄17號"
     }
   },
   {
-    "id": "helppoint_00104",
+    "place_id": "ChIJ_QpsMWWrQjQRn-Vr-uPPU9o",
     "category": "convenience_store",
-    "lat": 25.049131,
-    "lng": 121.578757,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042701,
+    "lng": 121.563868,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 8118272738
+      "name": "7-ELEVEN 松聯門市",
+      "address": "110臺北市信義區忠孝東路四段559巷24號1樓"
     }
   },
   {
-    "id": "helppoint_00105",
+    "place_id": "ChIJ69gkH7yrQjQRUyiI5feT9ho",
     "category": "convenience_store",
-    "lat": 25.047804,
-    "lng": 121.578033,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042986,
+    "lng": 121.565952,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 8118272739
+      "name": "7-ELEVEN 松高門市",
+      "address": "110臺北市信義區興雅里基隆路一段141號"
     }
   },
   {
-    "id": "helppoint_00106",
+    "place_id": "ChIJh7eui6SrQjQROt33nwdEsIs",
     "category": "convenience_store",
-    "lat": 25.037173,
-    "lng": 121.577144,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.04204,
+    "lng": 121.568619,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 8118273002
+      "name": "7-ELEVEN 敦厚門市",
+      "address": "110臺北市信義區興雅里永吉路30巷168弄1號"
     }
   },
   {
-    "id": "helppoint_00107",
+    "place_id": "ChIJx3IwcbyrQjQRaRoqX8papcI",
     "category": "convenience_store",
-    "lat": 25.044617,
-    "lng": 121.581002,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042457,
+    "lng": 121.566119,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 8413652396
+      "name": "全家便利商店 永隆店",
+      "address": "110臺北市信義區興雅里基隆路一段147巷7號"
     }
   },
   {
-    "id": "helppoint_00108",
+    "place_id": "ChIJsY0-OuqrQjQRGk4dwqA3Fzw",
     "category": "convenience_store",
-    "lat": 25.019941,
-    "lng": 121.557584,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.045565,
+    "lng": 121.568949,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 9180754911
+      "name": "7-ELEVEN 革新門市",
+      "address": "110臺北市信義區敦厚里永吉路32號"
     }
   },
   {
-    "id": "helppoint_00109",
+    "place_id": "ChIJF36eymirQjQRaGuSC4p1GKo",
     "category": "convenience_store",
-    "lat": 25.041798,
-    "lng": 121.56725,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.0431,
+    "lng": 121.56861,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 9364864628
+      "name": "全家便利商店 厚雅店",
+      "address": "110臺北市信義區敦厚里永吉路30巷118號"
     }
   },
   {
-    "id": "helppoint_00110",
+    "place_id": "ChIJLR_1-7yrQjQRCFoTBJsSA5g",
     "category": "convenience_store",
-    "lat": 25.026753,
-    "lng": 121.567582,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.0435,
+    "lng": 121.568849,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9391261122
+      "name": "7-ELEVEN 永信門市",
+      "address": "110臺北市信義區敦厚里永吉路30巷103號"
     }
   },
   {
-    "id": "helppoint_00111",
+    "place_id": "ChIJ93dMawCrQjQRxN48Q5Q-y-0",
     "category": "convenience_store",
-    "lat": 25.045755,
-    "lng": 121.572777,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.045005,
+    "lng": 121.572268,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9395836054
+      "name": "蝦皮店到店 信義松信-智取店",
+      "address": "110臺北市信義區五全里松信路101號1 樓"
     }
   },
   {
-    "id": "helppoint_00112",
+    "place_id": "ChIJQQOW0KKrQjQREdOnJgNyRa4",
     "category": "convenience_store",
-    "lat": 25.043128,
-    "lng": 121.581381,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.043651,
+    "lng": 121.571865,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9395836055
+      "name": "7-ELEVEN 松信門市",
+      "address": "110臺北市信義區松信路148號1樓"
     }
   },
   {
-    "id": "helppoint_00113",
+    "place_id": "ChIJkXe8CqarQjQRijWx3rL999g",
     "category": "convenience_store",
-    "lat": 25.020244,
-    "lng": 121.557214,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.045726,
+    "lng": 121.574159,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9395836056
+      "name": "全家便利商店 永吉二店",
+      "address": "110臺北市信義區五常里永吉路223號"
     }
   },
   {
-    "id": "helppoint_00114",
+    "place_id": "ChIJLyJpjW2rQjQRuvfyke0o0wk",
     "category": "convenience_store",
-    "lat": 25.029684,
-    "lng": 121.561621,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.045775,
+    "lng": 121.573985,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9449166783
+      "name": "7-ELEVEN 永吉門市",
+      "address": "110臺北市信義區永吉路217號1樓2樓及219號1樓"
     }
   },
   {
-    "id": "helppoint_00115",
+    "place_id": "ChIJWQUy67WrQjQRQy12NMe3hr4",
     "category": "convenience_store",
-    "lat": 25.044615,
-    "lng": 121.57722,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.043485,
+    "lng": 121.574039,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": "蝦皮店到店",
-      "osm_id": 9515432896
+      "name": "7-ELEVEN 信吉門市",
+      "address": "110臺北市信義區永吉路278巷58弄2號"
     }
   },
   {
-    "id": "helppoint_00116",
+    "place_id": "ChIJqffAGg6rQjQRyu-hKRBq2T8",
     "category": "convenience_store",
-    "lat": 25.037833,
-    "lng": 121.579415,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.043543,
+    "lng": 121.572162,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 9565748538
+      "name": "全家便利商店 永孝店",
+      "address": "110臺北市信義區五全里松信路145號"
     }
   },
   {
-    "id": "helppoint_00117",
+    "place_id": "ChIJD5bFKwurQjQRuVCBeLhVc0A",
     "category": "convenience_store",
-    "lat": 25.043091,
-    "lng": 121.568663,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042403,
+    "lng": 121.57416,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 9610069282
+      "name": "全家便利商店 欣富台店",
+      "address": "110臺北市信義區長春里虎林街120巷165號"
     }
   },
   {
-    "id": "helppoint_00118",
+    "place_id": "ChIJx5HZW72rQjQRhdOn_tvi92s",
     "category": "convenience_store",
-    "lat": 25.025448,
-    "lng": 121.55611,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.045883,
+    "lng": 121.570232,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": "蝦皮店到店",
-      "osm_id": 9706421744
+      "name": "萊爾富便利商店 信義吉隆店(北市信吉店)",
+      "address": "110臺北市信義區雅祥里永吉路125號"
     }
   },
   {
-    "id": "helppoint_00119",
+    "place_id": "ChIJpSD5gJirQjQRRfyCGdlAjqc",
     "category": "convenience_store",
-    "lat": 25.024108,
-    "lng": 121.568564,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.045375,
+    "lng": 121.574339,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9717369814
+      "name": "萊爾富便利商店 信義柳中園（北市松永店）",
+      "address": "110臺北市信義區五全里永吉路280號"
     }
   },
   {
-    "id": "helppoint_00120",
+    "place_id": "ChIJr6ROv_irQjQRMuIIBqvNoSI",
     "category": "convenience_store",
-    "lat": 25.035005,
-    "lng": 121.57623,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042373,
+    "lng": 121.575186,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9832879822
+      "name": "萊爾富便利商店 信義樂萬店",
+      "address": "110臺北市信義區富台里忠孝東路五段423巷9、11、13號"
     }
   },
   {
-    "id": "helppoint_00121",
+    "place_id": "ChIJwV0qVJ-rQjQRAlM2VIKv9Qk",
     "category": "convenience_store",
-    "lat": 25.03623,
-    "lng": 121.559354,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.044679,
+    "lng": 121.577307,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": "蝦皮店到店",
-      "osm_id": 9880178108
+      "name": "7-ELEVEN 鑫吉門市",
+      "address": "110臺北市信義區虎林街85號"
     }
   },
   {
-    "id": "helppoint_00122",
+    "place_id": "ChIJicqSSp-rQjQRCv-I6hQXnCg",
     "category": "convenience_store",
-    "lat": 25.039843,
-    "lng": 121.578696,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.046287,
+    "lng": 121.577152,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "蝦皮店到店",
-      "brand": null,
-      "osm_id": 9880178109
+      "name": "全家便利商店 新松林店",
+      "address": "110臺北市信義區四育里虎林街61之4號"
     }
   },
   {
-    "id": "helppoint_00123",
+    "place_id": "ChIJh7eui6SrQjQRgLHPEo5MbwY",
     "category": "convenience_store",
-    "lat": 25.040357,
-    "lng": 121.563172,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.041692,
+    "lng": 121.579054,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 10680158915
+      "name": "7-ELEVEN 捷忠門市",
+      "address": "110臺北市信義區忠孝東路五段617號"
     }
   },
   {
-    "id": "helppoint_00124",
+    "place_id": "ChIJU22Y27CrQjQRBrkACi5vpbQ",
     "category": "convenience_store",
-    "lat": 25.045696,
-    "lng": 121.574124,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.04447,
+    "lng": 121.575319,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 11639684920
+      "name": "萊爾富便利商店 信義永吉店",
+      "address": "110臺北市信義區五全里永吉路278巷27弄36號"
     }
   },
   {
-    "id": "helppoint_00125",
+    "place_id": "ChIJ_d2Wi_erQjQRJLQrtuYrpME",
     "category": "convenience_store",
-    "lat": 25.04351,
-    "lng": 121.574041,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.043438,
+    "lng": 121.576229,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 11639889057
+      "name": "全家便利商店 永林店",
+      "address": "110臺北市信義區四維里虎林街82巷23號"
     }
   },
   {
-    "id": "helppoint_00126",
+    "place_id": "ChIJ7bSfBXOrQjQRNftOjoWCXS4",
     "category": "convenience_store",
-    "lat": 25.045703,
-    "lng": 121.573989,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.044638,
+    "lng": 121.580977,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 11639933958
+      "name": "7-ELEVEN 後山埤門市",
+      "address": "110臺北市信義區中坡北路11號1樓"
     }
   },
   {
-    "id": "helppoint_00127",
+    "place_id": "ChIJOyLnFlarQjQRX5acEfovZQM",
     "category": "convenience_store",
-    "lat": 25.041014,
-    "lng": 121.575434,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.045005,
+    "lng": 121.580735,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 11639946472
+      "name": "全家便利商店 信吉店",
+      "address": "110臺北市信義區永春里中坡北路25號"
     }
   },
   {
-    "id": "helppoint_00128",
+    "place_id": "ChIJB19e4lyrQjQRx2mWJ2Jv3wg",
     "category": "convenience_store",
-    "lat": 25.039319,
-    "lng": 121.583299,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.04262,
+    "lng": 121.581618,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "7-Eleven",
-      "brand": "7-Eleven",
-      "osm_id": 12244967741
+      "name": "7-ELEVEN 春光門市",
+      "address": "110臺北市信義區大道里大道路9-11號"
     }
   },
   {
-    "id": "helppoint_00129",
+    "place_id": "ChIJZ9mKrQqrQjQR2kKN4VR5eDI",
     "category": "convenience_store",
-    "lat": 25.049276,
-    "lng": 121.578865,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.042819,
+    "lng": 121.583367,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 12791270779
+      "name": "全家便利商店 協和店",
+      "address": "110臺北市信義區大道里中坡南路38號1F"
     }
   },
   {
-    "id": "helppoint_00130",
+    "place_id": "ChIJzbI__LerQjQRd2Ny8FMUoE4",
     "category": "convenience_store",
-    "lat": 25.043928,
-    "lng": 121.561573,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.047318,
+    "lng": 121.566533,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 12810732326
+      "name": "7-ELEVEN 道生門市",
+      "address": "110臺北市信義區新仁里東興路57號"
     }
   },
   {
-    "id": "helppoint_00131",
+    "place_id": "ChIJsY0-OuqrQjQR7rGGzLYPHWY",
     "category": "convenience_store",
-    "lat": 25.030986,
-    "lng": 121.561116,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.046753,
+    "lng": 121.572398,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "全家便利商店",
-      "brand": "全家便利商店",
-      "osm_id": 13167335023
+      "name": "7-ELEVEN 松錢門市",
+      "address": "110臺北市信義區松隆路192號 194號1樓"
     }
   },
   {
-    "id": "helppoint_00132",
+    "place_id": "ChIJd2g6rWSrQjQRmPP8ppQV5jA",
     "category": "convenience_store",
-    "lat": 25.024871,
-    "lng": 121.567134,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.04727,
+    "lng": 121.577578,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413753092
+      "name": "7-ELEVEN 開源門市",
+      "address": "110臺北市信義區四育里松山路136-138號"
     }
   },
   {
-    "id": "helppoint_00133",
+    "place_id": "ChIJ1Q_IE5urQjQR14-kIcZuyJA",
     "category": "convenience_store",
-    "lat": 25.020442,
-    "lng": 121.556888,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.047173,
+    "lng": 121.577578,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413775736
+      "name": "蝦皮店到店 信義五分埔 - 智取店",
+      "address": "110臺北市信義區松山路140號1樓"
     }
   },
   {
-    "id": "helppoint_00134",
+    "place_id": "ChIJkXe8CqarQjQRF3x625XkqNQ",
     "category": "convenience_store",
-    "lat": 25.027582,
-    "lng": 121.565637,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.046516,
+    "lng": 121.577973,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413775737
+      "name": "全家便利商店 松盛店",
+      "address": "110臺北市信義區永吉里松山路153號"
     }
   },
   {
-    "id": "helppoint_00135",
+    "place_id": "ChIJpxXuOXOrQjQRPa5lGGcacLs",
     "category": "convenience_store",
-    "lat": 25.041187,
-    "lng": 121.579541,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "lat": 25.047384,
+    "lng": 121.578035,
+    "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 0.9,
     "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413775738
-    }
-  },
-  {
-    "id": "helppoint_00136",
-    "category": "convenience_store",
-    "lat": 25.045391,
-    "lng": 121.574259,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413775739
-    }
-  },
-  {
-    "id": "helppoint_00137",
-    "category": "convenience_store",
-    "lat": 25.044474,
-    "lng": 121.575294,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413775740
-    }
-  },
-  {
-    "id": "helppoint_00138",
-    "category": "convenience_store",
-    "lat": 25.035742,
-    "lng": 121.576536,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413775741
-    }
-  },
-  {
-    "id": "helppoint_00139",
-    "category": "convenience_store",
-    "lat": 25.035948,
-    "lng": 121.561092,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "萊爾富",
-      "brand": "萊爾富",
-      "osm_id": 13413775742
-    }
-  },
-  {
-    "id": "helppoint_00140",
-    "category": "convenience_store",
-    "lat": 25.043654,
-    "lng": 121.571894,
-    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 0.9,
-    "meta": {
-      "name": "7-11",
-      "brand": null,
-      "osm_id": 13721264345
+      "name": "7-ELEVEN武松門市",
+      "address": "110臺北市信義區永吉里松山路121號"
     }
   }
 ]

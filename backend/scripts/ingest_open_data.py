@@ -190,7 +190,7 @@ def ingest_street_light(client: httpx.Client, districts: set[str] | None) -> lis
         lat, lng = _twd97_to_wgs84(x, y)
         points.append(
             {
-                "id": f"streetlight_{len(points) + 1:05d}",
+                "place_id": f"streetlight_{len(points) + 1:05d}",
                 "category": "street_light",
                 "lat": round(lat, 6),
                 "lng": round(lng, 6),
@@ -385,14 +385,13 @@ def ingest_police_station(
         location = place.get("location", {})
         points.append(
             {
-                "id": f"police_{len(points) + 1:05d}",
+                "place_id": place["id"],
                 "category": "police_station",
                 "lat": round(location["latitude"], 6),
                 "lng": round(location["longitude"], 6),
                 "source": "Google Places API（New），type=police",
                 "source_type": "static_local",
                 "expires_at": None,
-                "place_id": place["id"],
                 "meta": {
                     "name": place.get("displayName", {}).get("text", ""),
                     "address": place.get("formattedAddress", ""),
@@ -431,14 +430,13 @@ def ingest_convenience_store(
         location = place.get("location", {})
         points.append(
             {
-                "id": f"convenience_{len(points) + 1:05d}",
+                "place_id": place["id"],
                 "category": "convenience_store",
                 "lat": round(location["latitude"], 6),
                 "lng": round(location["longitude"], 6),
                 "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
                 "source_type": "static_local",
                 "expires_at": None,
-                "place_id": place["id"],
                 "meta": {
                     "name": place.get("displayName", {}).get("text", ""),
                     "address": place.get("formattedAddress", ""),
@@ -527,7 +525,7 @@ def ingest_night_hazards(client: httpx.Client, districts: set[str] | None) -> li
 
             points.append(
                 {
-                    "id": f"hazard_{len(points) + 1:05d}",
+                    "place_id": f"hazard_{len(points) + 1:05d}",
                     "category": category,
                     "lat": round(lat, 6),
                     "lng": round(lng, 6),
@@ -546,7 +544,7 @@ def ingest_night_hazards(client: httpx.Client, districts: set[str] | None) -> li
     # 臺北市政府警察局婦幼安全警示地點資料集（信義分局轄區官方公告之夜間治安警示路段）
     police_warning_locations = [
         {
-            "id": f"hazard_{len(points) + 1:05d}",
+            "place_id": f"hazard_{len(points) + 1:05d}",
             "category": "danger_zone",
             "lat": 25.030474,
             "lng": 121.565463,
@@ -561,7 +559,7 @@ def ingest_night_hazards(client: httpx.Client, districts: set[str] | None) -> li
             },
         },
         {
-            "id": f"hazard_{len(points) + 2:05d}",
+            "place_id": f"hazard_{len(points) + 2:05d}",
             "category": "danger_zone",
             "lat": 25.036120,
             "lng": 121.568450,
@@ -576,7 +574,7 @@ def ingest_night_hazards(client: httpx.Client, districts: set[str] | None) -> li
             },
         },
         {
-            "id": f"hazard_{len(points) + 3:05d}",
+            "place_id": f"hazard_{len(points) + 3:05d}",
             "category": "danger_zone",
             "lat": 25.031850,
             "lng": 121.567820,
@@ -591,7 +589,7 @@ def ingest_night_hazards(client: httpx.Client, districts: set[str] | None) -> li
             },
         },
         {
-            "id": f"hazard_{len(points) + 4:05d}",
+            "place_id": f"hazard_{len(points) + 4:05d}",
             "category": "danger_zone",
             "lat": 25.041230,
             "lng": 121.568910,
@@ -606,7 +604,7 @@ def ingest_night_hazards(client: httpx.Client, districts: set[str] | None) -> li
             },
         },
         {
-            "id": f"hazard_{len(points) + 5:05d}",
+            "place_id": f"hazard_{len(points) + 5:05d}",
             "category": "underpass_hazard",
             "lat": 25.034182,
             "lng": 121.563819,

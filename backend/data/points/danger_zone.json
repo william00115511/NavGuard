@@ -1,6 +1,6 @@
 [
   {
-    "id": "hazard_00001",
+    "place_id": "hazard_00001",
     "category": "night_club_hazard",
     "lat": 25.028524,
     "lng": 121.557093,
@@ -15,7 +15,7 @@
     }
   },
   {
-    "id": "hazard_00002",
+    "place_id": "hazard_00002",
     "category": "night_club_hazard",
     "lat": 25.037204,
     "lng": 121.569284,
@@ -30,7 +30,7 @@
     }
   },
   {
-    "id": "hazard_00003",
+    "place_id": "hazard_00003",
     "category": "night_club_hazard",
     "lat": 25.03499,
     "lng": 121.567747,
@@ -45,7 +45,7 @@
     }
   },
   {
-    "id": "hazard_00004",
+    "place_id": "hazard_00004",
     "category": "night_club_hazard",
     "lat": 25.03518,
     "lng": 121.566117,
@@ -60,7 +60,7 @@
     }
   },
   {
-    "id": "hazard_00005",
+    "place_id": "hazard_00005",
     "category": "night_club_hazard",
     "lat": 25.03521,
     "lng": 121.567392,
@@ -75,7 +75,7 @@
     }
   },
   {
-    "id": "hazard_00006",
+    "place_id": "hazard_00006",
     "category": "night_club_hazard",
     "lat": 25.035015,
     "lng": 121.568005,
@@ -90,7 +90,7 @@
     }
   },
   {
-    "id": "hazard_00007",
+    "place_id": "hazard_00007",
     "category": "night_club_hazard",
     "lat": 25.035638,
     "lng": 121.566791,
@@ -105,7 +105,7 @@
     }
   },
   {
-    "id": "hazard_00008",
+    "place_id": "hazard_00008",
     "category": "night_club_hazard",
     "lat": 25.028649,
     "lng": 121.557168,
@@ -120,7 +120,7 @@
     }
   },
   {
-    "id": "hazard_00009",
+    "place_id": "hazard_00009",
     "category": "night_club_hazard",
     "lat": 25.026142,
     "lng": 121.554882,
@@ -135,7 +135,7 @@
     }
   },
   {
-    "id": "hazard_00010",
+    "place_id": "hazard_00010",
     "category": "night_club_hazard",
     "lat": 25.030166,
     "lng": 121.557611,
@@ -150,7 +150,7 @@
     }
   },
   {
-    "id": "hazard_00011",
+    "place_id": "hazard_00011",
     "category": "night_club_hazard",
     "lat": 25.033724,
     "lng": 121.559749,
@@ -165,7 +165,7 @@
     }
   },
   {
-    "id": "hazard_00012",
+    "place_id": "hazard_00012",
     "category": "night_club_hazard",
     "lat": 25.031668,
     "lng": 121.558072,
@@ -180,7 +180,7 @@
     }
   },
   {
-    "id": "hazard_00013",
+    "place_id": "hazard_00013",
     "category": "night_club_hazard",
     "lat": 25.03566,
     "lng": 121.566028,
@@ -195,7 +195,7 @@
     }
   },
   {
-    "id": "hazard_00014",
+    "place_id": "hazard_00014",
     "category": "night_club_hazard",
     "lat": 25.035416,
     "lng": 121.56619,
@@ -210,7 +210,7 @@
     }
   },
   {
-    "id": "hazard_00015",
+    "place_id": "hazard_00015",
     "category": "night_club_hazard",
     "lat": 25.035507,
     "lng": 121.566141,
@@ -225,7 +225,7 @@
     }
   },
   {
-    "id": "hazard_00016",
+    "place_id": "hazard_00016",
     "category": "night_club_hazard",
     "lat": 25.032552,
     "lng": 121.562913,
@@ -240,7 +240,7 @@
     }
   },
   {
-    "id": "hazard_00017",
+    "place_id": "hazard_00017",
     "category": "night_club_hazard",
     "lat": 25.037912,
     "lng": 121.567288,
@@ -255,7 +255,7 @@
     }
   },
   {
-    "id": "hazard_00018",
+    "place_id": "hazard_00018",
     "category": "night_club_hazard",
     "lat": 25.045568,
     "lng": 121.567826,
@@ -270,7 +270,7 @@
     }
   },
   {
-    "id": "hazard_00019",
+    "place_id": "hazard_00019",
     "category": "night_club_hazard",
     "lat": 25.032276,
     "lng": 121.558952,
@@ -285,7 +285,7 @@
     }
   },
   {
-    "id": "hazard_00020",
+    "place_id": "hazard_00020",
     "category": "night_club_hazard",
     "lat": 25.040255,
     "lng": 121.566556,
@@ -300,7 +300,7 @@
     }
   },
   {
-    "id": "hazard_00021",
+    "place_id": "hazard_00021",
     "category": "night_club_hazard",
     "lat": 25.042248,
     "lng": 121.564803,
@@ -315,7 +315,7 @@
     }
   },
   {
-    "id": "hazard_00022",
+    "place_id": "hazard_00022",
     "category": "night_club_hazard",
     "lat": 25.031342,
     "lng": 121.557617,
@@ -330,7 +330,7 @@
     }
   },
   {
-    "id": "hazard_00023",
+    "place_id": "hazard_00023",
     "category": "night_club_hazard",
     "lat": 25.035,
     "lng": 121.567368,
@@ -345,7 +345,7 @@
     }
   },
   {
-    "id": "hazard_00024",
+    "place_id": "hazard_00024",
     "category": "night_club_hazard",
     "lat": 25.030073,
     "lng": 121.557988,
@@ -360,7 +360,7 @@
     }
   },
   {
-    "id": "hazard_00025",
+    "place_id": "hazard_00025",
     "category": "night_club_hazard",
     "lat": 25.03767,
     "lng": 121.568022,
@@ -375,7 +375,7 @@
     }
   },
   {
-    "id": "hazard_00026",
+    "place_id": "hazard_00026",
     "category": "danger_zone",
     "lat": 25.030474,
     "lng": 121.565463,
@@ -390,7 +390,7 @@
     }
   },
   {
-    "id": "hazard_00027",
+    "place_id": "hazard_00027",
     "category": "danger_zone",
     "lat": 25.03612,
     "lng": 121.56845,
@@ -405,7 +405,7 @@
     }
   },
   {
-    "id": "hazard_00028",
+    "place_id": "hazard_00028",
     "category": "danger_zone",
     "lat": 25.03185,
     "lng": 121.56782,
@@ -420,7 +420,7 @@
     }
   },
   {
-    "id": "hazard_00029",
+    "place_id": "hazard_00029",
     "category": "danger_zone",
     "lat": 25.04123,
     "lng": 121.56891,
@@ -435,7 +435,7 @@
     }
   },
   {
-    "id": "hazard_00030",
+    "place_id": "hazard_00030",
     "category": "underpass_hazard",
     "lat": 25.034182,
     "lng": 121.563819,
