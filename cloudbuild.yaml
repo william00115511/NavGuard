@@ -14,10 +14,10 @@ steps:
           -f Dockerfile.gcp \
           --secret id=ENV_FILE,src=/tmp/secrets/ENV_FILE \
           --secret id=KEY_JSON,src=/tmp/secrets/KEY_JSON \
-          -t asia-east1-docker.pkg.dev/$PROJECT_ID/my-repo/fastapi-backend:$COMMIT_SHA .
+          -t asia-east1-docker.pkg.dev/288900657769/my-repo/fastapi-backend:$COMMIT_SHA .
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'asia-east1-docker.pkg.dev/$PROJECT_ID/my-repo/fastapi-backend:$COMMIT_SHA']
+    args: ['push', 'asia-east1-docker.pkg.dev/288900657769/my-repo/fastapi-backend:$COMMIT_SHA']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
@@ -25,7 +25,7 @@ steps:
       - 'run'
       - 'deploy'
       - 'fastapi-backend'
-      - '--image=asia-east1-docker.pkg.dev/$PROJECT_ID/my-repo/fastapi-backend:$COMMIT_SHA'
+      - '--image=asia-east1-docker.pkg.dev/288900657769/my-repo/fastapi-backend:$COMMIT_SHA'
       - '--region=asia-east1'
       - '--platform=managed'
       - '--allow-unauthenticated'
