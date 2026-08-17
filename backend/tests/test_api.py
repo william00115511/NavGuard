@@ -9,7 +9,6 @@ client = TestClient(app)
 _ORIGIN = {"lat": 25.01848, "lng": 121.557416}
 _DESTINATION = {"lat": 25.04478, "lng": 121.584105}
 _ON_ROUTE_LOCATION = {"lat": 25.030474, "lng": 121.565463}
-_CLIENT_ID = "test-client-0001"
 
 
 def _calculate(**overrides):
@@ -18,8 +17,20 @@ def _calculate(**overrides):
     return client.post("/api/route/calculate", json=body)
 
 
+def _create_session(**overrides):
+    body = {"user_location": _ORIGIN}
+    body.update(overrides)
+    return client.post("/api/session", json=body)
+
+
+def _new_session_id() -> str:
+    response = _create_session()
+    assert response.status_code == 200
+    return response.json()["session_id"]
+
+
 def _chat(**overrides):
-    body = {"client_id": _CLIENT_ID, "message": "hi", "user_location": _ORIGIN}
+    body = {"session_id": _new_session_id(), "message": "hi", "user_location": _ORIGIN}
     body.update(overrides)
     return client.post("/api/chat", json=body)
 
@@ -33,15 +44,23 @@ def test_healthz_reports_loaded_data():
     assert body["points_loaded"] > 0
 
 
-def test_chat_auto_creates_context_for_new_client_id():
-    """§6.6 修訂：不再需要先呼叫任何「建立 session」端點，第一次見到某個
-    client_id 就直接可以對話，不會因為「session 不存在」而出錯。
+def test_create_session_returns_session_id():
+    """§6.1：對話前必須先呼叫 POST /api/session 換到 session_id。"""
+    response = _create_session()
+    assert response.status_code == 200
+    body = response.json()
+    assert body["session_id"]
+    assert body["created_at"]
+
+
+def test_chat_with_freshly_created_session_succeeds():
+    """§6.1：session_id 須先由 POST /api/session 配發，才能開始 /api/chat 對話。
 
     這裡不斷言一定拿到 route_ready：CHAT_SERVICE_BACKEND 若設成 gemini，
     單一句「hi」是否足以觸發路線計算取決於真實模型的判斷，不是這個測試要
     驗證的行為；用 fake 後端跑測試才會穩定拿到 route_ready。
     """
-    response = _chat(client_id="brand-new-client")
+    response = _chat()
     assert response.status_code == 200
     body = response.json()
 
@@ -55,27 +74,37 @@ def test_chat_auto_creates_context_for_new_client_id():
         assert body["reply_text"]
 
 
+def test_chat_with_unknown_session_id_returns_404():
+    """session_id 不存在或已過期是系統層級錯誤（§6.1 / §6.5），不是自動建立新對話。"""
+    response = client.post(
+        "/api/chat",
+        json={"session_id": "sess_never_issued", "message": "hi"},
+    )
+    assert response.status_code == 404
+    assert response.json()["error_code"] == "SESSION_NOT_FOUND"
+
+
 def test_chat_missing_message_returns_400():
-    response = client.post("/api/chat", json={"client_id": _CLIENT_ID})
+    response = client.post("/api/chat", json={"session_id": _new_session_id()})
     assert response.status_code == 400
     assert response.json()["error_code"] == "BAD_REQUEST"
 
 
-def test_chat_clear_context_is_idempotent_for_unknown_client_id():
-    response = client.post("/api/chat/clear", json={"client_id": "never-seen-before"})
+def test_chat_clear_context_is_idempotent_for_unknown_session_id():
+    response = client.post("/api/chat/clear", json={"session_id": "never-seen-before"})
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
 
 
 def test_chat_clear_context_then_resumes_fresh():
-    client_id = "clear-me"
-    assert _chat(client_id=client_id).status_code == 200
+    session_id = _new_session_id()
+    assert _chat(session_id=session_id).status_code == 200
 
-    clear_resp = client.post("/api/chat/clear", json={"client_id": client_id})
+    clear_resp = client.post("/api/chat/clear", json={"session_id": session_id})
     assert clear_resp.status_code == 200
 
-    # 清除後同一個 client_id 再次對話應該照常成功（自動重新建立對話狀態）。
-    assert _chat(client_id=client_id).status_code == 200
+    # 清除後同一個 session_id 再次對話應該照常成功（歷史被清空，但 session 本身還在）。
+    assert _chat(session_id=session_id).status_code == 200
 
 
 def test_route_calculate_returns_single_route_with_polyline():

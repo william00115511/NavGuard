@@ -17,11 +17,16 @@ from interfaces import (
     RouteEngine,
     RouteMetrics,
     RouteResult,
+    SessionNotFoundError,
 )
 
 
 def run(coro):
     return asyncio.run(coro)
+
+
+def new_session(service: GeminiChatService, **kwargs) -> str:
+    return run(service.create_session(**kwargs))
 
 
 def make_route_result(alpha: float = 0.6) -> RouteResult:
@@ -137,79 +142,81 @@ def route_call(**overrides) -> ModelReply:
     )
 
 
-def test_new_client_id_starts_a_conversation_without_any_setup_call() -> None:
-    """§6.6 修訂：不需要先呼叫任何「建立 session」方法，client_id 第一次出現
-    就直接可以對話。"""
+def test_handle_message_without_create_session_raises_session_not_found() -> None:
+    """§6.1：session_id 必須先由 create_session() 配發，直接用未知的 ID 對話要失敗。"""
+    service = GeminiChatService(ScriptedGateway([]), FakeRouteEngine())
+
+    with pytest.raises(SessionNotFoundError):
+        run(service.handle_message("sess_never_issued", "我從台北車站出發"))
+
+
+def test_new_session_starts_a_conversation() -> None:
     gateway = ScriptedGateway([ModelReply(text="請問目的地是哪裡？")])
     service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
 
-    result = run(service.handle_message("client-a", "我從台北車站出發"))
+    result = run(service.handle_message(session_id, "我從台北車站出發"))
 
     assert result.status is ChatStatus.COLLECTING_INFO
     assert result.reply_text == "請問目的地是哪裡？"
 
 
-def test_expired_session_silently_starts_a_fresh_conversation() -> None:
-    """過期不再是錯誤，只是這個 client_id 的歷史被清空、視為新對話。"""
+def test_expired_session_raises_session_not_found() -> None:
+    """過期的 session_id 是系統層級錯誤（§6.1），前端要重新呼叫 create_session
+    換一個新的 session_id，不是靜默重置成新對話。"""
     now = [100.0]
-    gateway = ScriptedGateway([ModelReply(text="第一次回覆"), ModelReply(text="第二次回覆")])
+    gateway = ScriptedGateway([ModelReply(text="第一次回覆")])
     service = GeminiChatService(
         gateway,
         FakeRouteEngine(),
         session_ttl_seconds=60,
         clock=lambda: now[0],
     )
-    run(service.handle_message("client-a", "規劃路線"))
+    session_id = new_session(service)
+    run(service.handle_message(session_id, "規劃路線"))
     now[0] = 300  # 超過 TTL
 
-    result = run(service.handle_message("client-a", "規劃路線"))
-
-    assert result.status is ChatStatus.COLLECTING_INFO
-    assert [m.kind for m in gateway.histories[-1]] == ["user"]
+    with pytest.raises(SessionNotFoundError):
+        run(service.handle_message(session_id, "規劃路線"))
 
 
-def test_fixed_pool_keeps_all_n_clients_without_eviction() -> None:
-    """§6.6 修訂：client_id 固定是 "1".."N"（純數字），後端直接配好 N 個
-    session；不再像舊版 LRU pool 那樣因為容量滿了逐出其他 client 的歷史。"""
-    gateway = ScriptedGateway(
-        [
-            ModelReply(text="回覆 1"),
-            ModelReply(text="回覆 2"),
-            ModelReply(text="回覆 3"),
-            ModelReply(text="還記得嗎"),
-        ]
+def test_reap_expired_sessions_removes_only_stale_sessions() -> None:
+    """§6.6：定時回收只清掉過期的 session，未過期的仍然可以正常對話。"""
+    now = [100.0]
+    gateway = ScriptedGateway([ModelReply(text="還在")])
+    service = GeminiChatService(
+        gateway,
+        FakeRouteEngine(),
+        session_ttl_seconds=60,
+        clock=lambda: now[0],
     )
-    service = GeminiChatService(gateway, FakeRouteEngine(), client_count=2)
+    stale_session_id = new_session(service)
+    now[0] = 110.0
+    fresh_session_id = new_session(service)
+    now[0] = 165.0  # stale 已過 TTL（65s > 60s），fresh 還沒（55s ≤ 60s）
 
-    run(service.handle_message("1", "第一次"))
-    run(service.handle_message("2", "第一次"))  # 不同 client_id，容量內，不會逐出 client 1
-    run(service.handle_message("1", "第二次"))
+    reaped = run(service.reap_expired_sessions())
 
-    result = run(service.handle_message("1", "還記得嗎"))
-
+    assert reaped == 1
+    with pytest.raises(SessionNotFoundError):
+        run(service.handle_message(stale_session_id, "還在嗎"))
+    result = run(service.handle_message(fresh_session_id, "還在嗎"))
     assert result.status is ChatStatus.COLLECTING_INFO
-    # client 1 的歷史一路留著，沒有被清空重來。
-    assert [m.kind for m in gateway.histories[-1]] == [
-        "user",
-        "assistant",
-        "user",
-        "assistant",
-        "user",
-    ]
 
 
 def test_clear_context_resets_conversation_history() -> None:
     gateway = ScriptedGateway([ModelReply(text="第一次"), ModelReply(text="第二次")])
     service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
 
-    run(service.handle_message("client-a", "第一次訊息"))
-    run(service.clear_context("client-a"))
-    run(service.handle_message("client-a", "第二次訊息"))
+    run(service.handle_message(session_id, "第一次訊息"))
+    run(service.clear_context(session_id))
+    run(service.handle_message(session_id, "第二次訊息"))
 
     assert [m.kind for m in gateway.histories[-1]] == ["user"]
 
 
-def test_clear_context_on_unknown_client_id_is_a_noop() -> None:
+def test_clear_context_on_unknown_session_id_is_a_noop() -> None:
     service = GeminiChatService(ScriptedGateway([]), FakeRouteEngine())
     run(service.clear_context("never-seen-before"))  # 不應該丟例外
 
@@ -217,8 +224,9 @@ def test_clear_context_on_unknown_client_id_is_a_noop() -> None:
 def test_model_question_returns_collecting_info() -> None:
     gateway = ScriptedGateway([ModelReply(text="請問目的地是哪裡？")])
     service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
 
-    result = run(service.handle_message("client-a", "我從台北車站出發"))
+    result = run(service.handle_message(session_id, "我從台北車站出發"))
 
     assert result.status is ChatStatus.COLLECTING_INFO
     assert result.reply_text == "請問目的地是哪裡？"
@@ -229,8 +237,9 @@ def test_route_ready_does_not_make_a_second_gemini_call() -> None:
     把它轉成文字，reply_text 也不再帶值（§5.1 修訂）。"""
     gateway = ScriptedGateway([route_call()])
     service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
 
-    result = run(service.handle_message("client-a", "規劃"))
+    result = run(service.handle_message(session_id, "規劃"))
 
     assert result.status is ChatStatus.ROUTE_READY
     assert result.route_result is not None
@@ -242,8 +251,9 @@ def test_frontend_priority_alpha_is_passed_to_route_engine() -> None:
     gateway = ScriptedGateway([route_call()])
     engine = FakeRouteEngine()
     service = GeminiChatService(gateway, engine)
+    session_id = new_session(service)
 
-    result = run(service.handle_message("client-a", "幫我規劃路線", priority_alpha=0.8))
+    result = run(service.handle_message(session_id, "幫我規劃路線", priority_alpha=0.8))
 
     assert result.status is ChatStatus.ROUTE_READY
     assert result.route_result is not None
@@ -254,8 +264,9 @@ def test_priority_alpha_defaults_when_frontend_omits_it() -> None:
     gateway = ScriptedGateway([route_call()])
     engine = FakeRouteEngine()
     service = GeminiChatService(gateway, engine)
+    session_id = new_session(service)
 
-    result = run(service.handle_message("client-a", "幫我規劃路線"))
+    result = run(service.handle_message(session_id, "幫我規劃路線"))
 
     assert result.status is ChatStatus.ROUTE_READY
     assert engine.calculate_calls[0][2] == 0.6
@@ -264,8 +275,9 @@ def test_priority_alpha_defaults_when_frontend_omits_it() -> None:
 def test_gemini_supplied_priority_alpha_is_rejected() -> None:
     gateway = ScriptedGateway([route_call(priority_alpha=0.9)])
     service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
 
-    result = run(service.handle_message("client-a", "幫我規劃路線"))
+    result = run(service.handle_message(session_id, "幫我規劃路線"))
 
     assert result.status is ChatStatus.ERROR
     assert result.error_code == "INVALID_TOOL_ARGUMENTS"
@@ -276,9 +288,10 @@ def test_current_location_uses_session_location_and_geocode_bias() -> None:
     gateway = ScriptedGateway([route_call(origin="current_location")])
     engine = FakeRouteEngine()
     service = GeminiChatService(gateway, engine)
+    session_id = new_session(service)
 
     result = run(
-        service.handle_message("client-a", "從目前位置出發", user_location=user_location)
+        service.handle_message(session_id, "從目前位置出發", user_location=user_location)
     )
 
     assert result.status is ChatStatus.ROUTE_READY
@@ -290,8 +303,9 @@ def test_current_location_uses_session_location_and_geocode_bias() -> None:
 def test_gateway_is_told_when_no_user_location_is_available() -> None:
     gateway = ScriptedGateway([ModelReply(text="請問你的起點是哪裡？")])
     service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
 
-    run(service.handle_message("client-a", "幫我規劃路線"))
+    run(service.handle_message(session_id, "幫我規劃路線"))
 
     assert gateway.has_user_location_calls == [False]
 
@@ -304,9 +318,10 @@ def test_geocoding_failure_is_recorded_for_next_turn() -> None:
         ]
     )
     service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
 
-    first = run(service.handle_message("client-a", "規劃"))
-    second = run(service.handle_message("client-a", "起點在北門"))
+    first = run(service.handle_message(session_id, "規劃"))
+    second = run(service.handle_message(session_id, "起點在北門"))
 
     assert first.error_code == "GEOCODING_FAILED"
     assert second.status is ChatStatus.COLLECTING_INFO
@@ -317,17 +332,19 @@ def test_geocoding_failure_is_recorded_for_next_turn() -> None:
 def test_system_dependency_failure_is_not_misreported_as_business_error(engine) -> None:
     gateway = ScriptedGateway([route_call()])
     service = GeminiChatService(gateway, engine)
+    session_id = new_session(service)
 
     with pytest.raises(RuntimeError):
-        run(service.handle_message("client-a", "規劃"))
+        run(service.handle_message(session_id, "規劃"))
 
 
 def test_history_pruning_keeps_complete_tool_turns() -> None:
     gateway = ScriptedGateway([route_call(), route_call()])
     service = GeminiChatService(gateway, FakeRouteEngine(), max_history_messages=4)
+    session_id = new_session(service)
 
-    run(service.handle_message("client-a", "第一次"))
-    run(service.handle_message("client-a", "第二次"))
+    run(service.handle_message(session_id, "第一次"))
+    run(service.handle_message(session_id, "第二次"))
 
     assert gateway.histories[1][0].kind == "user"
     assert len(gateway.histories[1]) <= 4
