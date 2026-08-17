@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from app.config import DEFAULT_ALPHA, Settings, WALK_SPEED_MPS
+from app.config import Settings, WALK_SPEED_MPS
 from app.data.store import get_data_store
 from app.engine.graph import get_road_graph
 from app.engine.metrics import build_metrics
@@ -27,6 +27,7 @@ from evaluation.config import (
     DEFAULT_SEED,
     FAILURES_CSV_PATH,
     RESULTS_CSV_PATH,
+    SAFEST_ROUTE_ALPHA,
 )
 from evaluation.google_routes_client import (
     CachingGoogleRoutesClient,
@@ -120,7 +121,7 @@ async def run_batch(
     for scenario in scenarios:
         try:
             result = await engine.calculate_route(
-                scenario.origin, scenario.destination, priority_alpha=DEFAULT_ALPHA
+                scenario.origin, scenario.destination, priority_alpha=SAFEST_ROUTE_ALPHA
             )
         except OutOfCoverageError as exc:
             failures.append(Failure(scenario.scenario_id, f"out_of_coverage: {exc}"))
