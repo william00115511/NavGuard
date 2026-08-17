@@ -102,3 +102,22 @@ def test_filter_active_points_drops_expired():
 def test_filter_active_points_drops_unparsable_expiry():
     broken = _point("b1", "danger_zone", source_type="dynamic_realtime", expires_at="not-a-timestamp")
     assert filter_active_points([broken]) == []
+
+
+def test_night_club_and_underpass_hazard_penalties():
+    """驗證夜店醉漢區與地下道等負向點位能正確降低安全分數。"""
+    categories = {
+        "street_light": CategoryConfig(name="street_light", effect="positive", weight=1.0, radius_m=30, kind="static", label="路燈"),
+        "night_club_hazard": CategoryConfig(name="night_club_hazard", effect="negative", weight=2.5, radius_m=50, kind="static", label="夜店酒吧鬧事區"),
+        "underpass_hazard": CategoryConfig(name="underpass_hazard", effect="negative", weight=3.0, radius_m=60, kind="static", label="封閉地下道死角"),
+    }
+    points = [
+        _point("l1", "street_light", lat=0.0, lng=0.0),
+        _point("c1", "night_club_hazard", lat=0.0001, lng=0.0001),
+        _point("u1", "underpass_hazard", lat=0.0002, lng=0.0002),
+    ]
+    profile = build_scoring_profile(categories, points)
+    here = LatLng(lat=0.0, lng=0.0)
+    score = raw_score_at(here, points, profile)
+    assert score < 0, "負向點位總權重 (5.5) 大於路燈 (1.0)，原始分數應為負"
+    assert sigmoid_safety(score) < 0.5
