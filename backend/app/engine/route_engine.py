@@ -7,8 +7,8 @@ Calling 處理常式唯一需要依賴的介面；Dev B 開發階段可先用假
 每次請求的流程（§4.1）：
     取本次未過期的動態點位 → 只對受影響的 edge 疊加動態分數（靜態分數啟動時
     已快取）→ sigmoid 正規化 → 依 α 合成 edge cost → A* 找最低成本路徑
-    → 同時以 α=0 算一條最快路線作為對照 → 回傳兩條路線 + metrics
-    + reasons + warnings
+    → 同時以 α=0 算一條最快路線作為對照（供 detour 對照與 §7 URL 簡化用）
+    → 回傳兩條路線 + metrics + warnings；API 層只對外回傳其中一條（§6.2 修訂）
 """
 
 import uuid
@@ -20,7 +20,7 @@ from app.config import DEFAULT_ALPHA, DISCLAIMER, FALLBACK_DYNAMIC_CATEGORY, WAL
 from app.data.schema import CategoryConfig, PointRecord
 from app.data.store import DataStore, get_data_store
 from app.engine.graph import RoadGraph, get_road_graph
-from app.engine.metrics import build_metrics, build_reasons, decide_confidence
+from app.engine.metrics import build_metrics, decide_confidence
 from app.engine.pathfinding import PathComputation, compute_path
 from app.engine.safety import EdgeSafetyIndex, build_scoring_profile, filter_active_points
 from app.maps.url_builder import build_google_maps_url
@@ -31,6 +31,7 @@ from interfaces import (
     Route,
     RouteEngine,
     RouteResult,
+    RouteWarning,
 )
 
 
@@ -114,7 +115,6 @@ class LocalDataRouteEngine(RouteEngine):
                 alpha_used=alpha,
                 metrics=safest_metrics,
                 confidence=confidence,
-                reasons=build_reasons(safest_metrics, fastest_metrics, self._profile),
                 warnings=list(warnings),
             ),
             Route(
@@ -124,7 +124,6 @@ class LocalDataRouteEngine(RouteEngine):
                 alpha_used=0.0,
                 metrics=fastest_metrics,
                 confidence=confidence,
-                reasons=[],
                 warnings=list(warnings),
             ),
         ]
@@ -144,10 +143,10 @@ class LocalDataRouteEngine(RouteEngine):
 
     def _prepare_hazards(
         self, hazards: Sequence[DynamicHazard]
-    ) -> tuple[list[DynamicHazard], list[PointRecord], list[str]]:
+    ) -> tuple[list[DynamicHazard], list[PointRecord], list[RouteWarning]]:
         """套用 §5.4 的後端處理規則，回傳（實際採用的 hazard、點位、warnings）。"""
         categories = self._data_store.categories
-        warnings: list[str] = []
+        warnings: list[RouteWarning] = []
         considered: list[DynamicHazard] = []
         points: list[PointRecord] = []
         seen: set[tuple[str, float, float]] = set()
@@ -165,7 +164,7 @@ class LocalDataRouteEngine(RouteEngine):
             seen.add(key)
 
             if resolved.expires_at <= now:
-                warnings.append(f"即時資訊「{resolved.summary}」已過期，未納入本次計算")
+                warnings.append(RouteWarning(code="hazard_expired", summary=resolved.summary))
                 continue
 
             considered.append(resolved)
@@ -175,7 +174,7 @@ class LocalDataRouteEngine(RouteEngine):
 
     def _resolve_category(
         self, hazard: DynamicHazard, categories: dict[str, CategoryConfig]
-    ) -> tuple[DynamicHazard, Optional[str]]:
+    ) -> tuple[DynamicHazard, Optional[RouteWarning]]:
         """規則 1/2：effect 一律查 categories.json；未知類別退回 dynamic_unknown。"""
         category = categories.get(hazard.category)
         if category is not None and category.kind == "dynamic":
@@ -191,10 +190,8 @@ class LocalDataRouteEngine(RouteEngine):
                 datetime.now(timezone.utc) + timedelta(hours=ttl_hours or _FALLBACK_TTL_HOURS),
             ),
         )
-        return resolved, (
-            f"即時事件類別「{hazard.category}」未登記在資料設定中，"
-            f"已以低權重的未分類事件計入"
-        )
+        # code="unknown_hazard_category"：category 帶原始（未登記的）類別 key。
+        return resolved, RouteWarning(code="unknown_hazard_category", category=hazard.category)
 
     def _hazard_to_point(self, hazard: DynamicHazard) -> PointRecord:
         """把 DynamicHazard（§3.4 / §5.4）轉成統一點位格式（§3.2）。"""

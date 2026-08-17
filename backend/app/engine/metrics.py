@@ -1,4 +1,4 @@
-"""路線層級的可解釋 metrics、confidence 與 reasons（AGENTS.md §4.6 / §4.7）。
+"""路線層級的可解釋 metrics 與 confidence（AGENTS.md §4.6 / §4.7）。
 
 這些是**報告用**指標，不參與路徑選擇。無資料的欄位一律填 None，不填 0
 （§1 原則 3：沒有資料不等於沒有風險）。
@@ -149,32 +149,3 @@ def decide_confidence(profile: ScoringProfile, points: Sequence[PointRecord]) ->
     if coverage >= 0.8 and dynamic_ratio <= 0.2:
         return Confidence.HIGH
     return Confidence.MEDIUM
-
-
-def build_reasons(safest: RouteMetrics, fastest: RouteMetrics, profile: ScoringProfile) -> list[str]:
-    """產生給使用者看的理由。
-
-    只陳述可驗證的事實（數量、分鐘數），不做安全承諾——§1 原則 1 禁止
-    「絕對安全」「保證安全」這類文案，所以這裡一律用「較多／較少」的說法。
-    """
-    reasons: list[str] = []
-
-    if safest.help_points_within_50m:
-        reasons.append(f"沿途 50 公尺內有 {safest.help_points_within_50m} 個可求助據點")
-    if safest.police_within_150m:
-        reasons.append(f"沿途 150 公尺內有 {safest.police_within_150m} 處警察局")
-    if safest.lit_coverage_ratio is not None:
-        reasons.append(f"約 {safest.lit_coverage_ratio:.0%} 的路段 30 公尺內有路燈資料")
-
-    delta_min = safest.duration_min_est - fastest.duration_min_est
-    if delta_min > 0.1 and safest.avg_safety_score > fastest.avg_safety_score:
-        reasons.append(
-            f"比最快路線多走約 {delta_min:.0f} 分鐘，換得較高的照明與可求助據點密度"
-        )
-    elif abs(delta_min) <= 0.1:
-        reasons.append("與最快路線幾乎同長，不需要額外繞路")
-
-    for name in profile.missing_static:
-        reasons.append(f"（{profile.categories[name].display_name}資料缺漏，未納入以上評估）")
-
-    return reasons
