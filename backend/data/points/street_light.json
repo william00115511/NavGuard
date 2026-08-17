@@ -1,0 +1,134 @@
+[
+  {
+    "id": "streetlight_00001",
+    "category": "street_light",
+    "lat": 25.048,
+    "lng": 121.531,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00002",
+    "category": "street_light",
+    "lat": 25.048,
+    "lng": 121.535,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00003",
+    "category": "street_light",
+    "lat": 25.041,
+    "lng": 121.531,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00004",
+    "category": "street_light",
+    "lat": 25.041,
+    "lng": 121.535,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00005",
+    "category": "street_light",
+    "lat": 25.034,
+    "lng": 121.531,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00006",
+    "category": "street_light",
+    "lat": 25.034,
+    "lng": 121.535,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00007",
+    "category": "street_light",
+    "lat": 25.027,
+    "lng": 121.531,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00008",
+    "category": "street_light",
+    "lat": 25.027,
+    "lng": 121.535,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00009",
+    "category": "street_light",
+    "lat": 25.02,
+    "lng": 121.531,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00010",
+    "category": "street_light",
+    "lat": 25.02,
+    "lng": 121.535,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00011",
+    "category": "street_light",
+    "lat": 25.013,
+    "lng": 121.531,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  },
+  {
+    "id": "streetlight_00012",
+    "category": "street_light",
+    "lat": 25.013,
+    "lng": 121.535,
+    "source": "台北市路燈資料_2026(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": {}
+  }
+]

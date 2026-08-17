@@ -1,0 +1,7 @@
+{
+  "street_light":   { "effect": "positive", "weight": 1.0, "radius_m": 30,  "kind": "static" },
+  "police_station": { "effect": "positive", "weight": 3.0, "radius_m": 150, "kind": "static" },
+  "danger_zone":    { "effect": "negative", "weight": 2.0, "radius_m": 80,  "kind": "static" },
+  "fire_incident":  { "effect": "negative", "weight": 4.0, "radius_m": 200, "kind": "dynamic", "default_ttl_hours": 6 },
+  "crowd_event":    { "effect": "positive", "weight": 1.5, "radius_m": 100, "kind": "dynamic", "default_ttl_hours": 12 }
+}
