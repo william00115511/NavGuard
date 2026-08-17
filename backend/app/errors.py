@@ -33,3 +33,10 @@ class UpstreamError(ApiError):
 
     status_code = 500
     error_code = "INTERNAL_ERROR"
+
+
+class RouteNotFoundError(ApiError):
+    """起訖點在路網圖上不連通，找不到可行路徑。"""
+
+    status_code = 500
+    error_code = "ROUTE_NOT_FOUND"
