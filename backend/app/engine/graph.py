@@ -1,8 +1,10 @@
 """道路網路圖的載入與拓樸（AGENTS.md §3.5 / §4.1）。
 
-MVP 用備援方案：手動整理的簡化網格圖（見 data/road_network.json），
-之後要換成 osmnx 擷取的 OSM 路網時，只需要換掉 `load()` 讀檔的來源，
-節點/邊的介面（RoadGraph）不用改，pathfinding.py 也不用改。
+`data/road_network.json` 由 `scripts/build_road_network.py` 直接打 Overpass
+API 擷取信義區真實 OSM 步行路網產生（§3.5 主要方案是用 osmnx 存
+GraphML／pickle，這裡改用專案已有的 httpx 換取同樣的路網拓樸，不新增
+地理空間依賴）。若之後要換成 osmnx 版本，只需要換掉 `load()` 讀檔的
+來源，節點/邊的介面（RoadGraph）不用改，pathfinding.py 也不用改。
 """
 
 import json
