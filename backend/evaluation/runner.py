@@ -21,7 +21,7 @@ from app.data.store import get_data_store
 from app.engine.graph import get_road_graph
 from app.engine.metrics import build_metrics
 from app.engine.route_engine import LocalDataRouteEngine
-from app.engine.safety import build_scoring_profile, filter_active_points
+from app.engine.safety import ScoringProfile, build_scoring_profile, filter_active_points
 from evaluation.config import (
     DEFAULT_N_SCENARIOS,
     DEFAULT_SEED,
@@ -52,7 +52,7 @@ class Failure:
     reason: str
 
 
-def _metrics_row(prefix: str, metrics: RouteMetrics) -> dict[str, object]:
+def _metrics_row(prefix: str, metrics: RouteMetrics, profile: ScoringProfile) -> dict[str, object]:
     row: dict[str, object] = {f"{prefix}_{name}": getattr(metrics, name) for name in _ROUTE_METRIC_FIELDS}
     # AGENTS.md §4.6 修訂：danger_zone 也改回傳具體點位列表，不再計入
     # passed_landmarks，評估報表改對列表 len()（0 代表這次路線沒經過，
@@ -67,6 +67,24 @@ def _metrics_row(prefix: str, metrics: RouteMetrics) -> dict[str, object]:
     row[f"{prefix}_police_within_150m"] = (
         len(metrics.police_stations) if metrics.police_stations is not None else None
     )
+    # passed_landmarks 涵蓋除了 danger_zone/police_station/convenience_store
+    # 以外的所有類別（目前主要是正面的 street_light，以及負面的
+    # night_club_hazard／underpass_hazard，見 categories.json）。計分公式
+    # （app/engine/safety.py）本來就只認正負號、不認具體類別名稱（§3.3），
+    # 這裡比照辦理：用 profile.categories[name].effect 分流加總成正/負兩欄，
+    # 不額外為新類別硬編碼欄位，新增一個負面類別也不用改這裡的程式碼。
+    positive_count = 0
+    negative_count = 0
+    for name, count in metrics.passed_landmarks.items():
+        category = profile.categories.get(name)
+        if category is None:
+            continue
+        if category.effect == "positive":
+            positive_count += count
+        else:
+            negative_count += count
+    row[f"{prefix}_other_positive_landmarks_passed"] = positive_count
+    row[f"{prefix}_other_negative_landmarks_passed"] = negative_count
     return row
 
 
@@ -139,9 +157,9 @@ async def run_batch(
             "destination_lng": scenario.destination.lng,
             "straight_line_distance_m": round(scenario.straight_line_distance_m, 1),
         }
-        row.update(_metrics_row("google", google_metrics))
-        row.update(_metrics_row("our_fastest", our_fastest.metrics))
-        row.update(_metrics_row("our_safest", our_safest.metrics))
+        row.update(_metrics_row("google", google_metrics, profile))
+        row.update(_metrics_row("our_fastest", our_fastest.metrics, profile))
+        row.update(_metrics_row("our_safest", our_safest.metrics, profile))
         rows.append(row)
 
     return rows, failures

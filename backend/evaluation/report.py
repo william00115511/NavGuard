@@ -40,7 +40,11 @@ _PREFIX_LABELS = {
 _REQUIRED_FLOAT_SUFFIXES = ("distance_m", "duration_min_est", "avg_safety_score", "detour_vs_fastest_min")
 _OPTIONAL_FLOAT_SUFFIXES = ("lit_coverage_ratio",)
 _OPTIONAL_INT_SUFFIXES = ("convenience_stores_within_80m", "police_within_150m")
-_REQUIRED_INT_SUFFIXES = ("danger_zone_passed",)
+_REQUIRED_INT_SUFFIXES = (
+    "danger_zone_passed",
+    "other_positive_landmarks_passed",
+    "other_negative_landmarks_passed",
+)
 
 
 # ---------- 讀檔 ----------
@@ -116,6 +120,8 @@ class Summary:
     mean_delta_safety_vs_google: float
     delta_safety_ci: tuple[float, float]
     mean_delta_danger_zone_vs_google: float
+    mean_delta_other_positive_landmarks_vs_google: float
+    mean_delta_other_negative_landmarks_vs_google: float
     mean_delta_lit_coverage_vs_google: Optional[float]
     mean_delta_convenience_stores_vs_google: Optional[float]
     mean_delta_police_vs_google: Optional[float]
@@ -150,6 +156,8 @@ def summarize(rows: list[dict], n_failed: int = 0) -> Summary:
     win_rate_vs_fastest = sum(1 for d in safety_deltas_vs_fastest if d > 0) / len(safety_deltas_vs_fastest)
 
     danger_deltas = _paired_deltas(rows, "our_safest", "google", "danger_zone_passed")
+    other_positive_deltas = _paired_deltas(rows, "our_safest", "google", "other_positive_landmarks_passed")
+    other_negative_deltas = _paired_deltas(rows, "our_safest", "google", "other_negative_landmarks_passed")
     lit_deltas = _paired_deltas(rows, "our_safest", "google", "lit_coverage_ratio")
     convenience_deltas = _paired_deltas(rows, "our_safest", "google", "convenience_stores_within_80m")
     police_deltas = _paired_deltas(rows, "our_safest", "google", "police_within_150m")
@@ -169,6 +177,12 @@ def summarize(rows: list[dict], n_failed: int = 0) -> Summary:
         mean_delta_safety_vs_google=mean_delta_safety,
         delta_safety_ci=bootstrap_mean_ci(safety_deltas_vs_google),
         mean_delta_danger_zone_vs_google=statistics.mean(danger_deltas) if danger_deltas else 0.0,
+        mean_delta_other_positive_landmarks_vs_google=(
+            statistics.mean(other_positive_deltas) if other_positive_deltas else 0.0
+        ),
+        mean_delta_other_negative_landmarks_vs_google=(
+            statistics.mean(other_negative_deltas) if other_negative_deltas else 0.0
+        ),
         mean_delta_lit_coverage_vs_google=(statistics.mean(lit_deltas) if lit_deltas else None),
         mean_delta_convenience_stores_vs_google=(statistics.mean(convenience_deltas) if convenience_deltas else None),
         mean_delta_police_vs_google=(statistics.mean(police_deltas) if police_deltas else None),
@@ -224,10 +238,13 @@ def render_markdown(summary: Summary, failures: list[tuple[str, str]]) -> str:
         "",
         "| 指標 | 差異 |",
         "|---|---|",
-        f"| 危險點位通過數 | {summary.mean_delta_danger_zone_vs_google:+.2f} |",
+        f"| 危險點位通過數（負面） | {summary.mean_delta_danger_zone_vs_google:+.2f} |",
+        f"| 其他負面類別通過數（如夜店鬧事區、地下道死角） | "
+        f"{summary.mean_delta_other_negative_landmarks_vs_google:+.2f} |",
+        f"| 其他正面類別通過數（如路燈） | {summary.mean_delta_other_positive_landmarks_vs_google:+.2f} |",
         f"| 路燈覆蓋率（30m 內有路燈的採樣點比例） | {_fmt_optional(summary.mean_delta_lit_coverage_vs_google, '{:+.3f}')} |",
-        f"| 80m 內超商數 | {_fmt_optional(summary.mean_delta_convenience_stores_vs_google, '{:+.2f}')} |",
-        f"| 150m 內警局數 | {_fmt_optional(summary.mean_delta_police_vs_google, '{:+.2f}')} |",
+        f"| 80m 內超商數（正面） | {_fmt_optional(summary.mean_delta_convenience_stores_vs_google, '{:+.2f}')} |",
+        f"| 150m 內警局數（正面） | {_fmt_optional(summary.mean_delta_police_vs_google, '{:+.2f}')} |",
         "",
         "## 方法論",
         "",
@@ -236,7 +253,10 @@ def render_markdown(summary: Summary, failures: list[tuple[str, str]]) -> str:
         "3. Google 路線來自 Google Routes API（walking mode）解碼後的座標序列，用跟我們建路網 edge 完全相同的"
         "取樣方式切成一串「偽 edge」，再套用跟我們自己路線**完全相同**的 `raw_edge_score` / `sigmoid_safety` /"
         " `build_metrics`（app/engine/safety.py、app/engine/metrics.py），沒有另外為 Google 路線寫一套算分邏輯。",
-        "4. 安全分數差異採配對比較（同一組起訖點兩條路線相減），而非兩組獨立平均相減，避免起訖點難易度不同"
+        "4. 除了危險點位／超商／警局三個具名類別，`categories.json` 其餘類別（目前是正面的路燈、負面的"
+        "夜店鬧事區與地下道死角）改用 `RouteMetrics.passed_landmarks` 依 `effect`（正/負）分流加總，"
+        "跟計分公式一樣只認正負號、不寫死具體類別名稱——之後在 `categories.json` 新增類別，這裡不用改程式碼。",
+        "5. 安全分數差異採配對比較（同一組起訖點兩條路線相減），而非兩組獨立平均相減，避免起訖點難易度不同"
         "造成的變異蓋過真正的差異。",
         "",
         "**限制與提醒**：安全分數是輔助決策依據，不是安全保證；本報告只反映本次資料集（路燈／可求助據點／"
@@ -311,10 +331,18 @@ def render_html(summary: Summary, failures: list[tuple[str, str]]) -> str:
     metrics_rows = "".join(
         f"<tr><td>{label}</td><td>{value}</td></tr>"
         for label, value in (
-            ("危險點位通過數（平均差異）", f"{summary.mean_delta_danger_zone_vs_google:+.2f}"),
+            ("危險點位通過數（負面，平均差異）", f"{summary.mean_delta_danger_zone_vs_google:+.2f}"),
+            (
+                "其他負面類別通過數（夜店鬧事區、地下道死角等，平均差異）",
+                f"{summary.mean_delta_other_negative_landmarks_vs_google:+.2f}",
+            ),
+            (
+                "其他正面類別通過數（路燈等，平均差異）",
+                f"{summary.mean_delta_other_positive_landmarks_vs_google:+.2f}",
+            ),
             ("路燈覆蓋率（平均差異）", _fmt_optional(summary.mean_delta_lit_coverage_vs_google, "{:+.3f}")),
-            ("80m 內超商數（平均差異）", _fmt_optional(summary.mean_delta_convenience_stores_vs_google, "{:+.2f}")),
-            ("150m 內警局數（平均差異）", _fmt_optional(summary.mean_delta_police_vs_google, "{:+.2f}")),
+            ("80m 內超商數（正面，平均差異）", _fmt_optional(summary.mean_delta_convenience_stores_vs_google, "{:+.2f}")),
+            ("150m 內警局數（正面，平均差異）", _fmt_optional(summary.mean_delta_police_vs_google, "{:+.2f}")),
         )
     )
 

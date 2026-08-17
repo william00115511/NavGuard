@@ -22,6 +22,8 @@ def _row(
             f"{prefix}_police_within_150m": 0,
             f"{prefix}_detour_vs_fastest_min": 0.0,
             f"{prefix}_danger_zone_passed": danger,
+            f"{prefix}_other_positive_landmarks_passed": 0,
+            f"{prefix}_other_negative_landmarks_passed": 0,
         }
 
     row: dict = {"scenario_id": scenario_id, "straight_line_distance_m": 500.0}
