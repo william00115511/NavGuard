@@ -7,8 +7,8 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 RUN --mount=type=secret,id=ENV_FILE \
     --mount=type=secret,id=KEY_JSON \
-    cp /secrets/APP_ENV_FILE .env && \
-    cp /secrets/GCP_SA_KEY_JSON google-credentials.json
+    cp /run/secrets/ENV_FILE .env && \
+    cp /run/secrets/KEY_JSON google-credentials.json
 
 FROM python:3.11-slim
 
