@@ -27,6 +27,7 @@ def load_categories(path: Path) -> dict[str, CategoryConfig]:
             radius_m=cfg["radius_m"],
             kind=cfg["kind"],
             default_ttl_hours=cfg.get("default_ttl_hours"),
+            label=cfg.get("label"),
         )
     return categories
 
