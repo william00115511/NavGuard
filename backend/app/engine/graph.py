@@ -11,7 +11,7 @@ from pathlib import Path
 
 from app.config import EDGE_SAMPLE_INTERVAL_M, MAX_SNAP_DISTANCE_M, ROAD_NETWORK_PATH
 from app.engine.geo import haversine_m, sample_along
-from inner_interface import LatLng, OutOfCoverageError
+from interfaces import LatLng, OutOfCoverageError
 
 EdgeKey = tuple[str, str]
 

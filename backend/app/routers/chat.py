@@ -16,8 +16,8 @@ from app.chat.dependencies import get_chat_service
 from app.errors import ApiError, InternalError, UpstreamTimeoutError
 from app.errors import SessionNotFoundError as ApiSessionNotFoundError
 from app.schemas import ChatRequest, ChatResponse, hazard_to_out, route_to_out
-from inner_interface import ChatStatus
-from inner_interface import SessionNotFoundError as ChatSessionNotFoundError
+from interfaces import ChatStatus
+from interfaces import SessionNotFoundError as ChatSessionNotFoundError
 
 router = APIRouter(prefix="/api", tags=["chat"])
 
