@@ -1,6 +1,8 @@
 import asyncio
 from types import SimpleNamespace
 
+from google.genai import types
+
 from app.geocoding.gemini_geocoder import GeminiGroundedGeocoder
 from interfaces import LatLng
 
@@ -29,7 +31,8 @@ class FakeClient:
 
 
 def make_response(text: str):
-    return SimpleNamespace(text=text)
+    parts = [types.Part.from_text(text=text)] if text else []
+    return SimpleNamespace(candidates=[SimpleNamespace(content=SimpleNamespace(parts=parts))])
 
 
 def test_geocode_picks_nearest_candidate_to_bias() -> None:

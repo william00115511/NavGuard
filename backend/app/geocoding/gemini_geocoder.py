@@ -29,6 +29,18 @@ _TIMEOUT_MS = 8_000
 _TW_LAT_RANGE = (21.5, 26.5)
 _TW_LNG_RANGE = (118.0, 123.0)
 
+def _response_text(response: Any) -> str:
+    """等同 response.text，但直接讀 parts，不觸發 SDK 對 non-text parts 的警告 log。"""
+    candidates = getattr(response, "candidates", None)
+    if not candidates or candidates[0].content is None or candidates[0].content.parts is None:
+        return ""
+    return "".join(
+        part.text
+        for part in candidates[0].content.parts
+        if isinstance(part.text, str) and not (isinstance(part.thought, bool) and part.thought)
+    )
+
+
 _PROMPT_TEMPLATE = """請用 Google 搜尋確認下面這個地點在台灣的實際座標，並列出所有語意上可能符合的候選地點（例如同名連鎖店的不同分店、容易混淆的相似地名）。
 
 地點描述：{place_description}
@@ -56,6 +68,10 @@ class GeminiGroundedGeocoder:
             tools=[types.Tool(google_search=types.GoogleSearch())],
             temperature=0.0,
             http_options=types.HttpOptions(timeout=_TIMEOUT_MS),
+            # 這裡只用 Search grounding，不宣告任何 function；停用 AFC 避免
+            # SDK 誤判成 function-calling 流程，多繞一圈 AFC loop 並印出
+            # 「建議改用 AsyncChat.send_message」的無關警告。
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
         )
 
     async def geocode(
@@ -77,7 +93,7 @@ class GeminiGroundedGeocoder:
         except Exception:
             return None
 
-        candidates = self._parse_candidates(response.text or "")
+        candidates = self._parse_candidates(_response_text(response))
         if not candidates:
             return None
         if bias is None:

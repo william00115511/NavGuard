@@ -1,6 +1,8 @@
 import asyncio
 from types import SimpleNamespace
 
+from google.genai import types
+
 from app.chat.gemini_chat_service import ConversationMessage
 from app.chat.google_genai_gateway import GoogleGenAIGateway
 
@@ -26,10 +28,11 @@ class FakeClient:
 
 
 def make_response(*, text="", function_calls=None):
+    parts = [types.Part.from_text(text=text)] if text else []
     return SimpleNamespace(
         text=text,
         function_calls=function_calls or [],
-        candidates=[SimpleNamespace(content=SimpleNamespace(role="model", parts=[]))],
+        candidates=[SimpleNamespace(content=SimpleNamespace(role="model", parts=parts))],
     )
 
 

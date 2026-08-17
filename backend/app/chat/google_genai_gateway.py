@@ -68,6 +68,18 @@ CALCULATE_SAFE_ROUTE_TOOL = types.Tool(
 )
 
 
+def _response_text(content: types.Content | None) -> str:
+    """等同 response.text，但直接讀 parts，不觸發 SDK 對 non-text parts 的警告 log
+    （工具呼叫的回應本來就沒有純文字 part，是預期狀況，不需要每次都印警告）。"""
+    if content is None or content.parts is None:
+        return ""
+    return "".join(
+        part.text
+        for part in content.parts
+        if isinstance(part.text, str) and not (isinstance(part.thought, bool) and part.thought)
+    )
+
+
 class GoogleGenAIGateway:
     def __init__(self, client: Any, model: str) -> None:
         self._client = client
@@ -113,7 +125,7 @@ class GoogleGenAIGateway:
         )
         raw_content = response.candidates[0].content if response.candidates else None
         return ModelReply(
-            text=response.text or "",
+            text=_response_text(raw_content),
             tool_calls=tool_calls,
             raw_content=raw_content,
         )
