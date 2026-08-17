@@ -7,9 +7,8 @@ steps:
       - '-c'
       - |
         mkdir -p /tmp/secrets
-        echo "$ENV_FILE" > /tmp/secrets/ENV_FILE
-        echo "$KEY_JSON" > /tmp/secrets/KEY_JSON
-
+        echo "$$ENV_FILE" > /tmp/secrets/ENV_FILE
+        echo "$$KEY_JSON" > /tmp/secrets/KEY_JSON
         docker build \
           -f Dockerfile.gcp \
           --secret id=ENV_FILE,src=/tmp/secrets/ENV_FILE \
