@@ -28,6 +28,7 @@ from app.maps.url_builder import build_google_maps_url
 from interfaces import (
     DynamicHazard,
     LatLng,
+    NearbyPoint,
     NoRouteFoundError,
     Route,
     RouteEndpoint,
@@ -94,11 +95,25 @@ class LocalDataRouteEngine(RouteEngine):
         destination_node = self._graph.nearest_node(LatLng(lat=destination.lat, lng=destination.lng))
 
         considered, dynamic_points, hazard_warnings = self._prepare_hazards(dynamic_hazards)
-        safety_by_edge = self._index.safety_scores(dynamic_points)
+        safety_by_edge, risk_by_edge = self._index.routing_scores(dynamic_points)
         all_points = self._static_points + dynamic_points
 
-        fastest = compute_path(self._graph, safety_by_edge, origin_node, destination_node, alpha=0.0)
-        safest = compute_path(self._graph, safety_by_edge, origin_node, destination_node, alpha=alpha)
+        fastest = compute_path(
+            self._graph,
+            safety_by_edge,
+            origin_node,
+            destination_node,
+            alpha=0.0,
+            risk_by_edge=risk_by_edge,
+        )
+        safest = compute_path(
+            self._graph,
+            safety_by_edge,
+            origin_node,
+            destination_node,
+            alpha=alpha,
+            risk_by_edge=risk_by_edge,
+        )
         if fastest is None or safest is None:
             raise NoRouteFoundError(f"起訖點在路網圖上不連通：{origin_node} -> {destination_node}")
 
@@ -107,6 +122,13 @@ class LocalDataRouteEngine(RouteEngine):
         fastest_metrics = build_metrics(fastest, all_points, self._profile, detour_vs_fastest_min=0.0)
         detour_min = (safest.distance_m - fastest.distance_m) / WALK_SPEED_MPS / 60
         safest_metrics = build_metrics(safest, all_points, self._profile, detour_min)
+        safest_metrics = replace(
+            safest_metrics,
+            avoided_danger_zones=self._avoided_danger_zones(
+                fastest_metrics.danger_zones,
+                safest_metrics.danger_zones,
+            ),
+        )
 
         routes = [
             Route(
@@ -136,7 +158,20 @@ class LocalDataRouteEngine(RouteEngine):
             warnings=list(warnings),
         )
 
+    @staticmethod
+    def _avoided_danger_zones(
+        fastest_dangers: Optional[list[NearbyPoint]],
+        selected_dangers: Optional[list[NearbyPoint]],
+    ) -> Optional[list[NearbyPoint]]:
+        """找出最快路線會經過、但推薦路線已繞開的危險點位。
 
+        用內部原本就會計算的 alpha=0 路線作為對照，不需要用新的區域範圍
+        猜測哪些點位與這次路線有關。
+        """
+        if fastest_dangers is None or selected_dangers is None:
+            return None
+        selected_ids = {point.place_id for point in selected_dangers}
+        return [point for point in fastest_dangers if point.place_id not in selected_ids]
 
     def _build_maps_url(self, safest: PathComputation, fastest: PathComputation) -> str:
         # §7.3：用最快路線當參考，強制保留安全路線偏離它最遠的轉折點，

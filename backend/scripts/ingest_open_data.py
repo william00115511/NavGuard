@@ -104,7 +104,7 @@ sys.path.insert(0, str(BACKEND_DIR))
 from app.config import Settings  # noqa: E402
 
 _HTTP_TIMEOUT = 60.0
-_USER_AGENT = "Safeway-NightWalkSafety-DataIngest/0.1 (offline conversion script)"
+_USER_AGENT = "NavGuard-NightWalkSafety-DataIngest/0.1 (offline conversion script)"
 _METERS_PER_DEGREE_LAT = 111_320.0
 
 # 臺北市 12 個行政區（含「區」字，對應警政署地址、Overpass 行政區名稱的格式）。

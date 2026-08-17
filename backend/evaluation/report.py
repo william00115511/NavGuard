@@ -201,7 +201,7 @@ def _fmt_optional(value: Optional[float], fmt: str) -> str:
 def render_markdown(summary: Summary, failures: list[tuple[str, str]]) -> str:
     ci_lo, ci_hi = summary.delta_safety_ci
     lines = [
-        "# Safeway vs Google Maps 安全性驗證報告",
+        "# NavGuard vs Google Maps 安全性驗證報告",
         "",
         f"- 成功比對樣本數：{summary.n_success}（另有 {summary.n_failed} 組未納入，見文末「未納入案例」）",
         f"- 起訖點：從路網隨機取樣，直線距離介於 {MIN_SCENARIO_DISTANCE_M:.0f}m–{MAX_SCENARIO_DISTANCE_M:.0f}m",
@@ -368,7 +368,7 @@ def render_html(summary: Summary, failures: list[tuple[str, str]]) -> str:
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<title>Safeway vs Google Maps 安全性驗證報告</title>
+<title>NavGuard vs Google Maps 安全性驗證報告</title>
 <style>
   body {{ font-family: -apple-system, "Segoe UI", "Noto Sans TC", sans-serif; background:#f7f8fa;
          color:#1f2933; margin:0; padding:32px 16px; }}
@@ -391,7 +391,7 @@ def render_html(summary: Summary, failures: list[tuple[str, str]]) -> str:
 </head>
 <body>
 <main>
-  <h1>Safeway vs Google Maps 安全性驗證報告</h1>
+  <h1>NavGuard vs Google Maps 安全性驗證報告</h1>
   <p class="meta">
     成功比對樣本數 {summary.n_success}（另有 {summary.n_failed} 組未納入）·
     起訖點隨機取樣，直線距離 {MIN_SCENARIO_DISTANCE_M:.0f}m–{MAX_SCENARIO_DISTANCE_M:.0f}m ·

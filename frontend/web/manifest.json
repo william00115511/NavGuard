@@ -1,11 +1,11 @@
 {
-    "name": "safeway_frontend",
-    "short_name": "safeway_frontend",
+    "name": "NavGuard",
+    "short_name": "NavGuard",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "NavGuard 夜間步行安全導航",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

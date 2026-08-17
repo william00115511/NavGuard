@@ -47,7 +47,7 @@ async def lifespan(app: FastAPI):
         reap_task.cancel()
 
 
-app = FastAPI(title="Safeway Backend", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="NavGuard Backend", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

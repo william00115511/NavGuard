@@ -103,6 +103,9 @@ class RouteMetrics:
     police_stations: Optional[list[NearbyPoint]] = None
     convenience_stores: Optional[list[NearbyPoint]] = None
     danger_zones: Optional[list[NearbyPoint]] = None
+    # 最快路線會經過、但推薦路線已繞開的危險點位；供前端在地圖上
+    # 解釋「為什麼這樣繞」。None 仍代表該類資料無覆蓋。
+    avoided_danger_zones: Optional[list[NearbyPoint]] = None
 
 
 @dataclass(frozen=True)

@@ -16,28 +16,29 @@ logger = logging.getLogger(__name__)
 
 
 SYSTEM_INSTRUCTION = """
-你是 Safeway 夜間步行路線助理，使用繁體中文。先收集起點與終點；安全優先權重
+你是 NavGuard 夜間步行路線助理，使用繁體中文。先收集起點與終點；安全優先權重
 （priority_alpha）由前端 UI 直接提供，不是你的判斷範圍，也不需要向使用者
 詢問或在對話中提及這個數值。只有起點與終點都確認後才能呼叫
 calculate_safe_route。不得自行編造座標、路線、距離、安全分數、點位或事件。
-工具回傳後只能根據工具資料摘要，不得修改任何數值，也不得宣稱路線絕對安全。
-每次提供路線都要附上工具回傳的 disclaimer 與 warnings。若使用者正遭遇立即
-危險，停止一般導航並建議聯絡當地緊急服務、前往明亮且有人員的公共場所。
+calculate_safe_route 的結構化結果會由系統介面直接顯示。你不得摘要、重述、
+列舉或貼出工具結果，不得輸出路線數值或 Google Maps 連結；呼叫工具後就結束
+該回合。使用者之後再提出目的地或路線需求時，必須視為新的需求：資訊足夠就
+再次呼叫 calculate_safe_route，資訊不足才簡短追問，不得拿上一筆工具結果作答。
+若使用者正遭遇立即危險，停止一般導航並建議聯絡當地緊急服務、前往明亮且有
+人員的公共場所。
 
-地點消歧原則：使用者提到連鎖品牌或有多間分店的地標（百貨公司、超商、
-連鎖店等）時，先自行判斷現有資訊是否已經足夠指向單一明確地點——例如
-對話中另一端的地址明顯只靠近某一間分店、使用者已提過所在城市或區域、
-或分店之間距離夠遠、走路路線有明顯差異，足以用地理位置排除其他分店。
-只要能合理判斷，就直接選用該分店繼續進行（呼叫工具時把地點說清楚，
-例如「大遠百（台北店）」），不要為了消歧而多問一輪。
+地點消歧原則：使用者提到可能對應多個實際地點的品牌、商場、分店或館別時，
+除非使用者已明確說出分店／館別，否則不得自行挑最近的一個，也不得呼叫
+calculate_safe_route。你必須先詢問使用者，並列出目前對話中的城市、區域、
+另一端地點與目前位置所能合理縮小出的所有候選，不得任意限制成 2 到 4 個，
+不得省略同一商圈內的其他館別。每個選項都要使用能清楚區分的完整名稱。
 
-注意：分店距離近不等於可以隨便選一間。像超商這種分店之間高度可互相
-替代的地標，即使沒有其他線索，選最近的一間通常就是使用者的意圖。但
-像百貨公司在同一商圈內的不同館別（例如新光三越信義新天地的 A9、A11
-等），使用者講出具體地標時通常是衝著特定館別去的，即使各館距離很近、
-走路路線差異不大，也不能只靠距離判斷該去哪一館——這種情況下如果沒有
-其他線索能縮小到單一館別，仍然要詢問使用者，並只列出你判斷最可能的
-少數幾個選項（2 到 4 個即可），不要把所有分店都列出來要使用者自己選。
+例如使用者在台北信義區語境中只說「新光三越」，或輸入常見近音／錯字
+「星光三越」，應先說明可能是指「新光三越」，並列出信義新天地 A4、A8、
+A9、A11 全部四個館別供使用者選擇；在使用者選定以前不得自行決定館別。
+如果現有資訊連城市或區域都無法確定，先詢問城市／區域，不得憑空杜撰或
+列出覆蓋範圍外的分店。只有像超商這類使用者通常不在意特定分店、語意明確
+表示「找最近一間」的可互相替代地點，才可以直接選最近的一間。
 """.strip()
 
 LOCATION_AVAILABLE_NOTE = (
@@ -95,6 +96,40 @@ def _response_text(content: types.Content | None) -> str:
     )
 
 
+def _has_usable_model_parts(content: Any) -> bool:
+    """只重用真的能送回 Vertex 的原始 model content。
+
+    Vertex 偶爾會以 HTTP 200 回傳空 candidate；把 `parts=[]` 原樣放進下一輪
+    contents 會造成整條模型降級鏈都收到 400 INVALID_ARGUMENT。這裡只接受
+    目前對話流程會產生的文字或 function call，其他空殼一律改由 message 的
+    deterministic text/tool_call 重建。
+    """
+    if not isinstance(content, types.Content) or not content.parts:
+        return False
+    return any(
+        (isinstance(part.text, str) and bool(part.text.strip()))
+        or part.function_call is not None
+        for part in content.parts
+    )
+
+
+def _is_invalid_history_error(exc: Exception) -> bool:
+    """辨識 Vertex 因對話 content/parts 不合法而回傳的 INVALID_ARGUMENT。
+
+    不直接依賴特定 transport 的例外類別，因為 API key 與 Vertex AI 兩種 client
+    可能包成不同 exception；錯誤碼與訊息才是兩邊共有的訊號。
+    """
+    error_text = f"{type(exc).__name__}: {exc}".upper()
+    is_invalid_argument = (
+        "INVALID_ARGUMENT" in error_text
+        or "INVALIDARGUMENT" in error_text
+        or "INVALID ARGUMENT" in error_text
+    )
+    return is_invalid_argument and any(
+        marker in error_text for marker in ("PART", "CONTENT", "HISTORY")
+    )
+
+
 class GoogleGenAIGateway:
     def __init__(
         self,
@@ -130,6 +165,7 @@ class GoogleGenAIGateway:
         config = self._configs[has_user_location]
         response = None
         last_exc: Exception | None = None
+        history_rebuilt = False
 
         for model_name in self._models:
             try:
@@ -141,6 +177,31 @@ class GoogleGenAIGateway:
                 logger.info("Successfully generated model turn with: %s", model_name)
                 break
             except Exception as exc:
+                # 若 Vertex 指出 history 的 content/parts 不合法，先完全捨棄 SDK
+                # 回傳的 raw content，僅從後端保存的語意欄位重建，再用同一模型
+                # 重試一次。後續模型也沿用清乾淨的 contents，不能把相同毒歷史
+                # 原封不動送遍整條 fallback chain。
+                if not history_rebuilt and _is_invalid_history_error(exc):
+                    history_rebuilt = True
+                    contents = self._to_contents(history, reuse_raw_content=False)
+                    logger.warning(
+                        "Gemini model '%s' rejected conversation history; rebuilt sanitized "
+                        "contents and retrying the same model once",
+                        model_name,
+                    )
+                    try:
+                        response = await self._client.aio.models.generate_content(
+                            model=model_name,
+                            contents=contents,
+                            config=config,
+                        )
+                        logger.info(
+                            "Successfully generated model turn with sanitized history: %s",
+                            model_name,
+                        )
+                        break
+                    except Exception as retry_exc:
+                        exc = retry_exc
                 logger.warning(
                     "Gemini model '%s' failed (error: %s). Trying next fallback model...",
                     model_name,
@@ -170,26 +231,32 @@ class GoogleGenAIGateway:
     @staticmethod
     def _to_contents(
         history: Sequence[ConversationMessage],
+        *,
+        reuse_raw_content: bool = True,
     ) -> list[types.Content]:
         contents: list[types.Content] = []
         for message in history:
-            if isinstance(message.raw_content, types.Content):
+            if reuse_raw_content and _has_usable_model_parts(message.raw_content):
                 contents.append(message.raw_content)
-            elif message.kind == "user":
+            elif message.kind == "user" and message.text.strip():
                 contents.append(
                     types.Content(
                         role="user",
                         parts=[types.Part.from_text(text=message.text)],
                     )
                 )
-            elif message.kind == "assistant":
+            elif message.kind == "assistant" and message.text.strip():
                 contents.append(
                     types.Content(
                         role="model",
                         parts=[types.Part.from_text(text=message.text)],
                     )
                 )
-            elif message.kind == "tool_call" and message.tool_call is not None:
+            elif (
+                message.kind == "tool_call"
+                and message.tool_call is not None
+                and message.tool_call.name.strip()
+            ):
                 contents.append(
                     types.Content(
                         role="model",
@@ -201,7 +268,7 @@ class GoogleGenAIGateway:
                         ],
                     )
                 )
-            elif message.kind == "tool_response":
+            elif message.kind == "tool_response" and message.tool_name.strip():
                 contents.append(
                     types.Content(
                         role="user",

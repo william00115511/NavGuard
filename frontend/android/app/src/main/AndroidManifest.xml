@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="Safeway"
+        android:label="NavGuard"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- Set MAPS_API_KEY in android/local.properties; never put server keys here. -->

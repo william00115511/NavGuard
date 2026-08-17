@@ -3,7 +3,7 @@ import pytest
 from app.data.store import DataStore
 from app.engine.geo import haversine_m
 from app.engine.graph import Edge, RoadGraph
-from app.engine.pathfinding import compute_path, find_node_path, straight_line_heuristic
+from app.engine.pathfinding import compute_path, edge_cost, find_node_path, straight_line_heuristic
 from app.engine.safety import EdgeSafetyIndex, build_scoring_profile, filter_active_points
 from app.config import EDGE_SAMPLE_INTERVAL_M
 from app.engine.geo import sample_along
@@ -73,6 +73,40 @@ def test_cost_prefers_short_distance_over_few_edges():
 
     result = compute_path(graph, safety, "A", "B", alpha=0.0)
     assert result.node_path == ["A", "B"]
+
+
+def test_known_hazard_penalty_can_exceed_raw_distance():
+    assert edge_cost(100.0, safety=0.0, alpha=0.6, risk_exposure=1.0) > 100.0
+    assert edge_cost(100.0, safety=0.0, alpha=0.0, risk_exposure=1.0) == 100.0
+
+
+def test_default_safety_preference_detours_around_known_hazard():
+    """Regression: a short hazardous street must lose to a reasonable detour."""
+    nodes = {
+        "A": LatLng(25.0, 121.5),
+        "B": LatLng(25.0, 121.501),
+        "C": LatLng(25.0006, 121.5005),
+    }
+    pairs = [("A", "B"), ("A", "C"), ("C", "B")]
+    edges = [
+        Edge(
+            from_id=a,
+            to_id=b,
+            distance_m=haversine_m(nodes[a], nodes[b]),
+            samples=sample_along(nodes[a], nodes[b], EDGE_SAMPLE_INTERVAL_M),
+        )
+        for a, b in pairs
+    ]
+    graph = RoadGraph(nodes=nodes, edges=edges)
+    safety = {edge.key: 0.5 for edge in edges}
+    risk = {edge.key: 0.0 for edge in edges}
+    risk[edges[0].key] = 1.0
+
+    balanced = compute_path(graph, safety, "A", "B", alpha=0.6, risk_by_edge=risk)
+    fastest = compute_path(graph, safety, "A", "B", alpha=0.0, risk_by_edge=risk)
+
+    assert balanced.node_path == ["A", "C", "B"]
+    assert fastest.node_path == ["A", "B"]
 
 
 def test_astar_and_dijkstra_agree(demo):

@@ -8,6 +8,7 @@ from app.chat.gemini_chat_service import (
     ConversationMessage,
     GeminiChatService,
     ModelReply,
+    ROUTE_RESULT_PRESENTED_MARKER,
     ToolCall,
 )
 from interfaces import (
@@ -237,6 +238,30 @@ def test_model_question_returns_collecting_info() -> None:
     assert result.reply_text == "請問目的地是哪裡？"
 
 
+def test_empty_model_reply_uses_safe_history_message_on_next_turn() -> None:
+    """HTTP 200 但沒有 text/tool call 的 Gemini 回覆不得把空 raw content 留在
+    session，否則下一輪 Vertex 會拒絕整份 contents。"""
+    empty_raw_content = object()
+    gateway = ScriptedGateway(
+        [
+            ModelReply(raw_content=empty_raw_content),
+            ModelReply(text="請問新的目的地是哪裡？"),
+        ]
+    )
+    service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
+
+    first = run(service.handle_message(session_id, "第一則訊息"))
+    second = run(service.handle_message(session_id, "第二則訊息"))
+
+    assert first.reply_text == "請再提供起點與終點。"
+    assert second.status is ChatStatus.COLLECTING_INFO
+    saved_assistant = gateway.histories[1][1]
+    assert saved_assistant.kind == "assistant"
+    assert saved_assistant.text == "請再提供起點與終點。"
+    assert saved_assistant.raw_content is None
+
+
 def test_route_ready_does_not_make_a_second_gemini_call() -> None:
     """route_ready 的數值資料已經結構化（route_result），不需要再打一次 Gemini
     把它轉成文字，reply_text 也不再帶值（§5.1 修訂）。"""
@@ -250,6 +275,32 @@ def test_route_ready_does_not_make_a_second_gemini_call() -> None:
     assert result.route_result is not None
     assert result.reply_text is None
     assert len(gateway.histories) == 1
+
+
+def test_route_ready_closes_tool_turn_without_exposing_route_payload() -> None:
+    """下一輪 Gemini 不應看到內部最快路線、metrics 或 Maps URL，也不應把
+    尚未收尾的 function response 當成待摘要內容。"""
+    gateway = ScriptedGateway([route_call(), ModelReply(text="請問新的目的地是哪裡？")])
+    service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = new_session(service)
+
+    first = run(service.handle_message(session_id, "第一次規劃"))
+    second = run(service.handle_message(session_id, "我想規劃另一條路線"))
+
+    assert first.status is ChatStatus.ROUTE_READY
+    assert second.status is ChatStatus.COLLECTING_INFO
+    previous_turn = gateway.histories[1][:-1]
+    assert [message.kind for message in previous_turn] == [
+        "user",
+        "tool_call",
+        "tool_response",
+        "assistant",
+    ]
+    assert previous_turn[-2].tool_response == {
+        "status": "route_ready",
+        "result_presented_by_ui": True,
+    }
+    assert previous_turn[-1].text == ROUTE_RESULT_PRESENTED_MARKER
 
 
 def test_frontend_priority_alpha_is_passed_to_route_engine() -> None:

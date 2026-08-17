@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-import json
-from dataclasses import asdict, dataclass, field
-from datetime import datetime
-from enum import Enum
+from dataclasses import dataclass, field
 from time import monotonic
 from typing import Any, Callable, Protocol, Sequence
 from uuid import uuid4
@@ -31,6 +28,13 @@ class GeminiGatewayError(RuntimeError):
 
 
 DEFAULT_PRIORITY_ALPHA = 0.6
+
+# 路線結果由 API 以結構化 JSON 直接交給前端顯示。這則訊息只用來在 Gemini
+# 對話歷史中結束 function-calling 回合，不會回傳給使用者。
+ROUTE_RESULT_PRESENTED_MARKER = (
+    "路線工具已執行完成，結構化結果已由系統介面顯示。不要摘要、重述或列出"
+    "這筆工具結果；下一則使用者訊息視為新的對話回合。"
+)
 
 
 class CalculateRouteArguments(BaseModel):
@@ -168,10 +172,18 @@ class GeminiChatService(ChatService):
             return self._error("GEMINI_UNAVAILABLE", "目前無法理解路線需求，請稍後再試。")
 
         if not reply.tool_calls:
-            text = reply.text.strip() or "請再提供起點與終點。"
+            model_text = reply.text.strip()
+            text = model_text or "請再提供起點與終點。"
             self._append_history(
                 session,
-                ConversationMessage(kind="assistant", text=text, raw_content=reply.raw_content),
+                # Gemini 偶爾會回 HTTP 200 但 candidate.content.parts 為空。
+                # 此時畫面雖使用 fallback 文字，若仍保存原始空 content，下一輪
+                # Vertex 會以「must include at least one parts field」拒絕整份歷史。
+                ConversationMessage(
+                    kind="assistant",
+                    text=text,
+                    raw_content=reply.raw_content if model_text else None,
+                ),
             )
             return ChatResult(status=ChatStatus.COLLECTING_INFO, reply_text=text)
 
@@ -230,12 +242,23 @@ class GeminiChatService(ChatService):
             ConversationMessage(
                 kind="tool_response",
                 tool_name=tool_call.name,
-                tool_response=self._route_result_to_json(route),
+                # 下一輪只需要知道工具已成功完成。完整 RouteResult 可能包含內部
+                # fastest 對照路線與 Maps URL；留在歷史裡會讓模型誤把它們重述
+                # 成普通聊天文字。
+                tool_response={
+                    "status": "route_ready",
+                    "result_presented_by_ui": True,
+                },
             ),
+        )
+        self._append_history(
+            session,
+            ConversationMessage(kind="assistant", text=ROUTE_RESULT_PRESENTED_MARKER),
         )
 
         # route_ready 不需要 Gemini 把數值轉成文字（那份文字已經被結構化 route_result
-        # 取代，見 AGENTS.md §5.1 修訂），所以這裡不再多打一次 Gemini 拿 reply_text。
+        # 取代，見 AGENTS.md §5.1 修訂），所以這裡不再多打一次 Gemini 拿 reply_text；
+        # 上面的 deterministic assistant marker 只負責封閉歷史中的工具回合。
         return ChatResult(status=ChatStatus.ROUTE_READY, route_result=route)
 
     async def _resolve_origin(
@@ -290,17 +313,6 @@ class GeminiChatService(ChatService):
 
     def _is_expired(self, session: _SessionState) -> bool:
         return self._clock() - session.last_access_at > self._session_ttl_seconds
-
-    @staticmethod
-    def _route_result_to_json(route: RouteResult) -> dict[str, Any]:
-        def encode(value: Any) -> Any:
-            if isinstance(value, Enum):
-                return value.value
-            if isinstance(value, datetime):
-                return value.isoformat()
-            raise TypeError(f"unsupported route result value: {type(value).__name__}")
-
-        return json.loads(json.dumps(asdict(route), default=encode))
 
     @staticmethod
     def _error(error_code: str, reply_text: str) -> ChatResult:

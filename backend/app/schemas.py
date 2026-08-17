@@ -93,6 +93,7 @@ class RouteMetricsOut(BaseModel):
     police_stations: Optional[list[NearbyPointOut]] = None
     convenience_stores: Optional[list[NearbyPointOut]] = None
     danger_zones: Optional[list[NearbyPointOut]] = None
+    avoided_danger_zones: Optional[list[NearbyPointOut]] = None
 
 
 class RouteEndpointOut(BaseModel):
@@ -213,6 +214,7 @@ def metrics_to_out(metrics: RouteMetrics) -> RouteMetricsOut:
         police_stations=_nearby_list_to_out(metrics.police_stations),
         convenience_stores=_nearby_list_to_out(metrics.convenience_stores),
         danger_zones=_nearby_list_to_out(metrics.danger_zones),
+        avoided_danger_zones=_nearby_list_to_out(metrics.avoided_danger_zones),
     )
 
 

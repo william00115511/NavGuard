@@ -161,7 +161,12 @@ def test_metrics_use_null_not_zero_for_uncovered_categories():
     """§1 原則 3：沒有覆蓋的類別回 null，不能填 0 或空陣列。"""
     metrics = _calculate().json()["route"]["metrics"]
     assert metrics["lit_coverage_ratio"] is None or metrics["lit_coverage_ratio"] >= 0
-    for field in ("police_stations", "convenience_stores", "danger_zones"):
+    for field in (
+        "police_stations",
+        "convenience_stores",
+        "danger_zones",
+        "avoided_danger_zones",
+    ):
         assert metrics[field] is None or isinstance(metrics[field], list)
 
 
@@ -170,7 +175,12 @@ def test_route_ready_returns_concrete_police_and_help_point_locations():
     metrics = _calculate().json()["route"]["metrics"]
     assert "police_within_150m" not in metrics
     assert "help_points_within_50m" not in metrics
-    for field in ("police_stations", "convenience_stores", "danger_zones"):
+    for field in (
+        "police_stations",
+        "convenience_stores",
+        "danger_zones",
+        "avoided_danger_zones",
+    ):
         points = metrics[field]
         if not points:
             continue
@@ -178,6 +188,16 @@ def test_route_ready_returns_concrete_police_and_help_point_locations():
             assert isinstance(point["lat"], float)
             assert isinstance(point["lng"], float)
             assert "place_id" in point
+
+
+def test_route_reports_danger_zones_avoided_vs_fastest_route():
+    """推薦路線繞開的危險點位仍要回傳，讓前端可以在地圖上解釋繞行原因。"""
+    metrics = _calculate(priority_alpha=0.6).json()["route"]["metrics"]
+    avoided = metrics["avoided_danger_zones"]
+    assert avoided is None or isinstance(avoided, list)
+    if avoided:
+        selected_ids = {point["place_id"] for point in metrics["danger_zones"] or []}
+        assert all(point["place_id"] not in selected_ids for point in avoided)
 
 
 def test_route_calculate_rejects_out_of_coverage_with_http_200():

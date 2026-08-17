@@ -93,4 +93,4 @@ def test_render_markdown_includes_failures_and_headline_numbers():
     assert "s99" in text
     assert "google_no_route" in text
     assert f"{summary.win_rate_safest_vs_google:.0%}" in text
-    assert "Safeway vs Google Maps" in text
+    assert "NavGuard vs Google Maps" in text

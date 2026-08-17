@@ -1,4 +1,4 @@
-# AGENTS.md — Safeway 夜間步行安全導航
+# AGENTS.md — NavGuard 夜間步行安全導航
 
 > 這份文件是給 AI 助手（以及新加入的開發者）讀的專案上下文。閱讀後應該能理解：這個專案在做什麼、架構怎麼切、每個模組的輸入輸出契約是什麼、哪些事情絕對不能做。
 >
@@ -194,8 +194,17 @@ safety(edge) = 1 / (1 + exp(-k × raw_score(edge)))     # k 為調參常數，�
 ### 4.4 綜合成本函數（安全 vs 速度）
 
 ```text
-edge_cost = length_m × ( (1 - α) + α × (1 - safety(edge)) )
+edge_cost = length_m × (
+    (1 - α)
+    + α × (1 - safety(edge))
+    + α × risk_multiplier × risk_exposure(edge)
+)
 ```
+
+`risk_exposure(edge)` 只由負面類別的原始貢獻獨立計算後壓到 0~1，
+不會被路燈、警局或超商等正面點位抵銷。這個額外項讓已知危險路段
+的成本可以高於原始距離，有合理替代道路時會優先繞行；路網若無其他通路，
+仍可回傳路線與 warning，不會因為單一點位直接判定無路可走。
 
 ⚠️ **成本必須乘上邊長**。若 cost 是每條 edge 的固定值而非「每公尺代價」，最短路徑演算法會偏好「edge 數量少」的路徑而非「距離短」的路徑——OSM 路網中一條長幹道可能是一條 edge，十條短巷也是十條 edge，不乘長度會嚴重失真。
 
@@ -227,6 +236,7 @@ h(n) = haversine(n, goal) × (1 - α)
 | `convenience_stores` | 沿線 80m（同 `categories.json` 的 `radius_m`）內 24 小時超商的**具體點位列表**（`place_id`/`lat`/`lng`/`name`），該類別無資料時為 `null`（§6.2 修訂） |
 | `police_stations` | 沿線 150m 內警察局的**具體點位列表**，格式同上，該類別無資料時為 `null`（§6.2 修訂） |
 | `danger_zones` | 沿線 80m 內危險點位的**具體點位列表**（`place_id`／`lat`/`lng`/`name`/`summary`），一律以負面權重（`categories.json` 的 `effect: negative`）計入安全分數；該類別無資料時為 `null`（§6.2 修訂）。這是官方公告／OSM 標記的警示路段，非受害者個資，維持具體點位呈現，不做 grid/density 聚合 |
+| `avoided_danger_zones` | 最快對照路線會經過、但本次推薦路線已繞開的 `danger_zone` 具體點位列表；前端用來標示繞行原因。該類別無資料時為 `null` |
 | `passed_landmarks` | 其餘類別（路燈等）經過數量的 dict；`police_station`／`convenience_store`／`danger_zone` 已用上面三個具體點位列表取代，不再重複列在這裡計數 |
 | `detour_vs_fastest_min` | 相較 α=0 路線多花的分鐘數 |
 | `data_coverage` | 本次實際有資料的類別清單 |
@@ -329,7 +339,7 @@ tool call（目前只取 `tool_calls[0]`），並在 session 狀態裡加一個�
 ### 5.5 System Instruction
 
 ```text
-你是 Safeway 的夜間步行安全導航助手，使用繁體中文。
+你是 NavGuard 的夜間步行安全導航助手，使用繁體中文。
 
 你必須呼叫工具取得所有地理與安全資料。你不得編造路燈位置、營業時間、
 警方位置、犯罪統計、安全分數或任何形式的安全保證。工具回傳什麼數值，

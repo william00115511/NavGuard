@@ -4,6 +4,7 @@ from app.engine.safety import (
     decay,
     filter_active_points,
     raw_score_at,
+    risk_exposure,
     sigmoid_safety,
 )
 from interfaces import LatLng, RouteWarning
@@ -72,6 +73,12 @@ def test_sigmoid_is_fixed_and_comparable_across_requests():
     assert sigmoid_safety(0.0) == 0.5
     assert sigmoid_safety(5.0) > sigmoid_safety(1.0) > 0.5
     assert 0.0 < sigmoid_safety(-5.0) < 0.5
+
+
+def test_negative_risk_exposure_is_bounded_but_preserves_magnitude():
+    assert risk_exposure(0.0) == 0.0
+    assert risk_exposure(-5.0) > risk_exposure(-1.0) > 0.0
+    assert risk_exposure(-100.0) <= 1.0
 
 
 def test_missing_category_is_removed_and_others_renormalized():

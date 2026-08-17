@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,12 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 const _fallbackLocation = LatLng(25.0330, 121.5654);
+const _routeColor = Color(0xffc39a4b);
+// google_maps_flutter 的預設 pin 以 HSV hue 調色；40° 對應
+// _routeColor 的金棕色，讓目的地 marker 與路徑保持同一色系。
+const _routeMarkerHue = 40.0;
+const _warningOrange = Color(0xffff7800);
+const _warningMarkerHue = 24.0;
 const _compileTimeApiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
   defaultValue: '',
@@ -30,10 +37,13 @@ int _indexForAlpha(double alpha) {
   return closestIndex;
 }
 
+String _preferenceLabelForAlpha(double alpha) =>
+    const ['快速', '偏快', '平衡', '偏安全', '安全'][_indexForAlpha(alpha)];
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _apiBaseUrl = await _loadApiBaseUrl();
-  runApp(const SafewayApp());
+  runApp(const NavGuardApp());
 }
 
 /// `API_BASE_URL` 可供 CI 或臨時測試覆寫；一般開發讀取 assets/.env。
@@ -62,13 +72,13 @@ Future<String> _loadApiBaseUrl() async {
   return '';
 }
 
-class SafewayApp extends StatelessWidget {
-  const SafewayApp({super.key});
+class NavGuardApp extends StatelessWidget {
+  const NavGuardApp({super.key});
 
   @override
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'Safeway',
+    title: 'NavGuard',
     theme: ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
@@ -89,16 +99,16 @@ class SafeNavigationScreen extends StatefulWidget {
 }
 
 class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
-  final _api = SafewayChatApi();
+  final _api = NavGuardChatApi();
   final _input = TextEditingController();
   final _chatSheetExtent = ValueNotifier<double>(.4);
   final _chatRevision = ValueNotifier<int>(0);
   final _messages = <ChatMessage>[
-    ChatMessage.assistant('晚上好，我是 Safeway。告訴我你想從哪裡走到哪裡；我會依公開資料提供較安全的步行建議。'),
+    ChatMessage.assistant('你好，我是 NavGuard。告訴我你想從哪裡走到哪裡；我會依公開資料提供較安全的步行建議。'),
   ];
   GoogleMapController? _map;
+  BitmapDescriptor? _routeOriginIcon;
   LatLng _location = _fallbackLocation;
-  String? _sessionId;
   RouteReadyResponse? _routeResponse;
   SafeRoute? _selectedRoute;
   bool _waiting = false;
@@ -108,8 +118,51 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
   @override
   void initState() {
     super.initState();
-    _getLocationAndSession();
+    _loadRouteOriginIcon();
+    _getLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showChatSheet());
+  }
+
+  Future<void> _loadRouteOriginIcon() async {
+    const logicalSize = 30.0;
+    const pixelRatio = 3.0;
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder)..scale(pixelRatio);
+    final center = const Offset(logicalSize / 2, logicalSize / 2);
+
+    canvas.drawCircle(
+      center,
+      9.5,
+      Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.fill
+        ..isAntiAlias = true,
+    );
+    canvas.drawCircle(
+      center,
+      7.5,
+      Paint()
+        ..color = _routeColor
+        ..style = PaintingStyle.fill
+        ..isAntiAlias = true,
+    );
+
+    final picture = recorder.endRecording();
+    final image = await picture.toImage(
+      (logicalSize * pixelRatio).round(),
+      (logicalSize * pixelRatio).round(),
+    );
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    image.dispose();
+    picture.dispose();
+    if (byteData == null || !mounted) return;
+
+    setState(() {
+      _routeOriginIcon = BitmapDescriptor.bytes(
+        byteData.buffer.asUint8List(),
+        imagePixelRatio: pixelRatio,
+      );
+    });
   }
 
   @override
@@ -121,7 +174,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
     super.dispose();
   }
 
-  Future<void> _getLocationAndSession() async {
+  Future<void> _getLocation() async {
     try {
       if (await Geolocator.isLocationServiceEnabled()) {
         var permission = await Geolocator.checkPermission();
@@ -140,21 +193,6 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
     }
     if (!mounted) return;
     setState(() {});
-    await _createSession();
-  }
-
-  Future<void> _createSession() async {
-    try {
-      final session = await _api.createSession(_location);
-      if (mounted) setState(() => _sessionId = session.id);
-    } on ChatApiException catch (error) {
-      if (mounted && _api.isConfigured) _showSnackbar(error.message);
-    } catch (_) {
-      // Session 建立失敗不能讓初始化流程未捕捉例外；使用者仍可重試。
-      if (mounted && _api.isConfigured) {
-        _showSnackbar('無法連線至導航服務，請確認手機與後端在同一個 Wi-Fi。');
-      }
-    }
   }
 
   Future<void> _sendMessage() async {
@@ -167,9 +205,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
     });
     _chatRevision.value++;
     try {
-      if (_sessionId == null && _api.isConfigured) await _createSession();
       final response = await _api.sendMessage(
-        sessionId: _sessionId,
         message: text,
         location: _location,
         priorityAlpha: _priorityAlpha,
@@ -184,7 +220,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
         );
         if (response is RouteReadyResponse) {
           _routeResponse = response;
-          _selectedRoute = response.selectedRoute;
+          _selectedRoute = response.route;
         }
       });
       _chatRevision.value++;
@@ -225,9 +261,9 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
   Future<void> _showRecommendedRoute(RouteReadyResponse response) async {
     setState(() {
       _routeResponse = response;
-      _selectedRoute = response.selectedRoute;
+      _selectedRoute = response.route;
     });
-    await _focusRoutes(response.routes);
+    await _focusRoutes([response.route]);
     if (_isChatSheetOpen && mounted) Navigator.of(context).pop();
   }
 
@@ -238,7 +274,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
       builder: (context) => AlertDialog(
         title: const Text('在 Google Maps 開啟'),
         content: const Text(
-          'Google Maps 會依自己的演算法重新規劃，實際路線可能與 Safeway 的推薦路徑略有不同。',
+          'Google Maps 會依自己的演算法重新規劃，實際路線可能與 NavGuard 的推薦路徑略有不同。',
         ),
         actions: [
           TextButton(
@@ -259,6 +295,34 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
         ) &&
         mounted) {
       _showSnackbar('無法開啟 Google Maps。');
+    }
+  }
+
+  Future<void> _showPointDetails(NearbyPoint point, MapPointKind kind) async {
+    await _map?.animateCamera(CameraUpdate.newLatLng(point.position));
+    if (!mounted) return;
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: const Color(0xff242117),
+      builder: (context) => _MapPointDetailsSheet(
+        point: point,
+        kind: kind,
+        onOpenGoogleMaps: () => _openPointInGoogleMaps(point),
+      ),
+    );
+  }
+
+  Future<void> _openPointInGoogleMaps(NearbyPoint point) async {
+    final parameters = <String, String>{
+      'api': '1',
+      'query': '${point.lat},${point.lng}',
+      if (point.placeId != null) 'query_place_id': point.placeId!,
+    };
+    final url = Uri.https('www.google.com', '/maps/search/', parameters);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication) &&
+        mounted) {
+      _showSnackbar('無法在 Google Maps 開啟這個地點。');
     }
   }
 
@@ -292,30 +356,115 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             polylines: {
-              for (final route in response?.routes ?? <SafeRoute>[])
+              if (_selectedRoute != null)
                 Polyline(
-                  polylineId: PolylineId(route.id),
-                  points: route.path,
-                  width: route == _selectedRoute ? 7 : 4,
-                  color: route.id == 'fastest'
-                      ? const Color(0xff677a89)
-                      : const Color(0xffc39a4b),
-                  patterns: route == _selectedRoute
-                      ? const []
-                      : [PatternItem.dot, PatternItem.gap(10)],
+                  polylineId: const PolylineId('recommended-route'),
+                  points: _selectedRoute!.path,
+                  width: 7,
+                  color: _routeColor,
                 ),
             },
             markers: {
-              Marker(
-                markerId: const MarkerId('current-location'),
-                position: _location,
-                infoWindow: const InfoWindow(title: '目前位置'),
-              ),
-              if (_selectedRoute?.path.isNotEmpty == true)
+              if (response != null && _routeOriginIcon != null)
                 Marker(
-                  markerId: const MarkerId('destination'),
+                  markerId: const MarkerId('route-origin'),
+                  position:
+                      response.origin?.position ??
+                      (response.route.path.isNotEmpty
+                          ? response.route.path.first
+                          : _location),
+                  icon: _routeOriginIcon!,
+                  anchor: const Offset(.5, .5),
+                  infoWindow: InfoWindow(
+                    title: response.origin?.displayName('目前位置') ?? '路線起點',
+                    snippet: '路線起點',
+                  ),
+                )
+              else if (response == null)
+                Marker(
+                  markerId: const MarkerId('current-location'),
+                  position: _location,
+                  infoWindow: const InfoWindow(title: '目前位置'),
+                ),
+              if (response?.destination != null)
+                Marker(
+                  markerId: const MarkerId('route-destination'),
+                  position: response!.destination!.position,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(_routeMarkerHue),
+                  infoWindow: InfoWindow(
+                    title: response.destination!.displayName('目的地'),
+                    snippet: '路線終點',
+                  ),
+                )
+              else if (_selectedRoute?.path.isNotEmpty == true)
+                Marker(
+                  markerId: const MarkerId('route-destination'),
                   position: _selectedRoute!.path.last,
                   infoWindow: const InfoWindow(title: '目的地'),
+                ),
+              for (final point
+                  in _selectedRoute?.metrics.policeStations ??
+                      const <NearbyPoint>[])
+                Marker(
+                  markerId: MarkerId('police-${point.id}'),
+                  position: point.position,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueAzure,
+                  ),
+                  infoWindow: InfoWindow(
+                    title: point.displayName('警察局'),
+                    snippet: '警察局／可求助地點',
+                  ),
+                  onTap: () =>
+                      _showPointDetails(point, MapPointKind.policeStation),
+                ),
+              for (final point
+                  in _selectedRoute?.metrics.convenienceStores ??
+                      const <NearbyPoint>[])
+                Marker(
+                  markerId: MarkerId('store-${point.id}'),
+                  position: point.position,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueGreen,
+                  ),
+                  infoWindow: InfoWindow(
+                    title: point.displayName('24 小時便利商店'),
+                    snippet: '24 小時便利商店／可求助據點',
+                  ),
+                  onTap: () =>
+                      _showPointDetails(point, MapPointKind.convenienceStore),
+                ),
+              for (final point
+                  in _selectedRoute?.metrics.dangerZones ??
+                      const <NearbyPoint>[])
+                Marker(
+                  markerId: MarkerId('danger-${point.id}'),
+                  position: point.position,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    _warningMarkerHue,
+                  ),
+                  infoWindow: InfoWindow(
+                    title: point.displayName('需留意地點'),
+                    snippet: point.summary ?? '路線沿途需留意的地點',
+                  ),
+                  onTap: () =>
+                      _showPointDetails(point, MapPointKind.dangerZone),
+                ),
+              for (final point
+                  in _selectedRoute?.metrics.avoidedDangerZones ??
+                      const <NearbyPoint>[])
+                Marker(
+                  markerId: MarkerId('avoided-danger-${point.id}'),
+                  position: point.position,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    _warningMarkerHue,
+                  ),
+                  infoWindow: InfoWindow(
+                    title: '已繞開：${point.displayName('危險區域')}',
+                    snippet: point.summary ?? '推薦路線已繞開此需留意地點',
+                  ),
+                  onTap: () =>
+                      _showPointDetails(point, MapPointKind.dangerZone),
                 ),
             },
           ),
@@ -339,7 +488,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
             right: 16,
             top: 112,
             child: FloatingActionButton.small(
-              onPressed: _getLocationAndSession,
+              onPressed: _getLocation,
               child: const Icon(Icons.my_location),
             ),
           ),
@@ -348,10 +497,8 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
               alignment: Alignment.bottomCenter,
               child: _RouteSummary(
                 response: response,
-                selected: _selectedRoute!,
-                onSelect: (route) => setState(() => _selectedRoute = route),
                 onOpenGoogleMaps: _openGoogleMaps,
-                onContinueChat: _showChatSheet,
+                onContinueChat: () => _showChatSheet(initialExtent: .9),
               ),
             ),
           Positioned(
@@ -369,9 +516,9 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
     );
   }
 
-  Future<void> _showChatSheet() async {
+  Future<void> _showChatSheet({double initialExtent = .4}) async {
     if (_isChatSheetOpen || !mounted) return;
-    _chatSheetExtent.value = .4;
+    _chatSheetExtent.value = initialExtent.clamp(.4, .9).toDouble();
     setState(() => _isChatSheetOpen = true);
     await showModalBottomSheet<void>(
       context: context,
@@ -728,7 +875,7 @@ class _ChatPanelState extends State<_ChatPanel> {
                           },
                           textInputAction: TextInputAction.send,
                           decoration: const InputDecoration(
-                            hintText: '例如：從台北車站走到公館夜市',
+                            hintText: '例如：前往台北市政府',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(999),
@@ -831,6 +978,14 @@ class _MessageBubble extends StatelessWidget {
             ),
           if (message.routeResponse?.googleMapsUrl != null) ...[
             const SizedBox(height: 8),
+            Chip(
+              avatar: const Icon(Icons.shield_outlined, size: 17),
+              label: Text(
+                '路線偏好：${_preferenceLabelForAlpha(message.routeResponse!.route.alpha)}',
+              ),
+              visualDensity: VisualDensity.compact,
+            ),
+            const SizedBox(height: 4),
             FilledButton.icon(
               onPressed: () => onShowRecommendedRoute(message.routeResponse!),
               icon: const Icon(Icons.route_outlined, size: 18),
@@ -888,7 +1043,7 @@ class _TypingBubbleState extends State<_TypingBubble>
             child: child,
           );
         },
-        child: const Text('Safeway 正在理解你的需求…'),
+        child: const Text('NavGuard 正在理解你的需求…'),
       ),
     ),
   );
@@ -949,130 +1104,137 @@ class _RoutePreferenceBar extends StatelessWidget {
 class _RouteSummary extends StatelessWidget {
   const _RouteSummary({
     required this.response,
-    required this.selected,
-    required this.onSelect,
     required this.onOpenGoogleMaps,
     required this.onContinueChat,
   });
   final RouteReadyResponse response;
-  final SafeRoute selected;
-  final ValueChanged<SafeRoute> onSelect;
   final VoidCallback onOpenGoogleMaps;
   final VoidCallback onContinueChat;
 
   @override
-  Widget build(BuildContext context) => Container(
-    width: double.infinity,
-    padding: EdgeInsets.fromLTRB(
-      16,
-      10,
-      16,
-      MediaQuery.paddingOf(context).bottom + 14,
-    ),
-    decoration: const BoxDecoration(
-      color: Color(0xee242117),
-      borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 36,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: response.routes.length,
-            separatorBuilder: (_, index) => const SizedBox(width: 8),
-            itemBuilder: (_, index) {
-              final route = response.routes[index];
-              return ChoiceChip(
-                label: Text(route.label),
-                selected: route == selected,
-                onSelected: (_) => onSelect(route),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          '${_distance(selected.metrics.distanceMeters)} · 約 ${selected.metrics.durationMinutes} 分鐘',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 6),
-        Text(
-          response.replyText,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 13, color: Color(0xffded7c5)),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 5,
-          children: [
-            if (selected.metrics.litCoverageRatio != null)
-              _MetricChip(
-                icon: Icons.lightbulb_outline,
-                text:
-                    '照明 ${(selected.metrics.litCoverageRatio! * 100).round()}%',
+  Widget build(BuildContext context) {
+    final selected = response.route;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(
+        16,
+        18,
+        16,
+        MediaQuery.paddingOf(context).bottom + 8,
+      ),
+      decoration: const BoxDecoration(
+        color: Color(0xee242117),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.trip_origin, size: 18, color: Color(0xff71b97a)),
+              const SizedBox(width: 7),
+              Expanded(
+                child: Text(
+                  response.origin?.displayName('目前位置') ?? '起點',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            _MetricChip(
-              icon: Icons.storefront_outlined,
-              text: '${selected.metrics.helpPoints} 個求助據點',
-            ),
-          ],
-        ),
-        for (final reason in selected.reasons.take(1))
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.check_circle_outline,
-                  color: Color(0xffe1bc6b),
-                  size: 17,
-                ),
-                const SizedBox(width: 6),
-                Expanded(child: Text(reason)),
-              ],
-            ),
+            ],
           ),
-        for (final warning in selected.warnings.take(1))
           Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Row(
-              children: [
-                const Icon(Icons.info_outline, color: Colors.amber, size: 17),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    warning,
-                    style: const TextStyle(color: Colors.amber),
+            padding: const EdgeInsets.only(left: 8),
+            child: Container(width: 2, height: 12, color: Colors.white24),
+          ),
+          Row(
+            children: [
+              const Icon(Icons.location_on, size: 19, color: Color(0xffd99b65)),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  response.destination?.displayName('目的地') ?? '終點',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${_distance(selected.metrics.distanceMeters)} · 約 ${selected.metrics.durationMinutes} 分鐘',
+            style: const TextStyle(fontSize: 13, color: Color(0xffded7c5)),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 5,
+            children: [
+              if (selected.metrics.litCoverageRatio != null)
+                _MetricChip(
+                  icon: Icons.lightbulb_outline,
+                  text:
+                      '照明 ${(selected.metrics.litCoverageRatio! * 100).round()}%',
+                ),
+              _MetricChip(
+                icon: Icons.storefront_outlined,
+                text: '${selected.metrics.convenienceStores.length} 間便利商店',
+              ),
+              _MetricChip(
+                icon: Icons.local_police_outlined,
+                text: '${selected.metrics.policeStations.length} 間警察局',
+              ),
+              if (selected.metrics.dangerZones.isNotEmpty)
+                _MetricChip(
+                  icon: Icons.warning_amber_rounded,
+                  text: '${selected.metrics.dangerZones.length} 個需留意地點',
+                ),
+              if (selected.metrics.avoidedDangerZones.isNotEmpty)
+                _MetricChip(
+                  icon: Icons.alt_route_rounded,
+                  text:
+                      '已繞開 ${selected.metrics.avoidedDangerZones.length} 個危險區域',
+                ),
+            ],
+          ),
+          for (final warning in response.warnings.take(1))
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline, color: Colors.amber, size: 17),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      warning,
+                      style: const TextStyle(color: Colors.amber),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: onOpenGoogleMaps,
+              icon: const Icon(Icons.directions_outlined),
+              label: const Text('在 Google Maps 開啟'),
             ),
           ),
-        const SizedBox(height: 8),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton.icon(
-            onPressed: onOpenGoogleMaps,
-            icon: const Icon(Icons.directions_outlined),
-            label: const Text('在 Google Maps 開啟'),
+          Align(
+            alignment: Alignment.center,
+            child: TextButton.icon(
+              onPressed: onContinueChat,
+              icon: const Icon(Icons.chat_bubble_outline, size: 18),
+              label: const Text('繼續對話或調整偏好'),
+            ),
           ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: TextButton.icon(
-            onPressed: onContinueChat,
-            icon: const Icon(Icons.chat_bubble_outline, size: 18),
-            label: const Text('繼續對話或調整偏好'),
-          ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 class _MetricChip extends StatelessWidget {
@@ -1084,41 +1246,144 @@ class _MetricChip extends StatelessWidget {
       Chip(avatar: Icon(icon, size: 16), label: Text(text));
 }
 
-class SafewayChatApi {
+enum MapPointKind { convenienceStore, policeStation, dangerZone }
+
+class _MapPointDetailsSheet extends StatelessWidget {
+  const _MapPointDetailsSheet({
+    required this.point,
+    required this.kind,
+    required this.onOpenGoogleMaps,
+  });
+
+  final NearbyPoint point;
+  final MapPointKind kind;
+  final VoidCallback onOpenGoogleMaps;
+
+  IconData get _icon => switch (kind) {
+    MapPointKind.convenienceStore => Icons.storefront_outlined,
+    MapPointKind.policeStation => Icons.local_police_outlined,
+    MapPointKind.dangerZone => Icons.warning_amber_rounded,
+  };
+
+  Color get _color => switch (kind) {
+    MapPointKind.convenienceStore => const Color(0xff66bb6a),
+    MapPointKind.policeStation => const Color(0xff42a5f5),
+    MapPointKind.dangerZone => _warningOrange,
+  };
+
+  String get _category => switch (kind) {
+    MapPointKind.convenienceStore => '24 小時便利商店／可求助據點',
+    MapPointKind.policeStation => '警察局／可求助地點',
+    MapPointKind.dangerZone => '需留意地點',
+  };
+
+  String get _fallbackName => switch (kind) {
+    MapPointKind.convenienceStore => '24 小時便利商店',
+    MapPointKind.policeStation => '警察局',
+    MapPointKind.dangerZone => '需留意地點',
+  };
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+    top: false,
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 18),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundColor: _color.withValues(alpha: .18),
+                foregroundColor: _color,
+                child: Icon(_icon),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      point.displayName(_fallbackName),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _category,
+                      style: TextStyle(color: _color, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (point.summary?.trim().isNotEmpty == true) ...[
+            const SizedBox(height: 14),
+            Text(point.summary!, style: const TextStyle(fontSize: 15)),
+          ],
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              const Icon(Icons.location_on_outlined, size: 18),
+              const SizedBox(width: 7),
+              Text(
+                '${point.lat.toStringAsFixed(6)}, ${point.lng.toStringAsFixed(6)}',
+                style: const TextStyle(color: Colors.white70),
+              ),
+            ],
+          ),
+          if (kind == MapPointKind.dangerZone) ...[
+            const SizedBox(height: 12),
+            const Text(
+              '此標示僅供路線判斷參考，不代表目前一定有危險。',
+              style: TextStyle(color: Color(0xffc9c0aa), fontSize: 12),
+            ),
+          ],
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: onOpenGoogleMaps,
+              icon: const Icon(Icons.map_outlined),
+              label: const Text('在 Google Maps 查看'),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class NavGuardChatApi {
+  String? _sessionId;
+
   bool get isConfigured => _apiBaseUrl.isNotEmpty;
 
-  Future<Session> createSession(LatLng location) async {
-    if (!isConfigured) return const Session('demo-session');
-    final response = await http
-        .post(
-          _uri('/api/session'),
-          headers: _headers,
-          body: jsonEncode({'user_location': _locationJson(location)}),
-        )
-        .timeout(const Duration(seconds: 20));
-    return _sessionFromResponse(response);
-  }
-
   Future<ChatResponse> sendMessage({
-    required String? sessionId,
     required String message,
     required LatLng location,
     required double priorityAlpha,
   }) async {
     if (!isConfigured) return RouteReadyResponse.demo(location, message);
-    if (sessionId == null) throw const ChatApiException('無法建立對話，請稍後再試。');
-    final response = await http
-        .post(
-          _uri('/api/chat'),
-          headers: _headers,
-          body: jsonEncode({
-            'session_id': sessionId,
-            'message': message,
-            'user_location': _locationJson(location),
-            'priority_alpha': priorityAlpha,
-          }),
-        )
-        .timeout(const Duration(seconds: 60));
+    _sessionId ??= await _createSession(location);
+    var response = await _postMessage(
+      sessionId: _sessionId!,
+      message: message,
+      location: location,
+      priorityAlpha: priorityAlpha,
+    );
+    // Session 過期時依新合約重新交握一次，再重送原訊息。
+    if (response.statusCode == 404) {
+      _sessionId = await _createSession(location);
+      response = await _postMessage(
+        sessionId: _sessionId!,
+        message: message,
+        location: location,
+        priorityAlpha: priorityAlpha,
+      );
+    }
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw _errorFromResponse(response);
     }
@@ -1126,6 +1391,43 @@ class SafewayChatApi {
       jsonDecode(response.body) as Map<String, dynamic>,
     );
   }
+
+  Future<String> _createSession(LatLng location) async {
+    final response = await http
+        .post(
+          _uri('/api/session'),
+          headers: _headers,
+          body: jsonEncode({'user_location': _locationJson(location)}),
+        )
+        .timeout(const Duration(seconds: 20));
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw _errorFromResponse(response);
+    }
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    final sessionId = body['session_id'] as String?;
+    if (sessionId == null || sessionId.isEmpty) {
+      throw const ChatApiException('伺服器未回傳有效的 session_id。');
+    }
+    return sessionId;
+  }
+
+  Future<http.Response> _postMessage({
+    required String sessionId,
+    required String message,
+    required LatLng location,
+    required double priorityAlpha,
+  }) => http
+      .post(
+        _uri('/api/chat'),
+        headers: _headers,
+        body: jsonEncode({
+          'session_id': sessionId,
+          'message': message,
+          'user_location': _locationJson(location),
+          'priority_alpha': priorityAlpha,
+        }),
+      )
+      .timeout(const Duration(seconds: 60));
 
   Uri _uri(String path) =>
       Uri.parse('${_apiBaseUrl.replaceFirst(RegExp(r'/$'), '')}$path');
@@ -1136,16 +1438,6 @@ class SafewayChatApi {
     'lat': location.latitude,
     'lng': location.longitude,
   };
-  Session _sessionFromResponse(http.Response response) {
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw _errorFromResponse(response);
-    }
-    final body = jsonDecode(response.body) as Map<String, dynamic>;
-    final id = body['session_id'] as String?;
-    if (id == null) throw const ChatApiException('伺服器沒有回傳對話識別碼。');
-    return Session(id);
-  }
-
   ChatApiException _errorFromResponse(http.Response response) {
     try {
       final body = jsonDecode(response.body);
@@ -1158,11 +1450,6 @@ class SafewayChatApi {
       return ChatApiException('服務暫時無法使用（${response.statusCode}）');
     }
   }
-}
-
-class Session {
-  const Session(this.id);
-  final String id;
 }
 
 class ChatApiException implements Exception {
@@ -1224,76 +1511,115 @@ class RouteReadyResponse extends ChatResponse {
   const RouteReadyResponse({
     required String replyText,
     required this.disclaimer,
-    required this.routes,
-    required this.selectedRouteId,
+    required this.route,
+    required this.warnings,
     required this.dynamicHazards,
+    required this.origin,
+    required this.destination,
     this.googleMapsUrl,
   }) : super(replyText);
-  final String disclaimer, selectedRouteId;
-  final List<SafeRoute> routes;
+  final String disclaimer;
+  final SafeRoute route;
+  final List<String> warnings;
   final List<DynamicHazard> dynamicHazards;
+  final RouteEndpoint? origin;
+  final RouteEndpoint? destination;
   final String? googleMapsUrl;
-  SafeRoute get selectedRoute => routes.firstWhere(
-    (route) => route.id == selectedRouteId,
-    orElse: () => routes.first,
-  );
-  factory RouteReadyResponse.fromJson(
-    Map<String, dynamic> json,
-  ) => RouteReadyResponse(
-    replyText: json['reply_text'] as String? ?? '',
-    disclaimer: json['disclaimer'] as String? ?? '此建議無法保證安全。',
-    selectedRouteId: json['selected_route_id'] as String? ?? 'safest',
-    routes: (json['routes'] as List<dynamic>? ?? [])
-        .map((item) => SafeRoute.fromJson(item as Map<String, dynamic>))
-        .toList(),
-    dynamicHazards: (json['dynamic_hazards_considered'] as List<dynamic>? ?? [])
-        .map((item) => DynamicHazard.fromJson(item as Map<String, dynamic>))
-        .toList(),
-    googleMapsUrl: json['google_maps_url'] as String?,
-  );
+  factory RouteReadyResponse.fromJson(Map<String, dynamic> json) {
+    final route = SafeRoute.fromJson(
+      json['route'] as Map<String, dynamic>? ?? {},
+    );
+    return RouteReadyResponse(
+      // route_ready 依新合約不提供 reply_text；摘要完全由結構化 metrics 組成。
+      replyText:
+          '已規劃較安全的步行路線：沿途有 ${route.metrics.convenienceStores.length} 間 24 小時便利商店與 ${route.metrics.policeStations.length} 間警察局。',
+      disclaimer: json['disclaimer'] as String? ?? '此建議無法保證安全。',
+      route: route,
+      warnings: _warningsFromJson(
+        // 新格式在頂層；保留 route.warnings fallback 方便前後端滾動更新。
+        json['warnings'] ??
+            (json['route'] as Map<String, dynamic>?)?['warnings'],
+      ),
+      dynamicHazards:
+          (json['dynamic_hazards_considered'] as List<dynamic>? ?? [])
+              .map(
+                (item) => DynamicHazard.fromJson(item as Map<String, dynamic>),
+              )
+              .toList(),
+      origin: RouteEndpoint.fromJson(json['origin']),
+      destination: RouteEndpoint.fromJson(json['destination']),
+      googleMapsUrl: json['google_maps_url'] as String?,
+    );
+  }
   factory RouteReadyResponse.demo(LatLng location, String message) {
     final safest = SafeRoute.demo(location, safest: true);
-    final fastest = SafeRoute.demo(location, safest: false);
     return RouteReadyResponse(
-      replyText: '示範模式：我已依你的需求規劃兩條路線。較安全路線多走約 4 分鐘，但沿途可求助據點與照明覆蓋較多。',
+      replyText: '示範模式：已規劃一條較安全的步行路線。',
       disclaimer: '此建議依公開資料與即時資訊產生，無法保證安全；緊急狀況請立即撥打 110 或 119。',
-      routes: [safest, fastest],
-      selectedRouteId: safest.id,
+      route: safest,
+      warnings: const [],
       dynamicHazards: const [],
+      origin: RouteEndpoint(
+        lat: location.latitude,
+        lng: location.longitude,
+        name: '目前位置',
+      ),
+      destination: RouteEndpoint(
+        lat: safest.path.last.latitude,
+        lng: safest.path.last.longitude,
+        name: '示範目的地',
+      ),
       googleMapsUrl: null,
+    );
+  }
+}
+
+class RouteEndpoint {
+  const RouteEndpoint({
+    required this.lat,
+    required this.lng,
+    this.placeId,
+    this.name,
+  });
+
+  final double lat, lng;
+  final String? placeId, name;
+  LatLng get position => LatLng(lat, lng);
+  String displayName(String fallback) =>
+      name?.trim().isNotEmpty == true ? name! : fallback;
+
+  static RouteEndpoint? fromJson(dynamic value) {
+    if (value is! Map) return null;
+    final json = Map<String, dynamic>.from(value);
+    final lat = json['lat'];
+    final lng = json['lng'];
+    if (lat is! num || lng is! num) return null;
+    return RouteEndpoint(
+      lat: lat.toDouble(),
+      lng: lng.toDouble(),
+      placeId: json['place_id'] as String?,
+      name: json['name'] as String?,
     );
   }
 }
 
 class SafeRoute {
   const SafeRoute({
-    required this.id,
-    required this.label,
     required this.path,
     required this.alpha,
     required this.metrics,
-    required this.reasons,
-    required this.warnings,
   });
-  final String id, label;
   final List<LatLng> path;
   final double alpha;
   final RouteMetrics metrics;
-  final List<String> reasons, warnings;
   factory SafeRoute.fromJson(Map<String, dynamic> json) => SafeRoute(
-    id: json['id'] as String,
-    label: json['label'] as String? ?? '路線',
     path: _coordinates(json['path_coordinates']),
     alpha: (json['alpha_used'] as num? ?? .6).toDouble(),
     metrics: RouteMetrics.fromJson(
       json['metrics'] as Map<String, dynamic>? ?? {},
     ),
-    reasons: List<String>.from(json['reasons'] as List<dynamic>? ?? []),
-    warnings: List<String>.from(json['warnings'] as List<dynamic>? ?? []),
   );
   factory SafeRoute.demo(LatLng start, {required bool safest}) => SafeRoute(
-    id: safest ? 'safest' : 'fastest',
-    label: safest ? '推薦的較安全路線' : '最快路線',
     path: safest
         ? [
             start,
@@ -1311,13 +1637,39 @@ class SafeRoute {
       durationMinutes: safest ? 18 : 14,
       avgSafetyScore: safest ? .78 : .52,
       litCoverageRatio: safest ? .71 : .45,
-      helpPoints: safest ? 5 : 2,
-      policeStations: safest ? 1 : 0,
+      convenienceStores: safest
+          ? [
+              NearbyPoint(
+                id: 'demo-help',
+                lat: start.latitude + .002,
+                lng: start.longitude + .002,
+                name: '示範 24 小時便利商店',
+              ),
+            ]
+          : const [],
+      policeStations: safest
+          ? [
+              NearbyPoint(
+                id: 'demo-police',
+                lat: start.latitude + .004,
+                lng: start.longitude + .004,
+                name: '示範警察局',
+              ),
+            ]
+          : const [],
+      dangerZones: safest
+          ? [
+              NearbyPoint(
+                id: 'demo-danger',
+                lat: start.latitude + .003,
+                lng: start.longitude + .003,
+                name: '示範需留意地點',
+                summary: '此處為示範資料，請留意周遭環境。',
+              ),
+            ]
+          : const [],
+      avoidedDangerZones: const [],
     ),
-    reasons: safest
-        ? const ['沿途 5 個營業中可求助據點', '比最快路線多走約 4 分鐘，但避開照明不足路段']
-        : const [],
-    warnings: safest ? const [] : const ['部分路段缺乏路燈資料，照明未納入評分'],
   );
 }
 
@@ -1327,10 +1679,12 @@ class RouteMetrics {
     required this.durationMinutes,
     required this.avgSafetyScore,
     required this.litCoverageRatio,
-    required this.helpPoints,
+    required this.convenienceStores,
     required this.policeStations,
+    required this.dangerZones,
+    required this.avoidedDangerZones,
   });
-  final int distanceMeters, durationMinutes, helpPoints, policeStations;
+  final int distanceMeters, durationMinutes;
   final double avgSafetyScore;
   final double? litCoverageRatio;
   factory RouteMetrics.fromJson(Map<String, dynamic> json) => RouteMetrics(
@@ -1340,8 +1694,47 @@ class RouteMetrics {
     durationMinutes: (json['duration_min_est'] as num? ?? 0).round(),
     avgSafetyScore: (json['avg_safety_score'] as num? ?? 0).toDouble(),
     litCoverageRatio: (json['lit_coverage_ratio'] as num?)?.toDouble(),
-    helpPoints: (json['help_points_within_50m'] as num? ?? 0).toInt(),
-    policeStations: (json['police_within_150m'] as num? ?? 0).toInt(),
+    convenienceStores: _nearbyPoints(
+      // help_points 是舊後端欄位，僅作相容 fallback。
+      json['convenience_stores'] ?? json['help_points'],
+    ),
+    policeStations: _nearbyPoints(json['police_stations']),
+    dangerZones: _nearbyPoints(json['danger_zones']),
+    avoidedDangerZones: _nearbyPoints(json['avoided_danger_zones']),
+  );
+  final List<NearbyPoint> convenienceStores,
+      policeStations,
+      dangerZones,
+      avoidedDangerZones;
+}
+
+class NearbyPoint {
+  const NearbyPoint({
+    required this.id,
+    required this.lat,
+    required this.lng,
+    this.name,
+    this.placeId,
+    this.summary,
+  });
+  final String id;
+  final double lat, lng;
+  final String? name;
+  final String? placeId;
+  final String? summary;
+  LatLng get position => LatLng(lat, lng);
+  String displayName(String fallback) =>
+      name?.trim().isNotEmpty == true ? name! : fallback;
+
+  factory NearbyPoint.fromJson(Map<String, dynamic> json) => NearbyPoint(
+    id:
+        (json['place_id'] ?? json['id'])?.toString() ??
+        '${json['lat']}-${json['lng']}',
+    lat: (json['lat'] as num? ?? 0).toDouble(),
+    lng: (json['lng'] as num? ?? 0).toDouble(),
+    name: json['name'] as String?,
+    placeId: json['place_id'] as String?,
+    summary: json['summary'] as String?,
   );
 }
 
@@ -1350,6 +1743,32 @@ class DynamicHazard {
   final String summary;
   factory DynamicHazard.fromJson(Map<String, dynamic> json) =>
       DynamicHazard(json['summary'] as String? ?? '近期事件');
+}
+
+List<NearbyPoint> _nearbyPoints(dynamic value) =>
+    (value as List<dynamic>? ?? [])
+        .whereType<Map>()
+        .map((item) => NearbyPoint.fromJson(Map<String, dynamic>.from(item)))
+        // 後端無此類資料時回傳 null；若資料不完整，則不在地圖上畫到 (0, 0)。
+        .where((point) => point.lat != 0 || point.lng != 0)
+        .toList();
+
+List<String> _warningsFromJson(dynamic value) => (value as List<dynamic>? ?? [])
+    .whereType<Map>()
+    .map((warning) => _warningText(Map<String, dynamic>.from(warning)))
+    .toList();
+
+String _warningText(Map<String, dynamic> warning) {
+  switch (warning['code']) {
+    case 'missing_data_category':
+      return '缺少 ${warning['category'] ?? '部分'} 資料，未納入評分。';
+    case 'unknown_hazard_category':
+      return '即時事件類別 ${warning['category'] ?? ''} 未登記，已採低權重處理。';
+    case 'hazard_expired':
+      return '即時事件已過期，未納入本次計算。';
+    default:
+      return '部分安全資料可能不足。';
+  }
 }
 
 List<LatLng> _coordinates(dynamic value) => (value as List<dynamic>? ?? [])

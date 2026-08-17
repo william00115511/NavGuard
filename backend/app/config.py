@@ -25,6 +25,14 @@ EDGE_SAMPLE_INTERVAL_M = 25.0
 # 固定 k（而非 min-max）才能讓分數跨請求可比較、可測試。
 SAFETY_SIGMOID_K = 0.6
 
+# Negative point contributions are tracked separately from the 0..1 safety
+# score.  Without an explicit risk term, the routing cost can only discount
+# safe streets; even an extremely dangerous edge is capped at its original
+# distance cost.  This multiplier makes a fully exposed hazard segment costly
+# enough that A* prefers a reasonable detour, while still allowing the segment
+# when the graph has no alternative route.
+RISK_COST_MULTIPLIER = 8.0
+
 # §4.4 綜合成本函數的預設安全權重。
 DEFAULT_ALPHA = 0.6
 
@@ -52,6 +60,9 @@ class Settings(BaseSettings):
     )
 
     chat_service_backend: str = "fake"
+    # Cloud Run 現有部署使用後端環境變數提供 Gemini API key；只存在 server side，
+    # 不會進入 Flutter、APK 或 image。若未設定，dependencies.py 才改用 Vertex JSON。
+    gemini_api_key: SecretStr = SecretStr("")
     gemini_model: str = "gemini-3.5-flash-lite"
     gemini_fallback_models: list[str] = [
         "gemini-3.1-flash-lite",

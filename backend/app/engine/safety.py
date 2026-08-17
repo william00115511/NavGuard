@@ -36,6 +36,18 @@ def sigmoid_safety(raw_score: float, k: float = SAFETY_SIGMOID_K) -> float:
     return 1.0 / (1.0 + math.exp(-k * raw_score))
 
 
+def risk_exposure(negative_raw_score: float, k: float = SAFETY_SIGMOID_K) -> float:
+    """Normalize negative-only point influence to 0..1 for routing penalties.
+
+    Safety is intentionally still reported as a 0..1 sigmoid score.  Routing,
+    however, must retain the magnitude of negative evidence separately so that
+    nearby lights or help points cannot cancel a marked hazard and so that a
+    hazard can cost more than the unweighted street distance.
+    """
+    magnitude = max(0.0, -negative_raw_score)
+    return 1.0 - math.exp(-k * magnitude)
+
+
 def filter_active_points(points: Sequence[PointRecord], now: datetime | None = None) -> list[PointRecord]:
     """過濾掉已過期的動態點位；靜態點位 expires_at 恆為 None，永遠保留。"""
     now = now or datetime.now(timezone.utc)
@@ -213,6 +225,17 @@ class EdgeSafetyIndex:
         self._static_raw: dict[EdgeKey, float] = {
             edge.key: _raw_edge_score_indexed(edge, grids, profile) for edge in graph.edges
         }
+        negative_points = [
+            point
+            for point in static_points
+            if (category := profile.categories.get(point.category)) is not None
+            and category.effect == "negative"
+        ]
+        negative_grids = _build_category_grids(negative_points, profile.categories)
+        self._static_negative_raw: dict[EdgeKey, float] = {
+            edge.key: _raw_edge_score_indexed(edge, negative_grids, profile)
+            for edge in graph.edges
+        }
 
     @property
     def profile(self) -> ScoringProfile:
@@ -220,13 +243,44 @@ class EdgeSafetyIndex:
 
     def safety_scores(self, dynamic_points: Sequence[PointRecord] = ()) -> dict[EdgeKey, float]:
         """回傳每條 edge 正規化後的 0~1 safety，1 最安全。"""
+        safety, _risk = self.routing_scores(dynamic_points)
+        return safety
+
+    def routing_scores(
+        self, dynamic_points: Sequence[PointRecord] = ()
+    ) -> tuple[dict[EdgeKey, float], dict[EdgeKey, float]]:
+        """Return reportable safety and independent negative risk per edge.
+
+        Positive and negative points still jointly determine the user-facing
+        safety score.  The second map contains only negative exposure and is
+        used by pathfinding as an additional cost, preventing positive density
+        from masking a known hazard.
+        """
         raw = dict(self._static_raw)
+        negative_raw = dict(self._static_negative_raw)
         if dynamic_points:
             # 動態點位一次對話最多幾筆，直接建索引查詢即可，不需要再額外的
             # bounding-box 早退邏輯。
             dynamic_grids = _build_category_grids(dynamic_points, self._profile.categories)
+            negative_dynamic_points = [
+                point
+                for point in dynamic_points
+                if (category := self._profile.categories.get(point.category)) is not None
+                and category.effect == "negative"
+            ]
+            negative_dynamic_grids = _build_category_grids(
+                negative_dynamic_points, self._profile.categories
+            )
             for edge in self._graph.edges:
                 delta = _raw_edge_score_indexed(edge, dynamic_grids, self._profile)
                 if delta:
                     raw[edge.key] += delta
-        return {key: sigmoid_safety(value) for key, value in raw.items()}
+                negative_delta = _raw_edge_score_indexed(
+                    edge, negative_dynamic_grids, self._profile
+                )
+                if negative_delta:
+                    negative_raw[edge.key] += negative_delta
+        return (
+            {key: sigmoid_safety(value) for key, value in raw.items()},
+            {key: risk_exposure(value) for key, value in negative_raw.items()},
+        )

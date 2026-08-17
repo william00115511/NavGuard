@@ -1,6 +1,9 @@
 """綜合成本函數與最短路徑演算法（AGENTS.md §4.4 / §4.5）。
 
-    edge_cost = length_m × ( (1 - α) + α × (1 - safety(edge)) )
+    edge_cost = length_m × (
+        (1 - α) + α × (1 - safety(edge))
+        + α × risk_multiplier × risk_exposure(edge)
+    )
 
 成本**必須乘上邊長**：若 cost 是每條 edge 的固定值而非「每公尺代價」，
 演算法會偏好「edge 數量少」的路徑而非「距離短」的路徑——一條長幹道是一條
@@ -14,6 +17,7 @@ from typing import Callable, Optional, Sequence
 
 from app.engine.geo import haversine_m
 from app.engine.graph import Edge, EdgeKey, RoadGraph
+from app.config import RISK_COST_MULTIPLIER
 from interfaces import LatLng
 
 
@@ -26,9 +30,22 @@ class PathComputation:
     avg_safety_score: float
 
 
-def edge_cost(distance_m: float, safety: float, alpha: float) -> float:
-    """§4.4 綜合成本；safety ≤ 1 時每公尺成本的下界是 (1 - α)。"""
-    return distance_m * ((1 - alpha) + alpha * (1 - safety))
+def edge_cost(
+    distance_m: float,
+    safety: float,
+    alpha: float,
+    risk_exposure: float = 0.0,
+) -> float:
+    """Combined route cost with an independent penalty for known hazards.
+
+    The original safety term only rewards safer streets and is bounded by the
+    raw distance.  ``risk_exposure`` adds a real penalty above that bound, so a
+    marked hazard is avoided when a reasonable connected alternative exists.
+    At alpha=0 the function remains exactly equal to shortest distance.
+    """
+    base = (1 - alpha) + alpha * (1 - safety)
+    risk_penalty = alpha * RISK_COST_MULTIPLIER * risk_exposure
+    return distance_m * (base + risk_penalty)
 
 
 def find_node_path(
@@ -38,12 +55,14 @@ def find_node_path(
     destination: str,
     alpha: float,
     heuristic: Optional[Callable[[str], float]] = None,
+    risk_by_edge: Optional[dict[EdgeKey, float]] = None,
 ) -> Optional[list[str]]:
     """A*（heuristic 為 None 時退化成 Dijkstra）找成本最低路徑。"""
     if origin == destination:
         return [origin]
 
     h = heuristic or (lambda _node: 0.0)
+    risk_by_edge = risk_by_edge or {}
     best_cost = {origin: 0.0}
     previous: dict[str, str] = {}
     queue: list[tuple[float, str]] = [(h(origin), origin)]
@@ -59,7 +78,12 @@ def find_node_path(
 
         for edge in graph.adjacency.get(node, []):
             neighbor = edge.other_end(node)
-            cost = best_cost[node] + edge_cost(edge.distance_m, safety_by_edge[edge.key], alpha)
+            cost = best_cost[node] + edge_cost(
+                edge.distance_m,
+                safety_by_edge[edge.key],
+                alpha,
+                risk_by_edge.get(edge.key, 0.0),
+            )
             if cost < best_cost.get(neighbor, float("inf")):
                 best_cost[neighbor] = cost
                 previous[neighbor] = node
@@ -96,12 +120,21 @@ def compute_path(
     destination_node: str,
     alpha: float,
     heuristic: Optional[Callable[[str], float]] = None,
+    risk_by_edge: Optional[dict[EdgeKey, float]] = None,
 ) -> Optional[PathComputation]:
     """找路徑並整理出後續計算 metrics 需要的 edge 序列與長度加權平均安全分數。"""
     if heuristic is None:
         heuristic = straight_line_heuristic(graph, destination_node, alpha)
 
-    node_path = find_node_path(graph, safety_by_edge, origin_node, destination_node, alpha, heuristic)
+    node_path = find_node_path(
+        graph,
+        safety_by_edge,
+        origin_node,
+        destination_node,
+        alpha,
+        heuristic,
+        risk_by_edge,
+    )
     if node_path is None:
         return None
 

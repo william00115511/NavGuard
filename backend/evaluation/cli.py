@@ -40,7 +40,7 @@ def _report(args: argparse.Namespace) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="evaluation.cli", description="Safeway vs Google Maps 安全性驗證")
+    parser = argparse.ArgumentParser(prog="evaluation.cli", description="NavGuard vs Google Maps 安全性驗證")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     run_parser = subparsers.add_parser("run", help="跑一批起訖點的路線比對，寫入 output/results.csv")

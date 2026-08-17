@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Safeway Frontend</string>
+	<string>NavGuard</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -37,11 +37,11 @@
 		<true/>
 	</dict>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Safeway 需要連線到同一 Wi-Fi 上的開發導航服務。</string>
+	<string>NavGuard 需要連線到同一 Wi-Fi 上的開發導航服務。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Safeway 需要使用目前位置，以提供較安全的步行路線。</string>
+	<string>NavGuard 需要使用目前位置，以提供較安全的步行路線。</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Safeway 需要使用目前位置，以提供較安全的步行路線。</string>
+	<string>NavGuard 需要使用目前位置，以提供較安全的步行路線。</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
