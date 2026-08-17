@@ -321,13 +321,6 @@ h(n) = haversine(n, goal) × (1 - α)
 若使用者表示自己正遭遇危險，立即停止一般導航流程，優先建議聯絡當地
 緊急服務、前往最近明亮且有人員的公共場所。
 ```
-
-### 5.6 已知技術風險
-
-⚠️ **Google Search grounding 與 function calling 是否能在同一次請求同時啟用，依 Gemini 版本與 API 方案而異。** 開發第一件事就是驗證這點。若不支援，改用兩段式：第一次呼叫只開 grounding 做搜尋、拿回文字結果；第二次呼叫關掉 grounding、只開 function calling，把搜尋結果放進 context 讓模型抽取事件。這會影響 Dev B 的實作結構，越早確認越好。
-
-模型以環境變數 `GEMINI_MODEL` 指定（demo 建議 `gemini-2.5-flash`），以便換模型不改程式碼。
-
 ---
 
 ## 6. 後端 API 合約
