@@ -19,7 +19,7 @@ from app.schemas import (
     hazard_to_out,
     route_to_out,
 )
-from inner_interface import DynamicHazard, NoRouteFoundError, OutOfCoverageError
+from interfaces import DynamicHazard, NoRouteFoundError, OutOfCoverageError
 
 router = APIRouter(prefix="/api", tags=["route"])
 

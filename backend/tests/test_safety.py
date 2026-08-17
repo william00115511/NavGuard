@@ -6,7 +6,7 @@ from app.engine.safety import (
     raw_score_at,
     sigmoid_safety,
 )
-from inner_interface import LatLng
+from interfaces import LatLng
 
 _CATEGORIES = {
     "street_light": CategoryConfig(

@@ -2,8 +2,8 @@
   {
     "id": "danger_00001",
     "category": "danger_zone",
-    "lat": 25.027,
-    "lng": 121.533,
+    "lat": 25.030474,
+    "lng": 121.565463,
     "source": "治安風險示範資料(demo)",
     "source_type": "static_local",
     "expires_at": null,

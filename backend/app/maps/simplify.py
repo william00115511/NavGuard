@@ -12,7 +12,7 @@ Google Maps 的 waypoints。單純的 Douglas-Peucker 會保留「形狀轉折�
 
 from typing import Sequence
 
-from inner_interface import LatLng
+from interfaces import LatLng
 
 
 def _perpendicular_distance(point: LatLng, start: LatLng, end: LatLng) -> float:

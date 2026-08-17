@@ -4,6 +4,8 @@
 （§1 原則 3：沒有資料不等於沒有風險）。
 """
 
+import math
+from collections import defaultdict
 from typing import Sequence
 
 from app.config import (
@@ -16,34 +18,75 @@ from app.data.schema import PointRecord
 from app.engine.geo import haversine_m
 from app.engine.pathfinding import PathComputation, path_sample_points
 from app.engine.safety import ScoringProfile
-from inner_interface import Confidence, LatLng, RouteMetrics
+from interfaces import Confidence, LatLng, RouteMetrics
 
 _LIT_CATEGORY = "street_light"
 _HELP_CATEGORY = "help_point"
 _POLICE_CATEGORY = "police_station"
+
+_METERS_PER_DEGREE_LAT = 111_320.0
+
+_GridBuckets = dict[tuple[int, int], list[PointRecord]]
 
 
 def _points_of(points: Sequence[PointRecord], category: str) -> list[PointRecord]:
     return [p for p in points if p.category == category]
 
 
+def _build_grid(points: Sequence[PointRecord], radius_m: float) -> tuple[_GridBuckets, float, float]:
+    """把點位依 radius_m 大小分桶，避免每個取樣點都要跟全部點位算距離。
+
+    格子邊長取自查詢半徑，所以取樣點所在格的 3x3 鄰域必定涵蓋半徑內的所有
+    點位；鄰域外的點位不可能落在半徑內，可以直接跳過，不必算 haversine。
+    """
+    if not points:
+        return {}, 1.0, 1.0
+    ref_lat = sum(p.lat for p in points) / len(points)
+    lat_deg = max(radius_m, 1.0) / _METERS_PER_DEGREE_LAT
+    meters_per_deg_lng = _METERS_PER_DEGREE_LAT * max(math.cos(math.radians(ref_lat)), 1e-6)
+    lng_deg = max(radius_m, 1.0) / meters_per_deg_lng
+    buckets: _GridBuckets = defaultdict(list)
+    for p in points:
+        buckets[(math.floor(p.lat / lat_deg), math.floor(p.lng / lng_deg))].append(p)
+    return buckets, lat_deg, lng_deg
+
+
+def _nearby_points(sample: LatLng, buckets: _GridBuckets, lat_deg: float, lng_deg: float) -> list[PointRecord]:
+    """取樣點所在網格週圍 3x3 格內的候選點位；仍需用 haversine 精確篩選半徑。"""
+    gx = math.floor(sample.lat / lat_deg)
+    gy = math.floor(sample.lng / lng_deg)
+    candidates: list[PointRecord] = []
+    for dx in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            candidates.extend(buckets.get((gx + dx, gy + dy), ()))
+    return candidates
+
+
 def _count_near(samples: Sequence[LatLng], points: Sequence[PointRecord], radius_m: float) -> int:
     """沿線 radius_m 內的點位數（同一個點位只算一次）。"""
-    return sum(
-        1
-        for p in points
-        if any(haversine_m(s, LatLng(lat=p.lat, lng=p.lng)) <= radius_m for s in samples)
-    )
+    buckets, lat_deg, lng_deg = _build_grid(points, radius_m)
+    hit_ids: set[int] = set()
+    for s in samples:
+        for p in _nearby_points(s, buckets, lat_deg, lng_deg):
+            if id(p) in hit_ids:
+                continue
+            if haversine_m(s, LatLng(lat=p.lat, lng=p.lng)) <= radius_m:
+                hit_ids.add(id(p))
+    return len(hit_ids)
 
 
 def _coverage_ratio(samples: Sequence[LatLng], points: Sequence[PointRecord], radius_m: float) -> float:
     """採樣點中，radius_m 內至少有一個該類點位的比例。"""
     if not samples:
         return 0.0
+    buckets, lat_deg, lng_deg = _build_grid(points, radius_m)
     hit = sum(
         1
         for s in samples
-        if any(haversine_m(s, LatLng(lat=p.lat, lng=p.lng)) <= radius_m for p in points)
+        if any(
+            haversine_m(s, LatLng(lat=p.lat, lng=p.lng)) <= radius_m
+            for p in _nearby_points(s, buckets, lat_deg, lng_deg)
+        )
     )
     return hit / len(samples)
 

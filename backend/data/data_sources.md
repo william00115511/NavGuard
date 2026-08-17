@@ -1,28 +1,46 @@
-# 資料來源清單（AGENTS.md §3.1）
+# 資料來源（AGENTS.md §3.1）
 
-每一份進入計分的資料都必須能在這裡對應到來源、授權、覆蓋範圍與更新日期。
-這份清單會直接回傳給使用者作為資料透明度佐證。
+記錄 `backend/data/` 下每份本地檔案的來源、授權、覆蓋範圍與更新日期，作為回覆使用者時的資料透明度佐證。所有轉換腳本都在 `backend/scripts/`，執行期系統不會即時呼叫這些來源，資料要更新時由人手動重跑腳本覆蓋本地檔案。
 
-⚠️ **目前全部為 demo 佔位資料**，尚未接上真實政府開放資料集。展示前必須
-把下表換成實際下載的資料，並更新「取得日期」與「覆蓋範圍」。
+## points/street_light.json
 
-| 檔案 | 類別 | 來源 | 授權 | 覆蓋範圍 | 取得日期 |
-|---|---|---|---|---|---|
-| `points/street_light.json` | `street_light` | 示範資料（人工建立） | — | 台北車站～公館之間的示範網格 | 2026-08-17 |
-| `points/police_station.json` | `police_station` | 示範資料（人工建立） | — | 同上 | 2026-08-17 |
-| `points/help_point.json` | `help_point` | 示範資料（人工建立） | — | 同上 | 2026-08-17 |
-| `points/danger_zone.json` | `danger_zone` | 示範資料（人工建立） | — | 同上 | 2026-08-17 |
-| `road_network.json` | 路網 | 手動建立的簡化網格（§3.5 備援方案） | — | 同上 | 2026-08-17 |
+- **來源**：臺北市路燈位置分布圖（臺北市工務局公園路燈工程管理處，data.gov.tw）
+- **URL**：https://tppkl.blob.core.windows.net/blobfs/TaipeiLight.csv
+- **授權**：政府資料開放授權條款
+- **覆蓋範圍**：大安區、信義區（`ingest_open_data.py --district 大安區 信義區`）
+- **更新日期**：2026-08-17
+- **腳本**：`scripts/ingest_open_data.py`
 
-## 待辦
+## points/police_station.json
 
-- [ ] 確定展示行政區後，以 `osmnx`（`network_type="walk"`）擷取真實 OSM 路網
-- [ ] 接上實際路燈開放資料；若該城市未開放，`street_light` 留空並依 §9.3
-      以 `help_point` 密度作為照明 proxy，同時保留 warning
-- [ ] 接上警政署派出所資料
-- [ ] 犯罪資料一律以 grid／密度形式產出 `danger_zone`，不得包含精確歷史位置（§1 原則 5）
+- **來源**：各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）
+- **URL**：https://www.tgos.tw/tgos/VirtualDir/Product/9927eb8a-efed-40c0-8bc4-83121ad6834a/1150729.zip
+- **授權**：政府資料開放授權條款
+- **覆蓋範圍**：大安區、信義區
+- **更新日期**：2026-08-17
+- **腳本**：`scripts/ingest_open_data.py`
 
-## 動態點位
+## points/help_point.json
 
-Gemini 即時新聞搜尋產生的點位（`source_type: dynamic_realtime`）**不寫回本地檔案**，
-只存在單次對話的記憶體中並附 `expires_at`，因此不列入本清單（§3.4）。
+- **來源**：OpenStreetMap contributors（`shop=convenience`，Overpass API）
+- **授權**：ODbL 1.0
+- **覆蓋範圍**：大安區、信義區
+- **更新日期**：2026-08-17
+- **腳本**：`scripts/ingest_open_data.py`
+- **備註**：Overpass 查詢行政區時必須用 `relation[...](area.city)` + `map_to_area` 過濾，不能寫成 `area(area.city)["name"="X"]`——後者不會真的按地理範圍過濾，同名行政區會全部混進來（例如「信義區」臺北市、基隆市都有，曾經把基隆信義區的店家也一起抓進來）。
+
+## points/danger_zone.json
+
+- **來源**：治安風險示範資料（demo，非真實資料）
+- **授權**：不適用（專案內自建）
+- **覆蓋範圍**：信義區內單一示範點（象山／台北 101 一帶，位在 `road_network.json` 的一條真實路段上，方便展示「safety 優先路線繞開風險點」）
+- **更新日期**：2026-08-17
+
+## road_network.json
+
+- **來源**：OpenStreetMap contributors（`highway=*` 步行路網，Overpass API）
+- **授權**：ODbL 1.0
+- **覆蓋範圍**：信義區（臺北市），16,971 個節點、19,925 條邊
+- **更新日期**：2026-08-17
+- **腳本**：`scripts/build_road_network.py`
+- **備註**：AGENTS.md §3.5 的主要方案是用 `osmnx` 擷取存 GraphML／pickle；這裡改用專案已有的 `httpx` 直接打 Overpass API，換取同樣真實的路網拓樸但不新增地理空間依賴（networkx／shapely／geopandas）。node id 為 `osm_<OSM node id>`，重跑腳本更新路網後，若特定節點被 OSM 上游合併或刪除，其 id 可能改變。

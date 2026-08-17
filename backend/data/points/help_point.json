@@ -2,56 +2,5341 @@
   {
     "id": "helppoint_00001",
     "category": "help_point",
-    "lat": 25.0445,
-    "lng": 121.535,
-    "source": "夜間營業據點示範資料(demo)",
+    "lat": 25.028378,
+    "lng": 121.568216,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 1.0,
-    "meta": { "name": "示範超商（24h）" }
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 300215481
+    }
   },
   {
     "id": "helppoint_00002",
     "category": "help_point",
-    "lat": 25.0375,
-    "lng": 121.535,
-    "source": "夜間營業據點示範資料(demo)",
+    "lat": 25.028434,
+    "lng": 121.568829,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 1.0,
-    "meta": { "name": "示範藥局（夜間營業）" }
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 300215482
+    }
   },
   {
     "id": "helppoint_00003",
     "category": "help_point",
-    "lat": 25.0305,
-    "lng": 121.535,
-    "source": "夜間營業據點示範資料(demo)",
+    "lat": 25.018023,
+    "lng": 121.537435,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 1.0,
-    "meta": { "name": "示範飯店大廳" }
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 311449107
+    }
   },
   {
     "id": "helppoint_00004",
     "category": "help_point",
-    "lat": 25.0235,
-    "lng": 121.535,
-    "source": "夜間營業據點示範資料(demo)",
+    "lat": 25.018825,
+    "lng": 121.533485,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 1.0,
-    "meta": { "name": "示範超商（24h）" }
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 461524961
+    }
   },
   {
     "id": "helppoint_00005",
     "category": "help_point",
-    "lat": 25.0165,
-    "lng": 121.535,
-    "source": "夜間營業據點示範資料(demo)",
+    "lat": 25.022109,
+    "lng": 121.54098,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
     "source_type": "static_local",
     "expires_at": null,
-    "confidence": 1.0,
-    "meta": { "name": "示範加油站（24h）" }
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 472558738
+    }
+  },
+  {
+    "id": "helppoint_00006",
+    "category": "help_point",
+    "lat": 25.02316,
+    "lng": 121.569488,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 569944557
+    }
+  },
+  {
+    "id": "helppoint_00007",
+    "category": "help_point",
+    "lat": 25.021983,
+    "lng": 121.568865,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 569944558
+    }
+  },
+  {
+    "id": "helppoint_00008",
+    "category": "help_point",
+    "lat": 25.024863,
+    "lng": 121.56923,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 569944559
+    }
+  },
+  {
+    "id": "helppoint_00009",
+    "category": "help_point",
+    "lat": 25.024998,
+    "lng": 121.569477,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "家樂福超市",
+      "brand": "家樂福超市",
+      "osm_id": 569944560
+    }
+  },
+  {
+    "id": "helppoint_00010",
+    "category": "help_point",
+    "lat": 25.024102,
+    "lng": 121.570413,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 569944562
+    }
+  },
+  {
+    "id": "helppoint_00011",
+    "category": "help_point",
+    "lat": 25.026245,
+    "lng": 121.543691,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 689560111
+    }
+  },
+  {
+    "id": "helppoint_00012",
+    "category": "help_point",
+    "lat": 25.013054,
+    "lng": 121.536624,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 736492716
+    }
+  },
+  {
+    "id": "helppoint_00013",
+    "category": "help_point",
+    "lat": 25.017424,
+    "lng": 121.53254,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 738837031
+    }
+  },
+  {
+    "id": "helppoint_00014",
+    "category": "help_point",
+    "lat": 25.019257,
+    "lng": 121.529991,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 738839686
+    }
+  },
+  {
+    "id": "helppoint_00015",
+    "category": "help_point",
+    "lat": 25.019027,
+    "lng": 121.53156,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 743173514
+    }
+  },
+  {
+    "id": "helppoint_00016",
+    "category": "help_point",
+    "lat": 25.034721,
+    "lng": 121.55235,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 1270064487
+    }
+  },
+  {
+    "id": "helppoint_00017",
+    "category": "help_point",
+    "lat": 25.038632,
+    "lng": 121.534559,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 1446842517
+    }
+  },
+  {
+    "id": "helppoint_00018",
+    "category": "help_point",
+    "lat": 25.041293,
+    "lng": 121.566704,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 1501340090
+    }
+  },
+  {
+    "id": "helppoint_00019",
+    "category": "help_point",
+    "lat": 25.038381,
+    "lng": 121.551699,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 1947370956
+    }
+  },
+  {
+    "id": "helppoint_00020",
+    "category": "help_point",
+    "lat": 25.03005,
+    "lng": 121.551608,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 1999517725
+    }
+  },
+  {
+    "id": "helppoint_00021",
+    "category": "help_point",
+    "lat": 25.031061,
+    "lng": 121.549628,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 1999517726
+    }
+  },
+  {
+    "id": "helppoint_00022",
+    "category": "help_point",
+    "lat": 25.015779,
+    "lng": 121.544754,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2023229622
+    }
+  },
+  {
+    "id": "helppoint_00023",
+    "category": "help_point",
+    "lat": 25.017165,
+    "lng": 121.544737,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2026200468
+    }
+  },
+  {
+    "id": "helppoint_00024",
+    "category": "help_point",
+    "lat": 25.025811,
+    "lng": 121.566351,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2073029315
+    }
+  },
+  {
+    "id": "helppoint_00025",
+    "category": "help_point",
+    "lat": 25.022125,
+    "lng": 121.554641,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2096026232
+    }
+  },
+  {
+    "id": "helppoint_00026",
+    "category": "help_point",
+    "lat": 25.02089,
+    "lng": 121.554952,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 2096026722
+    }
+  },
+  {
+    "id": "helppoint_00027",
+    "category": "help_point",
+    "lat": 25.026129,
+    "lng": 121.528272,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2122373456
+    }
+  },
+  {
+    "id": "helppoint_00028",
+    "category": "help_point",
+    "lat": 25.039102,
+    "lng": 121.543925,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2128931496
+    }
+  },
+  {
+    "id": "helppoint_00029",
+    "category": "help_point",
+    "lat": 25.041458,
+    "lng": 121.538593,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2128931497
+    }
+  },
+  {
+    "id": "helppoint_00030",
+    "category": "help_point",
+    "lat": 25.042117,
+    "lng": 121.541565,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2128931499
+    }
+  },
+  {
+    "id": "helppoint_00031",
+    "category": "help_point",
+    "lat": 25.044274,
+    "lng": 121.536248,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2178474545
+    }
+  },
+  {
+    "id": "helppoint_00032",
+    "category": "help_point",
+    "lat": 25.033013,
+    "lng": 121.530308,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2183243059
+    }
+  },
+  {
+    "id": "helppoint_00033",
+    "category": "help_point",
+    "lat": 25.023555,
+    "lng": 121.542933,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2188231670
+    }
+  },
+  {
+    "id": "helppoint_00034",
+    "category": "help_point",
+    "lat": 25.02466,
+    "lng": 121.524502,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2191945183
+    }
+  },
+  {
+    "id": "helppoint_00035",
+    "category": "help_point",
+    "lat": 25.023698,
+    "lng": 121.525245,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2193828907
+    }
+  },
+  {
+    "id": "helppoint_00036",
+    "category": "help_point",
+    "lat": 25.023993,
+    "lng": 121.555652,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2218962072
+    }
+  },
+  {
+    "id": "helppoint_00037",
+    "category": "help_point",
+    "lat": 25.02965,
+    "lng": 121.556229,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 2282744505
+    }
+  },
+  {
+    "id": "helppoint_00038",
+    "category": "help_point",
+    "lat": 25.028183,
+    "lng": 121.5565,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2302317261
+    }
+  },
+  {
+    "id": "helppoint_00039",
+    "category": "help_point",
+    "lat": 25.028014,
+    "lng": 121.556798,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2302317276
+    }
+  },
+  {
+    "id": "helppoint_00040",
+    "category": "help_point",
+    "lat": 25.029856,
+    "lng": 121.53047,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 2310591224
+    }
+  },
+  {
+    "id": "helppoint_00041",
+    "category": "help_point",
+    "lat": 25.042939,
+    "lng": 121.555893,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 2376980931
+    }
+  },
+  {
+    "id": "helppoint_00042",
+    "category": "help_point",
+    "lat": 25.042914,
+    "lng": 121.556414,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2376980933
+    }
+  },
+  {
+    "id": "helppoint_00043",
+    "category": "help_point",
+    "lat": 25.041798,
+    "lng": 121.563748,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2377138792
+    }
+  },
+  {
+    "id": "helppoint_00044",
+    "category": "help_point",
+    "lat": 25.040836,
+    "lng": 121.562479,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2377138833
+    }
+  },
+  {
+    "id": "helppoint_00045",
+    "category": "help_point",
+    "lat": 25.023189,
+    "lng": 121.528565,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2383980635
+    }
+  },
+  {
+    "id": "helppoint_00046",
+    "category": "help_point",
+    "lat": 25.023366,
+    "lng": 121.528557,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2383980640
+    }
+  },
+  {
+    "id": "helppoint_00047",
+    "category": "help_point",
+    "lat": 25.039726,
+    "lng": 121.543469,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2396968915
+    }
+  },
+  {
+    "id": "helppoint_00048",
+    "category": "help_point",
+    "lat": 25.030935,
+    "lng": 121.560266,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2406793658
+    }
+  },
+  {
+    "id": "helppoint_00049",
+    "category": "help_point",
+    "lat": 25.027223,
+    "lng": 121.545843,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "家樂福超市",
+      "brand": "家樂福超市",
+      "osm_id": 2410011026
+    }
+  },
+  {
+    "id": "helppoint_00050",
+    "category": "help_point",
+    "lat": 25.025787,
+    "lng": 121.554399,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2410688006
+    }
+  },
+  {
+    "id": "helppoint_00051",
+    "category": "help_point",
+    "lat": 25.025557,
+    "lng": 121.549156,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2415942436
+    }
+  },
+  {
+    "id": "helppoint_00052",
+    "category": "help_point",
+    "lat": 25.03056,
+    "lng": 121.552567,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2415942444
+    }
+  },
+  {
+    "id": "helppoint_00053",
+    "category": "help_point",
+    "lat": 25.032462,
+    "lng": 121.551739,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2419919964
+    }
+  },
+  {
+    "id": "helppoint_00054",
+    "category": "help_point",
+    "lat": 25.030404,
+    "lng": 121.526792,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 2429872622
+    }
+  },
+  {
+    "id": "helppoint_00055",
+    "category": "help_point",
+    "lat": 25.034284,
+    "lng": 121.533028,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2460009696
+    }
+  },
+  {
+    "id": "helppoint_00056",
+    "category": "help_point",
+    "lat": 25.04242,
+    "lng": 121.539829,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2470166927
+    }
+  },
+  {
+    "id": "helppoint_00057",
+    "category": "help_point",
+    "lat": 25.042391,
+    "lng": 121.539595,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2470167051
+    }
+  },
+  {
+    "id": "helppoint_00058",
+    "category": "help_point",
+    "lat": 25.021941,
+    "lng": 121.541233,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2473232849
+    }
+  },
+  {
+    "id": "helppoint_00059",
+    "category": "help_point",
+    "lat": 25.02187,
+    "lng": 121.543189,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2473232956
+    }
+  },
+  {
+    "id": "helppoint_00060",
+    "category": "help_point",
+    "lat": 25.033098,
+    "lng": 121.52994,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2597965495
+    }
+  },
+  {
+    "id": "helppoint_00061",
+    "category": "help_point",
+    "lat": 25.03097,
+    "lng": 121.543314,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2597965516
+    }
+  },
+  {
+    "id": "helppoint_00062",
+    "category": "help_point",
+    "lat": 25.040402,
+    "lng": 121.563199,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2617568610
+    }
+  },
+  {
+    "id": "helppoint_00063",
+    "category": "help_point",
+    "lat": 25.0283,
+    "lng": 121.543718,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2620553279
+    }
+  },
+  {
+    "id": "helppoint_00064",
+    "category": "help_point",
+    "lat": 25.021097,
+    "lng": 121.548268,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2621123793
+    }
+  },
+  {
+    "id": "helppoint_00065",
+    "category": "help_point",
+    "lat": 25.031237,
+    "lng": 121.561105,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2638283930
+    }
+  },
+  {
+    "id": "helppoint_00066",
+    "category": "help_point",
+    "lat": 25.031709,
+    "lng": 121.566906,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2672528907
+    }
+  },
+  {
+    "id": "helppoint_00067",
+    "category": "help_point",
+    "lat": 25.023356,
+    "lng": 121.563347,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 2672538244
+    }
+  },
+  {
+    "id": "helppoint_00068",
+    "category": "help_point",
+    "lat": 25.024585,
+    "lng": 121.563547,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2672538247
+    }
+  },
+  {
+    "id": "helppoint_00069",
+    "category": "help_point",
+    "lat": 25.025191,
+    "lng": 121.571375,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "小雜貨店",
+      "brand": null,
+      "osm_id": 2672539795
+    }
+  },
+  {
+    "id": "helppoint_00070",
+    "category": "help_point",
+    "lat": 25.035823,
+    "lng": 121.578565,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2672864421
+    }
+  },
+  {
+    "id": "helppoint_00071",
+    "category": "help_point",
+    "lat": 25.027542,
+    "lng": 121.564892,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2677242556
+    }
+  },
+  {
+    "id": "helppoint_00072",
+    "category": "help_point",
+    "lat": 25.027015,
+    "lng": 121.563835,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2677242558
+    }
+  },
+  {
+    "id": "helppoint_00073",
+    "category": "help_point",
+    "lat": 25.027147,
+    "lng": 121.563723,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2677242560
+    }
+  },
+  {
+    "id": "helppoint_00074",
+    "category": "help_point",
+    "lat": 25.026235,
+    "lng": 121.566095,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2677242562
+    }
+  },
+  {
+    "id": "helppoint_00075",
+    "category": "help_point",
+    "lat": 25.042908,
+    "lng": 121.542449,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2680607315
+    }
+  },
+  {
+    "id": "helppoint_00076",
+    "category": "help_point",
+    "lat": 25.041129,
+    "lng": 121.536888,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2690911889
+    }
+  },
+  {
+    "id": "helppoint_00077",
+    "category": "help_point",
+    "lat": 25.040287,
+    "lng": 121.533509,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2690911893
+    }
+  },
+  {
+    "id": "helppoint_00078",
+    "category": "help_point",
+    "lat": 25.040068,
+    "lng": 121.533908,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2690911897
+    }
+  },
+  {
+    "id": "helppoint_00079",
+    "category": "help_point",
+    "lat": 25.033568,
+    "lng": 121.543942,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2724667931
+    }
+  },
+  {
+    "id": "helppoint_00080",
+    "category": "help_point",
+    "lat": 25.044159,
+    "lng": 121.546131,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2724716678
+    }
+  },
+  {
+    "id": "helppoint_00081",
+    "category": "help_point",
+    "lat": 25.020388,
+    "lng": 121.554408,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2760029675
+    }
+  },
+  {
+    "id": "helppoint_00082",
+    "category": "help_point",
+    "lat": 25.019701,
+    "lng": 121.553346,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2760029680
+    }
+  },
+  {
+    "id": "helppoint_00083",
+    "category": "help_point",
+    "lat": 25.020226,
+    "lng": 121.552721,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 2760032805
+    }
+  },
+  {
+    "id": "helppoint_00084",
+    "category": "help_point",
+    "lat": 25.040753,
+    "lng": 121.550671,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2787426156
+    }
+  },
+  {
+    "id": "helppoint_00085",
+    "category": "help_point",
+    "lat": 25.040527,
+    "lng": 121.550624,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2787426159
+    }
+  },
+  {
+    "id": "helppoint_00086",
+    "category": "help_point",
+    "lat": 25.040221,
+    "lng": 121.551683,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2787513572
+    }
+  },
+  {
+    "id": "helppoint_00087",
+    "category": "help_point",
+    "lat": 25.041024,
+    "lng": 121.541416,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2824652507
+    }
+  },
+  {
+    "id": "helppoint_00088",
+    "category": "help_point",
+    "lat": 25.036553,
+    "lng": 121.550424,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "福利社",
+      "brand": null,
+      "osm_id": 2858490222
+    }
+  },
+  {
+    "id": "helppoint_00089",
+    "category": "help_point",
+    "lat": 25.020467,
+    "lng": 121.544381,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 2917441717
+    }
+  },
+  {
+    "id": "helppoint_00090",
+    "category": "help_point",
+    "lat": 25.045495,
+    "lng": 121.569003,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2954089276
+    }
+  },
+  {
+    "id": "helppoint_00091",
+    "category": "help_point",
+    "lat": 25.043138,
+    "lng": 121.565875,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2962740496
+    }
+  },
+  {
+    "id": "helppoint_00092",
+    "category": "help_point",
+    "lat": 25.047305,
+    "lng": 121.566503,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2963985747
+    }
+  },
+  {
+    "id": "helppoint_00093",
+    "category": "help_point",
+    "lat": 25.047148,
+    "lng": 121.566765,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2965492497
+    }
+  },
+  {
+    "id": "helppoint_00094",
+    "category": "help_point",
+    "lat": 25.037071,
+    "lng": 121.549734,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 2969144318
+    }
+  },
+  {
+    "id": "helppoint_00095",
+    "category": "help_point",
+    "lat": 25.041286,
+    "lng": 121.565227,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 2987200649
+    }
+  },
+  {
+    "id": "helppoint_00096",
+    "category": "help_point",
+    "lat": 25.022606,
+    "lng": 121.549842,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3003964554
+    }
+  },
+  {
+    "id": "helppoint_00097",
+    "category": "help_point",
+    "lat": 25.025333,
+    "lng": 121.549534,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3003977366
+    }
+  },
+  {
+    "id": "helppoint_00098",
+    "category": "help_point",
+    "lat": 25.038887,
+    "lng": 121.585931,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": "萊爾富",
+      "osm_id": 3024920769
+    }
+  },
+  {
+    "id": "helppoint_00099",
+    "category": "help_point",
+    "lat": 25.038713,
+    "lng": 121.585996,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3024920770
+    }
+  },
+  {
+    "id": "helppoint_00100",
+    "category": "help_point",
+    "lat": 25.037709,
+    "lng": 121.583325,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3024920771
+    }
+  },
+  {
+    "id": "helppoint_00101",
+    "category": "help_point",
+    "lat": 25.042805,
+    "lng": 121.583404,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3024920795
+    }
+  },
+  {
+    "id": "helppoint_00102",
+    "category": "help_point",
+    "lat": 25.040629,
+    "lng": 121.58507,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3024920797
+    }
+  },
+  {
+    "id": "helppoint_00103",
+    "category": "help_point",
+    "lat": 25.044795,
+    "lng": 121.580956,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": null,
+      "brand": null,
+      "osm_id": 3024921106
+    }
+  },
+  {
+    "id": "helppoint_00104",
+    "category": "help_point",
+    "lat": 25.026475,
+    "lng": 121.541721,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3076262006
+    }
+  },
+  {
+    "id": "helppoint_00105",
+    "category": "help_point",
+    "lat": 25.028513,
+    "lng": 121.54103,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3076284829
+    }
+  },
+  {
+    "id": "helppoint_00106",
+    "category": "help_point",
+    "lat": 25.02865,
+    "lng": 121.539312,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3077603063
+    }
+  },
+  {
+    "id": "helppoint_00107",
+    "category": "help_point",
+    "lat": 25.03304,
+    "lng": 121.539387,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3077657902
+    }
+  },
+  {
+    "id": "helppoint_00108",
+    "category": "help_point",
+    "lat": 25.032807,
+    "lng": 121.543361,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3077657903
+    }
+  },
+  {
+    "id": "helppoint_00109",
+    "category": "help_point",
+    "lat": 25.028079,
+    "lng": 121.547761,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3077695264
+    }
+  },
+  {
+    "id": "helppoint_00110",
+    "category": "help_point",
+    "lat": 25.025,
+    "lng": 121.543931,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3077695265
+    }
+  },
+  {
+    "id": "helppoint_00111",
+    "category": "help_point",
+    "lat": 25.024846,
+    "lng": 121.54176,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3077753873
+    }
+  },
+  {
+    "id": "helppoint_00112",
+    "category": "help_point",
+    "lat": 25.025763,
+    "lng": 121.53866,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3077768710
+    }
+  },
+  {
+    "id": "helppoint_00113",
+    "category": "help_point",
+    "lat": 25.028671,
+    "lng": 121.538273,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3077768711
+    }
+  },
+  {
+    "id": "helppoint_00114",
+    "category": "help_point",
+    "lat": 25.026487,
+    "lng": 121.532502,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3078276697
+    }
+  },
+  {
+    "id": "helppoint_00115",
+    "category": "help_point",
+    "lat": 25.044495,
+    "lng": 121.542526,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "雜貨店",
+      "brand": null,
+      "osm_id": 3080433514
+    }
+  },
+  {
+    "id": "helppoint_00116",
+    "category": "help_point",
+    "lat": 25.02439,
+    "lng": 121.553844,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3082513510
+    }
+  },
+  {
+    "id": "helppoint_00117",
+    "category": "help_point",
+    "lat": 25.018567,
+    "lng": 121.557998,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3082513511
+    }
+  },
+  {
+    "id": "helppoint_00118",
+    "category": "help_point",
+    "lat": 25.029807,
+    "lng": 121.52836,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3181917429
+    }
+  },
+  {
+    "id": "helppoint_00119",
+    "category": "help_point",
+    "lat": 25.040663,
+    "lng": 121.565069,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3186195000
+    }
+  },
+  {
+    "id": "helppoint_00120",
+    "category": "help_point",
+    "lat": 25.026837,
+    "lng": 121.568567,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3198269374
+    }
+  },
+  {
+    "id": "helppoint_00121",
+    "category": "help_point",
+    "lat": 25.025567,
+    "lng": 121.545008,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3210314679
+    }
+  },
+  {
+    "id": "helppoint_00122",
+    "category": "help_point",
+    "lat": 25.033248,
+    "lng": 121.526928,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3216077273
+    }
+  },
+  {
+    "id": "helppoint_00123",
+    "category": "help_point",
+    "lat": 25.043403,
+    "lng": 121.535652,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3219718432
+    }
+  },
+  {
+    "id": "helppoint_00124",
+    "category": "help_point",
+    "lat": 25.026178,
+    "lng": 121.557384,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3219971765
+    }
+  },
+  {
+    "id": "helppoint_00125",
+    "category": "help_point",
+    "lat": 25.028447,
+    "lng": 121.545386,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3262687079
+    }
+  },
+  {
+    "id": "helppoint_00126",
+    "category": "help_point",
+    "lat": 25.031527,
+    "lng": 121.529475,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3270313861
+    }
+  },
+  {
+    "id": "helppoint_00127",
+    "category": "help_point",
+    "lat": 25.028088,
+    "lng": 121.547571,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3275610392
+    }
+  },
+  {
+    "id": "helppoint_00128",
+    "category": "help_point",
+    "lat": 25.036931,
+    "lng": 121.569103,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3278033043
+    }
+  },
+  {
+    "id": "helppoint_00129",
+    "category": "help_point",
+    "lat": 25.041738,
+    "lng": 121.547014,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3304641833
+    }
+  },
+  {
+    "id": "helppoint_00130",
+    "category": "help_point",
+    "lat": 25.028101,
+    "lng": 121.521926,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3311218076
+    }
+  },
+  {
+    "id": "helppoint_00131",
+    "category": "help_point",
+    "lat": 25.027834,
+    "lng": 121.522136,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3311218101
+    }
+  },
+  {
+    "id": "helppoint_00132",
+    "category": "help_point",
+    "lat": 25.042637,
+    "lng": 121.550559,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3311796756
+    }
+  },
+  {
+    "id": "helppoint_00133",
+    "category": "help_point",
+    "lat": 25.040111,
+    "lng": 121.571834,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3347475194
+    }
+  },
+  {
+    "id": "helppoint_00134",
+    "category": "help_point",
+    "lat": 25.035364,
+    "lng": 121.567701,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3379237115
+    }
+  },
+  {
+    "id": "helppoint_00135",
+    "category": "help_point",
+    "lat": 25.018368,
+    "lng": 121.55709,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3475999896
+    }
+  },
+  {
+    "id": "helppoint_00136",
+    "category": "help_point",
+    "lat": 25.043461,
+    "lng": 121.546306,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3505709801
+    }
+  },
+  {
+    "id": "helppoint_00137",
+    "category": "help_point",
+    "lat": 25.037927,
+    "lng": 121.574552,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 3514374815
+    }
+  },
+  {
+    "id": "helppoint_00138",
+    "category": "help_point",
+    "lat": 25.034806,
+    "lng": 121.573647,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3514374827
+    }
+  },
+  {
+    "id": "helppoint_00139",
+    "category": "help_point",
+    "lat": 25.018678,
+    "lng": 121.558946,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3554214093
+    }
+  },
+  {
+    "id": "helppoint_00140",
+    "category": "help_point",
+    "lat": 25.034402,
+    "lng": 121.562086,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3568469799
+    }
+  },
+  {
+    "id": "helppoint_00141",
+    "category": "help_point",
+    "lat": 25.038184,
+    "lng": 121.547392,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3592556104
+    }
+  },
+  {
+    "id": "helppoint_00142",
+    "category": "help_point",
+    "lat": 25.040146,
+    "lng": 121.557454,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3612895694
+    }
+  },
+  {
+    "id": "helppoint_00143",
+    "category": "help_point",
+    "lat": 25.034442,
+    "lng": 121.575532,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3633921319
+    }
+  },
+  {
+    "id": "helppoint_00144",
+    "category": "help_point",
+    "lat": 25.042521,
+    "lng": 121.554153,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3670390146
+    }
+  },
+  {
+    "id": "helppoint_00145",
+    "category": "help_point",
+    "lat": 25.033259,
+    "lng": 121.558919,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3690933419
+    }
+  },
+  {
+    "id": "helppoint_00146",
+    "category": "help_point",
+    "lat": 25.040663,
+    "lng": 121.577067,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3699812821
+    }
+  },
+  {
+    "id": "helppoint_00147",
+    "category": "help_point",
+    "lat": 25.040676,
+    "lng": 121.576868,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3699813185
+    }
+  },
+  {
+    "id": "helppoint_00148",
+    "category": "help_point",
+    "lat": 25.031663,
+    "lng": 121.55957,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3700532676
+    }
+  },
+  {
+    "id": "helppoint_00149",
+    "category": "help_point",
+    "lat": 25.032186,
+    "lng": 121.557603,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3700536512
+    }
+  },
+  {
+    "id": "helppoint_00150",
+    "category": "help_point",
+    "lat": 25.031935,
+    "lng": 121.558716,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3700536514
+    }
+  },
+  {
+    "id": "helppoint_00151",
+    "category": "help_point",
+    "lat": 25.031696,
+    "lng": 121.55946,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3700536515
+    }
+  },
+  {
+    "id": "helppoint_00152",
+    "category": "help_point",
+    "lat": 25.03221,
+    "lng": 121.55726,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3704049690
+    }
+  },
+  {
+    "id": "helppoint_00153",
+    "category": "help_point",
+    "lat": 25.027501,
+    "lng": 121.553593,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3704355306
+    }
+  },
+  {
+    "id": "helppoint_00154",
+    "category": "help_point",
+    "lat": 25.032765,
+    "lng": 121.554435,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "家樂福超市",
+      "brand": "家樂福超市",
+      "osm_id": 3707807816
+    }
+  },
+  {
+    "id": "helppoint_00155",
+    "category": "help_point",
+    "lat": 25.040719,
+    "lng": 121.574111,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3714843277
+    }
+  },
+  {
+    "id": "helppoint_00156",
+    "category": "help_point",
+    "lat": 25.040776,
+    "lng": 121.582659,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3732996378
+    }
+  },
+  {
+    "id": "helppoint_00157",
+    "category": "help_point",
+    "lat": 25.037372,
+    "lng": 121.575138,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3738821430
+    }
+  },
+  {
+    "id": "helppoint_00158",
+    "category": "help_point",
+    "lat": 25.034572,
+    "lng": 121.573639,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3742340190
+    }
+  },
+  {
+    "id": "helppoint_00159",
+    "category": "help_point",
+    "lat": 25.041718,
+    "lng": 121.567248,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3769904737
+    }
+  },
+  {
+    "id": "helppoint_00160",
+    "category": "help_point",
+    "lat": 25.041061,
+    "lng": 121.545311,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3799442392
+    }
+  },
+  {
+    "id": "helppoint_00161",
+    "category": "help_point",
+    "lat": 25.033192,
+    "lng": 121.542467,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3811447091
+    }
+  },
+  {
+    "id": "helppoint_00162",
+    "category": "help_point",
+    "lat": 25.019033,
+    "lng": 121.530772,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3818999702
+    }
+  },
+  {
+    "id": "helppoint_00163",
+    "category": "help_point",
+    "lat": 25.018946,
+    "lng": 121.530311,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "義美食品",
+      "brand": "義美食品",
+      "osm_id": 3818999943
+    }
+  },
+  {
+    "id": "helppoint_00164",
+    "category": "help_point",
+    "lat": 25.035163,
+    "lng": 121.557725,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3887825435
+    }
+  },
+  {
+    "id": "helppoint_00165",
+    "category": "help_point",
+    "lat": 25.033746,
+    "lng": 121.557732,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3887825767
+    }
+  },
+  {
+    "id": "helppoint_00166",
+    "category": "help_point",
+    "lat": 25.025621,
+    "lng": 121.536299,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3923847443
+    }
+  },
+  {
+    "id": "helppoint_00167",
+    "category": "help_point",
+    "lat": 25.036367,
+    "lng": 121.537312,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3937135677
+    }
+  },
+  {
+    "id": "helppoint_00168",
+    "category": "help_point",
+    "lat": 25.023567,
+    "lng": 121.548287,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3939158514
+    }
+  },
+  {
+    "id": "helppoint_00169",
+    "category": "help_point",
+    "lat": 25.025979,
+    "lng": 121.533701,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3939158515
+    }
+  },
+  {
+    "id": "helppoint_00170",
+    "category": "help_point",
+    "lat": 25.039682,
+    "lng": 121.577943,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3939158516
+    }
+  },
+  {
+    "id": "helppoint_00171",
+    "category": "help_point",
+    "lat": 25.032508,
+    "lng": 121.574652,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 3997541428
+    }
+  },
+  {
+    "id": "helppoint_00172",
+    "category": "help_point",
+    "lat": 25.032805,
+    "lng": 121.574659,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 3997541443
+    }
+  },
+  {
+    "id": "helppoint_00173",
+    "category": "help_point",
+    "lat": 25.035179,
+    "lng": 121.577014,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4058075213
+    }
+  },
+  {
+    "id": "helppoint_00174",
+    "category": "help_point",
+    "lat": 25.03918,
+    "lng": 121.576592,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4058075214
+    }
+  },
+  {
+    "id": "helppoint_00175",
+    "category": "help_point",
+    "lat": 25.042328,
+    "lng": 121.563582,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4058075215
+    }
+  },
+  {
+    "id": "helppoint_00176",
+    "category": "help_point",
+    "lat": 25.018131,
+    "lng": 121.550878,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4082740465
+    }
+  },
+  {
+    "id": "helppoint_00177",
+    "category": "help_point",
+    "lat": 25.023991,
+    "lng": 121.529358,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4149591703
+    }
+  },
+  {
+    "id": "helppoint_00178",
+    "category": "help_point",
+    "lat": 25.041376,
+    "lng": 121.540511,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "義美食品",
+      "brand": "義美食品",
+      "osm_id": 4269582579
+    }
+  },
+  {
+    "id": "helppoint_00179",
+    "category": "help_point",
+    "lat": 25.039453,
+    "lng": 121.554801,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4298940668
+    }
+  },
+  {
+    "id": "helppoint_00180",
+    "category": "help_point",
+    "lat": 25.040148,
+    "lng": 121.554734,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4298940669
+    }
+  },
+  {
+    "id": "helppoint_00181",
+    "category": "help_point",
+    "lat": 25.042077,
+    "lng": 121.554473,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4298942298
+    }
+  },
+  {
+    "id": "helppoint_00182",
+    "category": "help_point",
+    "lat": 25.042043,
+    "lng": 121.548168,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4301004797
+    }
+  },
+  {
+    "id": "helppoint_00183",
+    "category": "help_point",
+    "lat": 25.028428,
+    "lng": 121.563385,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4325693436
+    }
+  },
+  {
+    "id": "helppoint_00184",
+    "category": "help_point",
+    "lat": 25.042479,
+    "lng": 121.566175,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4325693437
+    }
+  },
+  {
+    "id": "helppoint_00185",
+    "category": "help_point",
+    "lat": 25.043348,
+    "lng": 121.562886,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 4325693920
+    }
+  },
+  {
+    "id": "helppoint_00186",
+    "category": "help_point",
+    "lat": 25.03782,
+    "lng": 121.578264,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 4325694185
+    }
+  },
+  {
+    "id": "helppoint_00187",
+    "category": "help_point",
+    "lat": 25.025681,
+    "lng": 121.551908,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4325694230
+    }
+  },
+  {
+    "id": "helppoint_00188",
+    "category": "help_point",
+    "lat": 25.029116,
+    "lng": 121.56474,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4325694231
+    }
+  },
+  {
+    "id": "helppoint_00189",
+    "category": "help_point",
+    "lat": 25.043596,
+    "lng": 121.572209,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4328118413
+    }
+  },
+  {
+    "id": "helppoint_00190",
+    "category": "help_point",
+    "lat": 25.042027,
+    "lng": 121.568582,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4328118623
+    }
+  },
+  {
+    "id": "helppoint_00191",
+    "category": "help_point",
+    "lat": 25.042155,
+    "lng": 121.552831,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4328118624
+    }
+  },
+  {
+    "id": "helppoint_00192",
+    "category": "help_point",
+    "lat": 25.043444,
+    "lng": 121.568859,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4328118625
+    }
+  },
+  {
+    "id": "helppoint_00193",
+    "category": "help_point",
+    "lat": 25.024446,
+    "lng": 121.548317,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4384257971
+    }
+  },
+  {
+    "id": "helppoint_00194",
+    "category": "help_point",
+    "lat": 25.027015,
+    "lng": 121.525725,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4447987309
+    }
+  },
+  {
+    "id": "helppoint_00195",
+    "category": "help_point",
+    "lat": 25.02829,
+    "lng": 121.543229,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 4524863567
+    }
+  },
+  {
+    "id": "helppoint_00196",
+    "category": "help_point",
+    "lat": 25.025233,
+    "lng": 121.542267,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524863571
+    }
+  },
+  {
+    "id": "helppoint_00197",
+    "category": "help_point",
+    "lat": 25.029162,
+    "lng": 121.561434,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524863655
+    }
+  },
+  {
+    "id": "helppoint_00198",
+    "category": "help_point",
+    "lat": 25.027148,
+    "lng": 121.562302,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524863660
+    }
+  },
+  {
+    "id": "helppoint_00199",
+    "category": "help_point",
+    "lat": 25.031388,
+    "lng": 121.554169,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524863917
+    }
+  },
+  {
+    "id": "helppoint_00200",
+    "category": "help_point",
+    "lat": 25.032475,
+    "lng": 121.553228,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4524863930
+    }
+  },
+  {
+    "id": "helppoint_00201",
+    "category": "help_point",
+    "lat": 25.032222,
+    "lng": 121.543804,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524863972
+    }
+  },
+  {
+    "id": "helppoint_00202",
+    "category": "help_point",
+    "lat": 25.039955,
+    "lng": 121.553157,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524863996
+    }
+  },
+  {
+    "id": "helppoint_00203",
+    "category": "help_point",
+    "lat": 25.041491,
+    "lng": 121.546133,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524864017
+    }
+  },
+  {
+    "id": "helppoint_00204",
+    "category": "help_point",
+    "lat": 25.026506,
+    "lng": 121.523102,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 4524864045
+    }
+  },
+  {
+    "id": "helppoint_00205",
+    "category": "help_point",
+    "lat": 25.036844,
+    "lng": 121.549201,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "義美食品",
+      "brand": "義美食品",
+      "osm_id": 4524864530
+    }
+  },
+  {
+    "id": "helppoint_00206",
+    "category": "help_point",
+    "lat": 25.034354,
+    "lng": 121.54583,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4524864577
+    }
+  },
+  {
+    "id": "helppoint_00207",
+    "category": "help_point",
+    "lat": 25.023047,
+    "lng": 121.555471,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 4574573815
+    }
+  },
+  {
+    "id": "helppoint_00208",
+    "category": "help_point",
+    "lat": 25.036115,
+    "lng": 121.546488,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4659929791
+    }
+  },
+  {
+    "id": "helppoint_00209",
+    "category": "help_point",
+    "lat": 25.02131,
+    "lng": 121.551393,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 4677018248
+    }
+  },
+  {
+    "id": "helppoint_00210",
+    "category": "help_point",
+    "lat": 25.021944,
+    "lng": 121.550961,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4677018250
+    }
+  },
+  {
+    "id": "helppoint_00211",
+    "category": "help_point",
+    "lat": 25.022512,
+    "lng": 121.569105,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "超偉便利商店",
+      "brand": null,
+      "osm_id": 4756039059
+    }
+  },
+  {
+    "id": "helppoint_00212",
+    "category": "help_point",
+    "lat": 25.024415,
+    "lng": 121.547711,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "義美食品",
+      "brand": "義美食品",
+      "osm_id": 4837986332
+    }
+  },
+  {
+    "id": "helppoint_00213",
+    "category": "help_point",
+    "lat": 25.031683,
+    "lng": 121.543778,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "義美食品",
+      "brand": "義美食品",
+      "osm_id": 4837986339
+    }
+  },
+  {
+    "id": "helppoint_00214",
+    "category": "help_point",
+    "lat": 25.040684,
+    "lng": 121.547321,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4837986367
+    }
+  },
+  {
+    "id": "helppoint_00215",
+    "category": "help_point",
+    "lat": 25.028494,
+    "lng": 121.557055,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4837986443
+    }
+  },
+  {
+    "id": "helppoint_00216",
+    "category": "help_point",
+    "lat": 25.034007,
+    "lng": 121.550296,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4837986453
+    }
+  },
+  {
+    "id": "helppoint_00217",
+    "category": "help_point",
+    "lat": 25.03038,
+    "lng": 121.553265,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4837986464
+    }
+  },
+  {
+    "id": "helppoint_00218",
+    "category": "help_point",
+    "lat": 25.037065,
+    "lng": 121.546906,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4837986469
+    }
+  },
+  {
+    "id": "helppoint_00219",
+    "category": "help_point",
+    "lat": 25.036493,
+    "lng": 121.547148,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "Toko Indo",
+      "brand": null,
+      "osm_id": 4837986470
+    }
+  },
+  {
+    "id": "helppoint_00220",
+    "category": "help_point",
+    "lat": 25.028729,
+    "lng": 121.549507,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4837986529
+    }
+  },
+  {
+    "id": "helppoint_00221",
+    "category": "help_point",
+    "lat": 25.027427,
+    "lng": 121.551602,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4837986532
+    }
+  },
+  {
+    "id": "helppoint_00222",
+    "category": "help_point",
+    "lat": 25.024621,
+    "lng": 121.550881,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4837986572
+    }
+  },
+  {
+    "id": "helppoint_00223",
+    "category": "help_point",
+    "lat": 25.032538,
+    "lng": 121.554389,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4837986579
+    }
+  },
+  {
+    "id": "helppoint_00224",
+    "category": "help_point",
+    "lat": 25.045003,
+    "lng": 121.580825,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 4850880822
+    }
+  },
+  {
+    "id": "helppoint_00225",
+    "category": "help_point",
+    "lat": 25.0268,
+    "lng": 121.529351,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 4911177349
+    }
+  },
+  {
+    "id": "helppoint_00226",
+    "category": "help_point",
+    "lat": 25.014968,
+    "lng": 121.535465,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": null,
+      "brand": null,
+      "osm_id": 4952060641
+    }
+  },
+  {
+    "id": "helppoint_00227",
+    "category": "help_point",
+    "lat": 25.04626,
+    "lng": 121.57707,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 5074815521
+    }
+  },
+  {
+    "id": "helppoint_00228",
+    "category": "help_point",
+    "lat": 25.023069,
+    "lng": 121.537095,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5102058921
+    }
+  },
+  {
+    "id": "helppoint_00229",
+    "category": "help_point",
+    "lat": 25.026525,
+    "lng": 121.531814,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5108661226
+    }
+  },
+  {
+    "id": "helppoint_00230",
+    "category": "help_point",
+    "lat": 25.025109,
+    "lng": 121.531555,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5109347817
+    }
+  },
+  {
+    "id": "helppoint_00231",
+    "category": "help_point",
+    "lat": 25.042259,
+    "lng": 121.574163,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 5110348195
+    }
+  },
+  {
+    "id": "helppoint_00232",
+    "category": "help_point",
+    "lat": 25.043046,
+    "lng": 121.578017,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 5110348199
+    }
+  },
+  {
+    "id": "helppoint_00233",
+    "category": "help_point",
+    "lat": 25.043379,
+    "lng": 121.576198,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 5110348216
+    }
+  },
+  {
+    "id": "helppoint_00234",
+    "category": "help_point",
+    "lat": 25.045829,
+    "lng": 121.570179,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 5110348563
+    }
+  },
+  {
+    "id": "helppoint_00235",
+    "category": "help_point",
+    "lat": 25.021911,
+    "lng": 121.556602,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 5110348624
+    }
+  },
+  {
+    "id": "helppoint_00236",
+    "category": "help_point",
+    "lat": 25.042433,
+    "lng": 121.556853,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5110348693
+    }
+  },
+  {
+    "id": "helppoint_00237",
+    "category": "help_point",
+    "lat": 25.044004,
+    "lng": 121.5575,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5110348694
+    }
+  },
+  {
+    "id": "helppoint_00238",
+    "category": "help_point",
+    "lat": 25.033683,
+    "lng": 121.554171,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 5110348763
+    }
+  },
+  {
+    "id": "helppoint_00239",
+    "category": "help_point",
+    "lat": 25.034306,
+    "lng": 121.554407,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5110348765
+    }
+  },
+  {
+    "id": "helppoint_00240",
+    "category": "help_point",
+    "lat": 25.036638,
+    "lng": 121.55731,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 5110348769
+    }
+  },
+  {
+    "id": "helppoint_00241",
+    "category": "help_point",
+    "lat": 25.047257,
+    "lng": 121.577587,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5110348789
+    }
+  },
+  {
+    "id": "helppoint_00242",
+    "category": "help_point",
+    "lat": 25.030723,
+    "lng": 121.55315,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5110348805
+    }
+  },
+  {
+    "id": "helppoint_00243",
+    "category": "help_point",
+    "lat": 25.043578,
+    "lng": 121.549697,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 5162707822
+    }
+  },
+  {
+    "id": "helppoint_00244",
+    "category": "help_point",
+    "lat": 25.025847,
+    "lng": 121.562057,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5365289460
+    }
+  },
+  {
+    "id": "helppoint_00245",
+    "category": "help_point",
+    "lat": 25.032954,
+    "lng": 121.543902,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "義美食品",
+      "brand": "義美食品",
+      "osm_id": 5483729836
+    }
+  },
+  {
+    "id": "helppoint_00246",
+    "category": "help_point",
+    "lat": 25.033136,
+    "lng": 121.544747,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5483729838
+    }
+  },
+  {
+    "id": "helppoint_00247",
+    "category": "help_point",
+    "lat": 25.034267,
+    "lng": 121.538249,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 5551907221
+    }
+  },
+  {
+    "id": "helppoint_00248",
+    "category": "help_point",
+    "lat": 25.03372,
+    "lng": 121.53869,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5551910930
+    }
+  },
+  {
+    "id": "helppoint_00249",
+    "category": "help_point",
+    "lat": 25.034046,
+    "lng": 121.543882,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "名店街",
+      "brand": null,
+      "osm_id": 5551914393
+    }
+  },
+  {
+    "id": "helppoint_00250",
+    "category": "help_point",
+    "lat": 25.033799,
+    "lng": 121.534617,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5551922165
+    }
+  },
+  {
+    "id": "helppoint_00251",
+    "category": "help_point",
+    "lat": 25.045241,
+    "lng": 121.578941,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "台灣菸酒",
+      "brand": null,
+      "osm_id": 5569304661
+    }
+  },
+  {
+    "id": "helppoint_00252",
+    "category": "help_point",
+    "lat": 25.041657,
+    "lng": 121.578974,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5585775159
+    }
+  },
+  {
+    "id": "helppoint_00253",
+    "category": "help_point",
+    "lat": 25.043514,
+    "lng": 121.578016,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "義美食品",
+      "brand": "義美食品",
+      "osm_id": 5585946723
+    }
+  },
+  {
+    "id": "helppoint_00254",
+    "category": "help_point",
+    "lat": 25.01549,
+    "lng": 121.536915,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "國立臺灣學員生消費合作社",
+      "brand": null,
+      "osm_id": 5587511570
+    }
+  },
+  {
+    "id": "helppoint_00255",
+    "category": "help_point",
+    "lat": 25.034303,
+    "lng": 121.560061,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5614713798
+    }
+  },
+  {
+    "id": "helppoint_00256",
+    "category": "help_point",
+    "lat": 25.030439,
+    "lng": 121.52958,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5717534183
+    }
+  },
+  {
+    "id": "helppoint_00257",
+    "category": "help_point",
+    "lat": 25.026588,
+    "lng": 121.546936,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5835453711
+    }
+  },
+  {
+    "id": "helppoint_00258",
+    "category": "help_point",
+    "lat": 25.038674,
+    "lng": 121.545269,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5839491736
+    }
+  },
+  {
+    "id": "helppoint_00259",
+    "category": "help_point",
+    "lat": 25.024417,
+    "lng": 121.547603,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 5856283860
+    }
+  },
+  {
+    "id": "helppoint_00260",
+    "category": "help_point",
+    "lat": 25.019434,
+    "lng": 121.539248,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 6037206719
+    }
+  },
+  {
+    "id": "helppoint_00261",
+    "category": "help_point",
+    "lat": 25.04697,
+    "lng": 121.566737,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "X-store",
+      "brand": "7-Eleven",
+      "osm_id": 6139315494
+    }
+  },
+  {
+    "id": "helppoint_00262",
+    "category": "help_point",
+    "lat": 25.042374,
+    "lng": 121.564857,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 6139315495
+    }
+  },
+  {
+    "id": "helppoint_00263",
+    "category": "help_point",
+    "lat": 25.030157,
+    "lng": 121.560999,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "OK超商",
+      "brand": "OK超商",
+      "osm_id": 6284503807
+    }
+  },
+  {
+    "id": "helppoint_00264",
+    "category": "help_point",
+    "lat": 25.044391,
+    "lng": 121.5436,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 6354698715
+    }
+  },
+  {
+    "id": "helppoint_00265",
+    "category": "help_point",
+    "lat": 25.039252,
+    "lng": 121.557412,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 6377724285
+    }
+  },
+  {
+    "id": "helppoint_00266",
+    "category": "help_point",
+    "lat": 25.03953,
+    "lng": 121.553074,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 6763209771
+    }
+  },
+  {
+    "id": "helppoint_00267",
+    "category": "help_point",
+    "lat": 25.040026,
+    "lng": 121.551957,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 6763230488
+    }
+  },
+  {
+    "id": "helppoint_00268",
+    "category": "help_point",
+    "lat": 25.025685,
+    "lng": 121.543896,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 6775539323
+    }
+  },
+  {
+    "id": "helppoint_00269",
+    "category": "help_point",
+    "lat": 25.039456,
+    "lng": 121.576665,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 6795607646
+    }
+  },
+  {
+    "id": "helppoint_00270",
+    "category": "help_point",
+    "lat": 25.038837,
+    "lng": 121.55002,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 6871573253
+    }
+  },
+  {
+    "id": "helppoint_00271",
+    "category": "help_point",
+    "lat": 25.028178,
+    "lng": 121.550135,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 7022030529
+    }
+  },
+  {
+    "id": "helppoint_00272",
+    "category": "help_point",
+    "lat": 25.038152,
+    "lng": 121.552872,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 7040009286
+    }
+  },
+  {
+    "id": "helppoint_00273",
+    "category": "help_point",
+    "lat": 25.04642,
+    "lng": 121.577946,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 7278675534
+    }
+  },
+  {
+    "id": "helppoint_00274",
+    "category": "help_point",
+    "lat": 25.014514,
+    "lng": 121.537992,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 7330746357
+    }
+  },
+  {
+    "id": "helppoint_00275",
+    "category": "help_point",
+    "lat": 25.033733,
+    "lng": 121.536666,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 7384220349
+    }
+  },
+  {
+    "id": "helppoint_00276",
+    "category": "help_point",
+    "lat": 25.034207,
+    "lng": 121.536012,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 7384458590
+    }
+  },
+  {
+    "id": "helppoint_00277",
+    "category": "help_point",
+    "lat": 25.034387,
+    "lng": 121.550164,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 7630753372
+    }
+  },
+  {
+    "id": "helppoint_00278",
+    "category": "help_point",
+    "lat": 25.03026,
+    "lng": 121.554893,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "家樂福超市",
+      "brand": "家樂福超市",
+      "osm_id": 7668443830
+    }
+  },
+  {
+    "id": "helppoint_00279",
+    "category": "help_point",
+    "lat": 25.039493,
+    "lng": 121.565234,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118207165
+    }
+  },
+  {
+    "id": "helppoint_00280",
+    "category": "help_point",
+    "lat": 25.038774,
+    "lng": 121.566853,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118207166
+    }
+  },
+  {
+    "id": "helppoint_00281",
+    "category": "help_point",
+    "lat": 25.04066,
+    "lng": 121.567025,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118207167
+    }
+  },
+  {
+    "id": "helppoint_00282",
+    "category": "help_point",
+    "lat": 25.020527,
+    "lng": 121.556382,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118207168
+    }
+  },
+  {
+    "id": "helppoint_00283",
+    "category": "help_point",
+    "lat": 25.030681,
+    "lng": 121.545971,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118207169
+    }
+  },
+  {
+    "id": "helppoint_00284",
+    "category": "help_point",
+    "lat": 25.02865,
+    "lng": 121.52198,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118207170
+    }
+  },
+  {
+    "id": "helppoint_00285",
+    "category": "help_point",
+    "lat": 25.049131,
+    "lng": 121.578757,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 8118272738
+    }
+  },
+  {
+    "id": "helppoint_00286",
+    "category": "help_point",
+    "lat": 25.047804,
+    "lng": 121.578033,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 8118272739
+    }
+  },
+  {
+    "id": "helppoint_00287",
+    "category": "help_point",
+    "lat": 25.037173,
+    "lng": 121.577144,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273002
+    }
+  },
+  {
+    "id": "helppoint_00288",
+    "category": "help_point",
+    "lat": 25.043829,
+    "lng": 121.549768,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273011
+    }
+  },
+  {
+    "id": "helppoint_00289",
+    "category": "help_point",
+    "lat": 25.03962,
+    "lng": 121.551892,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273012
+    }
+  },
+  {
+    "id": "helppoint_00290",
+    "category": "help_point",
+    "lat": 25.03857,
+    "lng": 121.551087,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273013
+    }
+  },
+  {
+    "id": "helppoint_00291",
+    "category": "help_point",
+    "lat": 25.036541,
+    "lng": 121.554236,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273014
+    }
+  },
+  {
+    "id": "helppoint_00292",
+    "category": "help_point",
+    "lat": 25.036585,
+    "lng": 121.555709,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273015
+    }
+  },
+  {
+    "id": "helppoint_00293",
+    "category": "help_point",
+    "lat": 25.043713,
+    "lng": 121.544443,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273016
+    }
+  },
+  {
+    "id": "helppoint_00294",
+    "category": "help_point",
+    "lat": 25.042719,
+    "lng": 121.544608,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8118273017
+    }
+  },
+  {
+    "id": "helppoint_00295",
+    "category": "help_point",
+    "lat": 25.044617,
+    "lng": 121.581002,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8413652396
+    }
+  },
+  {
+    "id": "helppoint_00296",
+    "category": "help_point",
+    "lat": 25.033158,
+    "lng": 121.529222,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 8524769282
+    }
+  },
+  {
+    "id": "helppoint_00297",
+    "category": "help_point",
+    "lat": 25.033807,
+    "lng": 121.527465,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 8524769294
+    }
+  },
+  {
+    "id": "helppoint_00298",
+    "category": "help_point",
+    "lat": 25.012956,
+    "lng": 121.542736,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 8999398236
+    }
+  },
+  {
+    "id": "helppoint_00299",
+    "category": "help_point",
+    "lat": 25.019941,
+    "lng": 121.557584,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 9180754911
+    }
+  },
+  {
+    "id": "helppoint_00300",
+    "category": "help_point",
+    "lat": 25.02926,
+    "lng": 121.542034,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9362998874
+    }
+  },
+  {
+    "id": "helppoint_00301",
+    "category": "help_point",
+    "lat": 25.020148,
+    "lng": 121.554417,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9362998875
+    }
+  },
+  {
+    "id": "helppoint_00302",
+    "category": "help_point",
+    "lat": 25.041798,
+    "lng": 121.56725,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 9364864628
+    }
+  },
+  {
+    "id": "helppoint_00303",
+    "category": "help_point",
+    "lat": 25.026753,
+    "lng": 121.567582,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9391261122
+    }
+  },
+  {
+    "id": "helppoint_00304",
+    "category": "help_point",
+    "lat": 25.045755,
+    "lng": 121.572777,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9395836054
+    }
+  },
+  {
+    "id": "helppoint_00305",
+    "category": "help_point",
+    "lat": 25.043128,
+    "lng": 121.581381,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9395836055
+    }
+  },
+  {
+    "id": "helppoint_00306",
+    "category": "help_point",
+    "lat": 25.020244,
+    "lng": 121.557214,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9395836056
+    }
+  },
+  {
+    "id": "helppoint_00307",
+    "category": "help_point",
+    "lat": 25.029684,
+    "lng": 121.561621,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9449166783
+    }
+  },
+  {
+    "id": "helppoint_00308",
+    "category": "help_point",
+    "lat": 25.041582,
+    "lng": 121.555876,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 9513103127
+    }
+  },
+  {
+    "id": "helppoint_00309",
+    "category": "help_point",
+    "lat": 25.04158,
+    "lng": 121.555941,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 9513103128
+    }
+  },
+  {
+    "id": "helppoint_00310",
+    "category": "help_point",
+    "lat": 25.041179,
+    "lng": 121.556444,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 9513103129
+    }
+  },
+  {
+    "id": "helppoint_00311",
+    "category": "help_point",
+    "lat": 25.044055,
+    "lng": 121.546359,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9515432895
+    }
+  },
+  {
+    "id": "helppoint_00312",
+    "category": "help_point",
+    "lat": 25.044615,
+    "lng": 121.57722,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": "蝦皮店到店",
+      "osm_id": 9515432896
+    }
+  },
+  {
+    "id": "helppoint_00313",
+    "category": "help_point",
+    "lat": 25.041273,
+    "lng": 121.541151,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 9526483326
+    }
+  },
+  {
+    "id": "helppoint_00314",
+    "category": "help_point",
+    "lat": 25.037833,
+    "lng": 121.579415,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 9565748538
+    }
+  },
+  {
+    "id": "helppoint_00315",
+    "category": "help_point",
+    "lat": 25.026007,
+    "lng": 121.552983,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9588074534
+    }
+  },
+  {
+    "id": "helppoint_00316",
+    "category": "help_point",
+    "lat": 25.043091,
+    "lng": 121.568663,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 9610069282
+    }
+  },
+  {
+    "id": "helppoint_00317",
+    "category": "help_point",
+    "lat": 25.025448,
+    "lng": 121.55611,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": "蝦皮店到店",
+      "osm_id": 9706421744
+    }
+  },
+  {
+    "id": "helppoint_00318",
+    "category": "help_point",
+    "lat": 25.02572,
+    "lng": 121.533496,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9717369813
+    }
+  },
+  {
+    "id": "helppoint_00319",
+    "category": "help_point",
+    "lat": 25.024108,
+    "lng": 121.568564,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9717369814
+    }
+  },
+  {
+    "id": "helppoint_00320",
+    "category": "help_point",
+    "lat": 25.035005,
+    "lng": 121.57623,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9832879822
+    }
+  },
+  {
+    "id": "helppoint_00321",
+    "category": "help_point",
+    "lat": 25.03623,
+    "lng": 121.559354,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": "蝦皮店到店",
+      "osm_id": 9880178108
+    }
+  },
+  {
+    "id": "helppoint_00322",
+    "category": "help_point",
+    "lat": 25.039843,
+    "lng": 121.578696,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": null,
+      "osm_id": 9880178109
+    }
+  },
+  {
+    "id": "helppoint_00323",
+    "category": "help_point",
+    "lat": 25.021024,
+    "lng": 121.528136,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 10076699083
+    }
+  },
+  {
+    "id": "helppoint_00324",
+    "category": "help_point",
+    "lat": 25.040357,
+    "lng": 121.563172,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 10680158915
+    }
+  },
+  {
+    "id": "helppoint_00325",
+    "category": "help_point",
+    "lat": 25.044103,
+    "lng": 121.547371,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "蝦皮店到店",
+      "brand": "蝦皮店到店",
+      "osm_id": 10975810659
+    }
+  },
+  {
+    "id": "helppoint_00326",
+    "category": "help_point",
+    "lat": 25.045696,
+    "lng": 121.574124,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 11639684920
+    }
+  },
+  {
+    "id": "helppoint_00327",
+    "category": "help_point",
+    "lat": 25.04351,
+    "lng": 121.574041,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 11639889057
+    }
+  },
+  {
+    "id": "helppoint_00328",
+    "category": "help_point",
+    "lat": 25.045703,
+    "lng": 121.573989,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 11639933958
+    }
+  },
+  {
+    "id": "helppoint_00329",
+    "category": "help_point",
+    "lat": 25.041014,
+    "lng": 121.575434,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 11639946472
+    }
+  },
+  {
+    "id": "helppoint_00330",
+    "category": "help_point",
+    "lat": 25.041933,
+    "lng": 121.550707,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 11889917744
+    }
+  },
+  {
+    "id": "helppoint_00331",
+    "category": "help_point",
+    "lat": 25.033945,
+    "lng": 121.540712,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "合作社",
+      "brand": null,
+      "osm_id": 11898785426
+    }
+  },
+  {
+    "id": "helppoint_00332",
+    "category": "help_point",
+    "lat": 25.012474,
+    "lng": 121.553231,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 12065608965
+    }
+  },
+  {
+    "id": "helppoint_00333",
+    "category": "help_point",
+    "lat": 25.039319,
+    "lng": 121.583299,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 12244967741
+    }
+  },
+  {
+    "id": "helppoint_00334",
+    "category": "help_point",
+    "lat": 25.049276,
+    "lng": 121.578865,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 12791270779
+    }
+  },
+  {
+    "id": "helppoint_00335",
+    "category": "help_point",
+    "lat": 25.043928,
+    "lng": 121.561573,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 12810732326
+    }
+  },
+  {
+    "id": "helppoint_00336",
+    "category": "help_point",
+    "lat": 25.035213,
+    "lng": 121.543408,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 12852320142
+    }
+  },
+  {
+    "id": "helppoint_00337",
+    "category": "help_point",
+    "lat": 25.036943,
+    "lng": 121.543888,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 12861757712
+    }
+  },
+  {
+    "id": "helppoint_00338",
+    "category": "help_point",
+    "lat": 25.019587,
+    "lng": 121.553474,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "好鄰居生活百貨",
+      "brand": null,
+      "osm_id": 12891939301
+    }
+  },
+  {
+    "id": "helppoint_00339",
+    "category": "help_point",
+    "lat": 25.030986,
+    "lng": 121.561116,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 13167335023
+    }
+  },
+  {
+    "id": "helppoint_00340",
+    "category": "help_point",
+    "lat": 25.015335,
+    "lng": 121.537016,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 13183685244
+    }
+  },
+  {
+    "id": "helppoint_00341",
+    "category": "help_point",
+    "lat": 25.03016,
+    "lng": 121.527801,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 13337714414
+    }
+  },
+  {
+    "id": "helppoint_00342",
+    "category": "help_point",
+    "lat": 25.042691,
+    "lng": 121.533225,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 13357253929
+    }
+  },
+  {
+    "id": "helppoint_00343",
+    "category": "help_point",
+    "lat": 25.043431,
+    "lng": 121.537733,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 13357253930
+    }
+  },
+  {
+    "id": "helppoint_00344",
+    "category": "help_point",
+    "lat": 25.01837,
+    "lng": 121.531504,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "全家便利商店",
+      "brand": "全家便利商店",
+      "osm_id": 13412683427
+    }
+  },
+  {
+    "id": "helppoint_00345",
+    "category": "help_point",
+    "lat": 25.024871,
+    "lng": 121.567134,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413753092
+    }
+  },
+  {
+    "id": "helppoint_00346",
+    "category": "help_point",
+    "lat": 25.034169,
+    "lng": 121.525586,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775729
+    }
+  },
+  {
+    "id": "helppoint_00347",
+    "category": "help_point",
+    "lat": 25.041718,
+    "lng": 121.552611,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775730
+    }
+  },
+  {
+    "id": "helppoint_00348",
+    "category": "help_point",
+    "lat": 25.020442,
+    "lng": 121.556888,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775736
+    }
+  },
+  {
+    "id": "helppoint_00349",
+    "category": "help_point",
+    "lat": 25.027582,
+    "lng": 121.565637,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775737
+    }
+  },
+  {
+    "id": "helppoint_00350",
+    "category": "help_point",
+    "lat": 25.041187,
+    "lng": 121.579541,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775738
+    }
+  },
+  {
+    "id": "helppoint_00351",
+    "category": "help_point",
+    "lat": 25.045391,
+    "lng": 121.574259,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775739
+    }
+  },
+  {
+    "id": "helppoint_00352",
+    "category": "help_point",
+    "lat": 25.044474,
+    "lng": 121.575294,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775740
+    }
+  },
+  {
+    "id": "helppoint_00353",
+    "category": "help_point",
+    "lat": 25.035742,
+    "lng": 121.576536,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775741
+    }
+  },
+  {
+    "id": "helppoint_00354",
+    "category": "help_point",
+    "lat": 25.035948,
+    "lng": 121.561092,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "萊爾富",
+      "brand": "萊爾富",
+      "osm_id": 13413775742
+    }
+  },
+  {
+    "id": "helppoint_00355",
+    "category": "help_point",
+    "lat": 25.022359,
+    "lng": 121.543554,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-Eleven",
+      "brand": "7-Eleven",
+      "osm_id": 13691719202
+    }
+  },
+  {
+    "id": "helppoint_00356",
+    "category": "help_point",
+    "lat": 25.043654,
+    "lng": 121.571894,
+    "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 0.9,
+    "meta": {
+      "name": "7-11",
+      "brand": null,
+      "osm_id": 13721264345
+    }
   }
 ]

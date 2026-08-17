@@ -10,6 +10,7 @@
 """
 
 import math
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Iterable, Sequence
@@ -18,7 +19,9 @@ from app.config import SAFETY_SIGMOID_K
 from app.data.schema import CategoryConfig, PointRecord
 from app.engine.geo import haversine_m
 from app.engine.graph import Edge, EdgeKey, RoadGraph
-from inner_interface import LatLng
+from interfaces import LatLng
+
+_METERS_PER_DEGREE_LAT = 111_320.0
 
 
 def decay(distance_m: float, radius_m: float) -> float:
@@ -136,14 +139,80 @@ def raw_edge_score(edge: Edge, points: Iterable[PointRecord], profile: ScoringPr
     return sum(raw_score_at(s, points, profile) for s in edge.samples) / len(edge.samples)
 
 
+_GridBuckets = dict[tuple[int, int], list[PointRecord]]
+
+
+@dataclass(frozen=True)
+class _CategoryGrid:
+    """單一類別的點位空間索引，格子邊長取自該類別的 radius_m（見 metrics.py 同款設計）。"""
+
+    buckets: _GridBuckets
+    lat_deg: float
+    lng_deg: float
+
+
+def _build_grid(points: Sequence[PointRecord], radius_m: float) -> _CategoryGrid:
+    if not points:
+        return _CategoryGrid({}, 1.0, 1.0)
+    ref_lat = sum(p.lat for p in points) / len(points)
+    lat_deg = max(radius_m, 1.0) / _METERS_PER_DEGREE_LAT
+    meters_per_deg_lng = _METERS_PER_DEGREE_LAT * max(math.cos(math.radians(ref_lat)), 1e-6)
+    lng_deg = max(radius_m, 1.0) / meters_per_deg_lng
+    buckets: _GridBuckets = defaultdict(list)
+    for p in points:
+        buckets[(math.floor(p.lat / lat_deg), math.floor(p.lng / lng_deg))].append(p)
+    return _CategoryGrid(buckets, lat_deg, lng_deg)
+
+
+def _nearby_points(sample: LatLng, grid: _CategoryGrid) -> list[PointRecord]:
+    gx = math.floor(sample.lat / grid.lat_deg)
+    gy = math.floor(sample.lng / grid.lng_deg)
+    candidates: list[PointRecord] = []
+    for dx in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            candidates.extend(grid.buckets.get((gx + dx, gy + dy), ()))
+    return candidates
+
+
+def _build_category_grids(
+    points: Sequence[PointRecord], categories: dict[str, CategoryConfig]
+) -> dict[str, _CategoryGrid]:
+    by_category: dict[str, list[PointRecord]] = defaultdict(list)
+    for p in points:
+        by_category[p.category].append(p)
+    return {
+        name: _build_grid(pts, categories[name].radius_m)
+        for name, pts in by_category.items()
+        if name in categories
+    }
+
+
+def _raw_edge_score_indexed(edge: Edge, grids: dict[str, _CategoryGrid], profile: ScoringProfile) -> float:
+    """跟 raw_edge_score 算法相同，但點位查詢走空間索引而非全點位掃描。
+
+    展示範圍換成信義區真實 OSM 路網後，edge 數量（近 2 萬）跟點位數量
+    （路燈近 3 萬筆）都比手動網格圖大兩三個數量級；全掃描是
+    edges × samples × points 量級，啟動會拖到無法接受，所以只有這條
+    （EdgeSafetyIndex 內部用的）熱路徑走索引版本——raw_score_at／
+    raw_edge_score 兩個公開函式維持原本簽章，給測試跟其他呼叫端用。
+    """
+    total = 0.0
+    for sample in edge.samples:
+        for grid in grids.values():
+            for point in _nearby_points(sample, grid):
+                total += point_contribution(sample, point, profile)
+    return total / len(edge.samples)
+
+
 class EdgeSafetyIndex:
     """靜態分數啟動時算一次並快取，每次請求只疊加動態點位的影響（§4.1）。"""
 
     def __init__(self, graph: RoadGraph, static_points: Sequence[PointRecord], profile: ScoringProfile):
         self._graph = graph
         self._profile = profile
+        grids = _build_category_grids(static_points, profile.categories)
         self._static_raw: dict[EdgeKey, float] = {
-            edge.key: raw_edge_score(edge, static_points, profile) for edge in graph.edges
+            edge.key: _raw_edge_score_indexed(edge, grids, profile) for edge in graph.edges
         }
 
     @property
@@ -153,17 +222,12 @@ class EdgeSafetyIndex:
     def safety_scores(self, dynamic_points: Sequence[PointRecord] = ()) -> dict[EdgeKey, float]:
         """回傳每條 edge 正規化後的 0~1 safety，1 最安全。"""
         raw = dict(self._static_raw)
-        for point in dynamic_points:
-            category = self._profile.categories.get(point.category)
-            if category is None:
-                continue
-            location = LatLng(lat=point.lat, lng=point.lng)
+        if dynamic_points:
+            # 動態點位一次對話最多幾筆，直接建索引查詢即可，不需要再額外的
+            # bounding-box 早退邏輯。
+            dynamic_grids = _build_category_grids(dynamic_points, self._profile.categories)
             for edge in self._graph.edges:
-                # 任一取樣點與 samples[0] 的距離都不超過 edge 長度，所以這個
-                # 條件成立時整條 edge 必定在影響半徑外，可以直接跳過（§4.1）。
-                if haversine_m(location, edge.samples[0]) > category.radius_m + edge.distance_m:
-                    continue
-                delta = sum(point_contribution(s, point, self._profile) for s in edge.samples)
+                delta = _raw_edge_score_indexed(edge, dynamic_grids, self._profile)
                 if delta:
-                    raw[edge.key] += delta / len(edge.samples)
+                    raw[edge.key] += delta
         return {key: sigmoid_safety(value) for key, value in raw.items()}

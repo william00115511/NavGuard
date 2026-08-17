@@ -9,7 +9,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from inner_interface import DynamicHazard, LatLng, Route, RouteMetrics, RouteResult
+from interfaces import DynamicHazard, LatLng, Route, RouteMetrics, RouteResult
 
 
 class LatLngIn(BaseModel):
