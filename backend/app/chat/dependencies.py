@@ -27,11 +27,20 @@ def get_chat_service() -> ChatService:
             api_key = settings.gemini_api_key.get_secret_value()
             if not api_key or api_key == "YOUR_API_KEY_HERE":
                 raise RuntimeError("CHAT_SERVICE_BACKEND=gemini requires GEMINI_API_KEY")
-            geocoding_api_key = settings.geocoding_api_key.get_secret_value()
+            geocoding_api_key = (
+                settings.geocoding_api_key.get_secret_value()
+                or settings.routes_api_key.get_secret_value()
+            )
             if not geocoding_api_key or geocoding_api_key == "YOUR_API_KEY_HERE":
-                raise RuntimeError("CHAT_SERVICE_BACKEND=gemini requires GEOCODING_API_KEY")
+                raise RuntimeError(
+                    "CHAT_SERVICE_BACKEND=gemini requires GEOCODING_API_KEY or ROUTES_API_KEY"
+                )
             client = genai.Client(api_key=api_key)
-            gateway = GoogleGenAIGateway(client=client, model=settings.gemini_model)
+            gateway = GoogleGenAIGateway(
+                client=client,
+                model=settings.gemini_model,
+                fallback_models=settings.gemini_fallback_models,
+            )
             route_engine = get_route_engine()
             route_engine.set_geocoder(GooglePlacesGeocoder(api_key=geocoding_api_key))
             _chat_service = GeminiChatService(

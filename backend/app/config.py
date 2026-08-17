@@ -58,7 +58,14 @@ class Settings(BaseSettings):
 
     chat_service_backend: str = "fake"
     gemini_api_key: SecretStr = SecretStr("")
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.7-flash"
+    gemini_fallback_models: list[str] = [
+        "gemini-3.1-flash-lite",
+        "gemini-flash-latest",
+        "gemini-3.5-flash",
+        "gemini-3.6-flash",
+    ]
     geocoding_api_key: SecretStr = SecretStr("")
+    routes_api_key: SecretStr = SecretStr("")
     session_ttl_seconds: float = Field(default=30 * 60, gt=0)
     max_history_messages: int = Field(default=20, ge=4)
