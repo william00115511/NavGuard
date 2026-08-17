@@ -22,8 +22,10 @@ calculate_safe_route。不得自行編造座標、路線、距離、安全分數
 """.strip()
 
 LOCATION_AVAILABLE_NOTE = (
-    "系統狀態：目前已取得使用者的目前位置，使用者若想以目前位置作為起點，"
-    "calculate_safe_route 的 origin 可填 current_location。"
+    "系統狀態：目前已取得使用者的目前位置。若使用者的訊息中沒有明確指定起點，"
+    "直接以目前位置作為起點（calculate_safe_route 的 origin 填 current_location），"
+    "不要詢問使用者是否要以目前位置出發。若使用者訊息中已明確指定其他起點，"
+    "則以使用者指定的起點為準。"
 )
 
 LOCATION_UNAVAILABLE_NOTE = (
