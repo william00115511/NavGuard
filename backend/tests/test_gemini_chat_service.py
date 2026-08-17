@@ -170,27 +170,34 @@ def test_expired_session_silently_starts_a_fresh_conversation() -> None:
     assert [m.kind for m in gateway.histories[-1]] == ["user"]
 
 
-def test_pool_evicts_least_recently_used_client_when_over_capacity() -> None:
-    """§6.6 修訂：固定大小的 LRU pool，超過 max_active_sessions 時逐出最久未使用的一個。"""
+def test_fixed_pool_keeps_all_n_clients_without_eviction() -> None:
+    """§6.6 修訂：client_id 固定是 "1".."N"（純數字），後端直接配好 N 個
+    session；不再像舊版 LRU pool 那樣因為容量滿了逐出其他 client 的歷史。"""
     gateway = ScriptedGateway(
         [
-            ModelReply(text="回覆 A"),
-            ModelReply(text="回覆 B"),
-            ModelReply(text="回覆 C"),
-            ModelReply(text="回覆 A 再一次"),
+            ModelReply(text="回覆 1"),
+            ModelReply(text="回覆 2"),
+            ModelReply(text="回覆 3"),
+            ModelReply(text="還記得嗎"),
         ]
     )
-    service = GeminiChatService(gateway, FakeRouteEngine(), max_active_sessions=2)
+    service = GeminiChatService(gateway, FakeRouteEngine(), client_count=2)
 
-    run(service.handle_message("client-a", "第一次"))
-    run(service.handle_message("client-b", "第一次"))
-    run(service.handle_message("client-c", "第一次"))  # 超過容量，逐出最久未用的 client-a
+    run(service.handle_message("1", "第一次"))
+    run(service.handle_message("2", "第一次"))  # 不同 client_id，容量內，不會逐出 client 1
+    run(service.handle_message("1", "第二次"))
 
-    result = run(service.handle_message("client-a", "還在嗎"))
+    result = run(service.handle_message("1", "還記得嗎"))
 
     assert result.status is ChatStatus.COLLECTING_INFO
-    # client-a 的舊歷史已經被逐出，這次看到的歷史只有這次的 user 訊息。
-    assert [m.kind for m in gateway.histories[-1]] == ["user"]
+    # client 1 的歷史一路留著，沒有被清空重來。
+    assert [m.kind for m in gateway.histories[-1]] == [
+        "user",
+        "assistant",
+        "user",
+        "assistant",
+        "user",
+    ]
 
 
 def test_clear_context_resets_conversation_history() -> None:

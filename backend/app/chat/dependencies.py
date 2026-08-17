@@ -23,7 +23,7 @@ def get_chat_service() -> ChatService:
         settings = Settings()
         backend = settings.chat_service_backend.lower()
         if backend == "fake":
-            _chat_service = FakeChatService(max_active_sessions=settings.max_active_sessions)
+            _chat_service = FakeChatService(client_count=settings.client_count)
         elif backend == "gemini":
             credentials_path = settings.google_application_credentials
             if not credentials_path.is_file():
@@ -52,7 +52,7 @@ def get_chat_service() -> ChatService:
                 route_engine=route_engine,
                 session_ttl_seconds=settings.session_ttl_seconds,
                 max_history_messages=settings.max_history_messages,
-                max_active_sessions=settings.max_active_sessions,
+                client_count=settings.client_count,
             )
         else:
             raise RuntimeError("CHAT_SERVICE_BACKEND must be either 'fake' or 'gemini'")

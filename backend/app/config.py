@@ -67,9 +67,9 @@ class Settings(BaseSettings):
     maps_api_key: SecretStr = SecretStr("")
     session_ttl_seconds: float = Field(default=30 * 60, gt=0)
     max_history_messages: int = Field(default=20, ge=4)
-    # §6.6：改成 client_id 自動建立 session 後，用固定大小的 LRU pool 取代
-    # 「顯式建立/清除」的兩段式流程；超過這個數量時逐出最久未使用的 session。
-    max_active_sessions: int = Field(default=50, ge=1)
+    # §6.1：client_id 固定就是 "1".."N"（前端一共部署 N 台裝置），不是任意產生的
+    # UUID，所以後端直接一次配好 N 個 session，不需要 LRU 之類的容量逐出機制。
+    client_count: int = Field(default=50, ge=1)
 
     @field_validator("google_application_credentials")
     @classmethod

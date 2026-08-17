@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import json
-from collections import OrderedDict
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -88,28 +87,34 @@ class GeminiChatService(ChatService):
         *,
         session_ttl_seconds: float = 30 * 60,
         max_history_messages: int = 20,
-        max_active_sessions: int = 50,
+        client_count: int = 50,
         clock: Callable[[], float] = monotonic,
     ) -> None:
         if session_ttl_seconds <= 0:
             raise ValueError("session_ttl_seconds must be positive")
         if max_history_messages < 4:
             raise ValueError("max_history_messages must be at least 4")
-        if max_active_sessions < 1:
-            raise ValueError("max_active_sessions must be at least 1")
+        if client_count < 1:
+            raise ValueError("client_count must be at least 1")
         self._gateway = gateway
         self._route_engine = route_engine
         self._session_ttl_seconds = session_ttl_seconds
         self._max_history_messages = max_history_messages
-        self._max_active_sessions = max_active_sessions
         self._clock = clock
-        # OrderedDict doubles as an LRU pool keyed by client_id: `move_to_end`
-        # on every access marks recent use, `popitem(last=False)` evicts the
-        # least-recently-used entry once the pool is full (§6.6 修訂).
-        self._sessions: OrderedDict[str, _SessionState] = OrderedDict()
+        # client_id 固定是 "1".."N"（純數字字串，見 AGENTS.md §6.1），所以直接
+        # 一次配好 N 個 session，不需要 LRU 之類的容量逐出機制。
+        self._sessions: dict[str, _SessionState] = {
+            str(i): _SessionState(last_access_at=self._clock())
+            for i in range(1, client_count + 1)
+        }
 
     async def clear_context(self, client_id: str) -> None:
-        self._sessions.pop(client_id, None)
+        session = self._sessions.get(client_id)
+        if session is None:
+            return
+        session.history.clear()
+        session.user_location = None
+        session.last_access_at = self._clock()
 
     async def handle_message(
         self,
@@ -121,7 +126,7 @@ class GeminiChatService(ChatService):
         if not message.strip():
             return self._error("INVALID_MESSAGE", "請輸入路線需求。")
 
-        session = self._get_or_create_session(client_id)
+        session = self._get_session(client_id)
         async with session.lock:
             if user_location is not None:
                 session.user_location = user_location
@@ -131,17 +136,17 @@ class GeminiChatService(ChatService):
             )
             return await self._handle_session_message(session, message.strip(), resolved_alpha)
 
-    def _get_or_create_session(self, client_id: str) -> _SessionState:
-        self._evict_expired()
+    def _get_session(self, client_id: str) -> _SessionState:
         session = self._sessions.get(client_id)
-        if session is not None:
-            self._sessions.move_to_end(client_id)
-            return session
-
-        if len(self._sessions) >= self._max_active_sessions:
-            self._sessions.popitem(last=False)
-        session = _SessionState(last_access_at=self._clock())
-        self._sessions[client_id] = session
+        if session is None:
+            # 理論上不會發生（client_id 固定是 "1".."N"，已在建構時配好），
+            # 保底自動建立，呼應「第一次出現的 client_id 直接可用」的既有
+            # 約定（AGENTS.md §6.1）。
+            session = _SessionState(last_access_at=self._clock())
+            self._sessions[client_id] = session
+        elif self._is_expired(session):
+            session.history.clear()
+            session.user_location = None
         return session
 
     async def _handle_session_message(
@@ -277,11 +282,6 @@ class GeminiChatService(ChatService):
                 tool_response={"error_code": error_code},
             ),
         )
-
-    def _evict_expired(self) -> None:
-        expired = [sid for sid, session in self._sessions.items() if self._is_expired(session)]
-        for session_id in expired:
-            del self._sessions[session_id]
 
     def _is_expired(self, session: _SessionState) -> bool:
         return self._clock() - session.last_access_at > self._session_ttl_seconds

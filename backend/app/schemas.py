@@ -24,7 +24,7 @@ class LatLngIn(BaseModel):
 
 
 class ChatRequest(BaseModel):
-    # 前端自行產生並持久化的識別碼（例如裝置安裝時建立一次的 UUID）；不需要
+    # 固定的裝置編號，"1".."N"（N 台展示裝置，見 AGENTS.md §6.1）；不需要
     # 先呼叫任何「建立 session」端點交換 ID（§6.6 修訂）。
     client_id: str = Field(min_length=1)
     message: str

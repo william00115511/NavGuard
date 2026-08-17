@@ -338,14 +338,14 @@ JSON，前端自己組文案）。上面「不要說『這條路很安全』」�
 舊版需要先呼叫 `POST /api/session` 交換一個後端配發的 `session_id`，才能開始
 對話。這個兩段式交握已移除：
 
-- 前端在裝置上自行產生並持久化一個識別碼（例如安裝時建立一次的 UUID），
-  作為 `client_id`，不需要跟後端要。
+- 展示場景是固定的 N 台裝置，`client_id` 就是裝置編號 `"1"`～`"N"`（純數字
+  字串），由部署時分配好，不是前端自行產生的 UUID，也不需要跟後端要。
 - 每次呼叫 `POST /api/chat`（§6.2）時直接帶上這個 `client_id`；後端第一次
   看到某個 `client_id` 時就自動建立新的對話狀態，不會回「session 不存在」
   這種錯誤。
-- 後端只保留最多 N 個活躍對話（`max_active_sessions`，可設定，見 §6.6）；
-  超過時逐出最久未使用的一個。對使用者而言差異不大——除非同時開著遠超過
-  N 個裝置/分頁在對話，否則感覺不到自己的對話被清掉。
+- 因為 `client_id` 的範圍就是固定的 `1`～`N`，後端直接一次配好 N 個
+  session（`client_count`，可設定，見 §6.6），不需要 LRU 之類的容量逐出
+  機制。
 - 使用者想「開始新的路線規劃」（清空對話歷史）時，前端呼叫
   `POST /api/chat/clear`（§6.2.1），不需要換新的 `client_id`。
 
@@ -354,7 +354,7 @@ JSON，前端自己組文案）。上面「不要說『這條路很安全』」�
 Request：
 ```json
 {
-  "client_id": "3f9c1e2a-...",
+  "client_id": "1",
   "message": "我想從台北車站走到公館夜市，希望盡量安全",
   "user_location": {"lat": 25.0330, "lng": 121.5654},
   "priority_alpha": 0.6
@@ -434,14 +434,14 @@ Response 依進度分三種 `status`：
 
 Request：
 ```json
-{ "client_id": "3f9c1e2a-..." }
+{ "client_id": "1" }
 ```
 
 Response：
 ```json
 { "status": "ok" }
 ```
-對不存在或已經被逐出的 `client_id` 呼叫一樣回 200（視為 no-op），不是錯誤。
+對不存在或已經過期的 `client_id` 呼叫一樣回 200（視為 no-op），不是錯誤。
 
 ### 6.3 `POST /api/route/calculate`（除錯／進階模式）
 
@@ -477,7 +477,12 @@ Response：與 6.2 `route_ready` 的 `route` / `dynamic_hazards_considered` 部�
 
 MVP 用 process 內記憶體 dict（`client_id` → 對話歷史 + 動態點位），這代表**後端必須是單一 process**；多 instance 部署會導致對話歷史隨機遺失。
 
-固定大小的 LRU pool 取代舊版單純的 TTL 字典：`max_active_sessions`（可設定，建議 50）限制同時活躍的對話數，超過時逐出最久未使用的一個；同時仍保留 TTL（建議 30 分鐘）讓長時間沒動靜的對話自動視為過期、下一則訊息當成新對話開始（不是錯誤，見 §6.1）。使用者主動要清掉歷史時用 `POST /api/chat/clear`（§6.2.1），不需要等 TTL 或被 LRU 逐出。
+`client_id` 的範圍是固定的 `"1"`～`"N"`（§6.1），所以後端在啟動時就直接配好
+`client_count`（可設定，建議 50，需對齊實際部署的裝置數 N）個 session，不需要
+LRU 之類「容量滿了就逐出」的機制。仍保留 TTL（`session_ttl_seconds`，建議 30
+分鐘）：對話閒置超過這個時間後，該 `client_id` 的 session 會就地清空歷史，
+下一則訊息當成新對話開始（不是錯誤，見 §6.1），但 session 本身不會被移除。
+使用者主動要清掉歷史時用 `POST /api/chat/clear`（§6.2.1），不需要等 TTL。
 
 ### 6.7 延遲
 
