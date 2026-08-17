@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -13,6 +14,10 @@ from app.data.store import get_data_store
 from app.engine.graph import get_road_graph
 from app.errors import ApiError
 from app.routers import chat, route, session
+
+# uvicorn 預設的 LOGGING_CONFIG 只設定 uvicorn.* 這幾個 logger，root logger 沒有
+# handler，導致 app 內的 logger.info(...) 全部被吃掉不會輸出，這裡補上設定讓其生效。
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +56,38 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+_LOG_BODY_MAX_CHARS = 2000
+
+
+async def _read_body_for_log(request: Request) -> str:
+    """讀取 request body 供 log 使用；Starlette 會快取內容，不影響後續 handler 讀取。"""
+    body = await request.body()
+    if not body:
+        return ""
+    text = body.decode("utf-8", errors="replace")
+    if len(text) > _LOG_BODY_MAX_CHARS:
+        text = text[:_LOG_BODY_MAX_CHARS] + f"...(truncated, {len(body)} bytes total)"
+    return text
+
+
+@app.middleware("http")
+async def log_api_requests(request: Request, call_next):
+    """記錄每次前端與後端的 API 交互（method、path、request body、status code、耗時）。"""
+    body_text = await _read_body_for_log(request)
+    start = time.perf_counter()
+    response = await call_next(request)
+    duration_ms = (time.perf_counter() - start) * 1000
+    logger.info(
+        "%s %s body=%s -> %d (%.1fms)",
+        request.method,
+        request.url.path,
+        body_text,
+        response.status_code,
+        duration_ms,
+    )
+    return response
+
 
 app.include_router(session.router)
 app.include_router(chat.router)
