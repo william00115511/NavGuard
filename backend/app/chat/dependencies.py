@@ -22,7 +22,7 @@ def get_chat_service() -> ChatService:
         settings = Settings()
         backend = settings.chat_service_backend.lower()
         if backend == "fake":
-            _chat_service = FakeChatService()
+            _chat_service = FakeChatService(max_active_sessions=settings.max_active_sessions)
         elif backend == "gemini":
             api_key = settings.gemini_api_key.get_secret_value()
             if not api_key or api_key == "YOUR_API_KEY_HERE":
@@ -39,6 +39,7 @@ def get_chat_service() -> ChatService:
                 route_engine=route_engine,
                 session_ttl_seconds=settings.session_ttl_seconds,
                 max_history_messages=settings.max_history_messages,
+                max_active_sessions=settings.max_active_sessions,
             )
         else:
             raise RuntimeError("CHAT_SERVICE_BACKEND must be either 'fake' or 'gemini'")

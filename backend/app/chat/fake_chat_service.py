@@ -1,14 +1,14 @@
 """固定回傳 route_ready 假資料的 ChatService。
 
 讓 Dev A 在 Dev B 完成 Gemini Function Calling 邏輯前，先把 API Router、
-session 轉發、錯誤處理串起來測試（AGENTS.md §8.3）。
+client_id 轉發、錯誤處理串起來測試（AGENTS.md §8.3）。
 
 Session 生命週期由 ChatService 自己管理（§6.6）：這裡示範最小可用的
-「記憶體 dict + TTL」，真正的 GeminiChatService 會在同一個位置額外保存
-對話歷史與 dynamic hazards，但那些對 API Router 完全不透明。
+「記憶體 dict + TTL + LRU 上限」，真正的 GeminiChatService 會在同一個位置
+額外保存對話歷史與 dynamic hazards，但那些對 API Router 完全不透明。
 """
 
-import uuid
+from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -22,10 +22,10 @@ from interfaces import (
     LatLng,
     NoRouteFoundError,
     OutOfCoverageError,
-    SessionNotFoundError,
 )
 
 SESSION_TTL = timedelta(minutes=30)
+DEFAULT_MAX_ACTIVE_SESSIONS = 50
 
 # 展示範圍內的固定起訖點，讓假回覆也跑一次真實引擎（而不是硬編路徑數值）。
 # 座標對應信義區真實 OSM 路網（見 tests/test_pathfinding.py 開頭的節點說明）。
@@ -42,28 +42,21 @@ class _Session:
 class FakeChatService(ChatService):
     """不呼叫 Gemini；用固定起訖點跑一次真實路徑引擎當假資料。"""
 
-    def __init__(self) -> None:
-        self._sessions: dict[str, _Session] = {}
+    def __init__(self, *, max_active_sessions: int = DEFAULT_MAX_ACTIVE_SESSIONS) -> None:
+        self._max_active_sessions = max_active_sessions
+        self._sessions: OrderedDict[str, _Session] = OrderedDict()
 
-    async def create_session(self, user_location: Optional[LatLng] = None) -> str:
-        self._evict_expired()
-        session_id = f"sess_{uuid.uuid4().hex[:8]}"
-        self._sessions[session_id] = _Session(
-            created_at=datetime.now(timezone.utc), user_location=user_location
-        )
-        return session_id
+    async def clear_context(self, client_id: str) -> None:
+        self._sessions.pop(client_id, None)
 
     async def handle_message(
         self,
-        session_id: str,
+        client_id: str,
         message: str,
         user_location: Optional[LatLng] = None,
         priority_alpha: Optional[float] = None,
     ) -> ChatResult:
-        self._evict_expired()
-        session = self._sessions.get(session_id)
-        if session is None:
-            raise SessionNotFoundError(f"session_id 不存在或已過期: {session_id}")
+        session = self._get_or_create_session(client_id)
         if user_location is not None:
             session.user_location = user_location
 
@@ -87,14 +80,20 @@ class FakeChatService(ChatService):
                 error_code=NO_ROUTE_FOUND,
             )
 
-        return ChatResult(
-            status=ChatStatus.ROUTE_READY,
-            reply_text=(
-                f"（測試用假回覆）已收到訊息「{message}」，幫你規劃了一條示範路線。"
-                f"{result.disclaimer}"
-            ),
-            route_result=result,
-        )
+        return ChatResult(status=ChatStatus.ROUTE_READY, route_result=result)
+
+    def _get_or_create_session(self, client_id: str) -> _Session:
+        self._evict_expired()
+        session = self._sessions.get(client_id)
+        if session is not None:
+            self._sessions.move_to_end(client_id)
+            return session
+
+        if len(self._sessions) >= self._max_active_sessions:
+            self._sessions.popitem(last=False)
+        session = _Session(created_at=datetime.now(timezone.utc))
+        self._sessions[client_id] = session
+        return session
 
     def _evict_expired(self) -> None:
         """§6.6：記憶體 session 加 TTL，避免長時間執行後無限增長。"""
