@@ -33,7 +33,7 @@
 ┌──────────────────────────────────────────────┐
 │ Flutter App                                  │
 │ - google_maps_flutter 畫 polyline 與 marker  │
-│ - geolocator 取目前位置作為預設起點          │
+│ - geolocator 取目前位置作為預設起點          │ ← Frontend Dev
 │ - 對話框 UI（訊息氣泡 + 路線摘要卡片）       │
 └──────────────────┬───────────────────────────┘
                    │ HTTPS  POST /api/session, /api/chat
@@ -43,13 +43,13 @@
 │ ┌──────────────────────────────────────────┐ │
 │ │ API Router：路由、session、錯誤處理      │ │  ← Dev A
 │ └──────────────────┬───────────────────────┘ │
-│                    │ ChatService (ABC)        │
+│                    │ ChatService (ABC)       │
 │ ┌──────────────────▼───────────────────────┐ │
 │ │ 對話協調層：Gemini Function Calling      │ │  ← Dev B
 │ │ - slot filling                           │ │
 │ │ - 即時新聞搜尋 → 動態點位回報            │ │
 │ └──────────────────┬───────────────────────┘ │
-│                    │ RouteEngine (ABC)        │
+│                    │ RouteEngine (ABC)       │
 │ ┌──────────────────▼───────────────────────┐ │
 │ │ 路徑計算引擎：建圖 → 加權 → A*           │ │  ← Dev A
 │ │ + Google Maps URL 產生器                 │ │
@@ -522,150 +522,7 @@ https://www.google.com/maps/dir/?api=1
 | **Dev A** | `/api/session`、`/api/chat`、`/api/route/calculate`、`/healthz` 等 HTTP 路由、session 管理、錯誤處理（§6）＋ 路徑計算引擎（§4）＋ 本地資料讀取與轉換腳本（§3）＋ Google Maps URL 產生（§7） |
 | **Dev B** | 與 Gemini API 對話、slot filling（§5.1）、`calculate_safe_route` 與 `report_dynamic_hazard` 兩個工具的觸發與後處理邏輯（§5.3、§5.4）、system instruction 調校 |
 
-兩人只透過下面兩個 `abc.ABC` 介面溝通，任一方不需等對方寫完就能先用假實作（mock）開發測試。
-
-### 8.2 `interfaces.py`
-
-```python
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from datetime import datetime
-from enum import Enum
-from typing import Optional, Sequence
-
-
-# ---------- 共用資料結構 ----------
-
-@dataclass(frozen=True)
-class LatLng:
-    lat: float
-    lng: float
-
-
-@dataclass(frozen=True)
-class DynamicHazard:
-    """對應 §3.4 / §5.4：Gemini 即時搜尋到的時效性點位。
-    注意 location 已是座標——geocoding 由 Function Calling handler
-    先呼叫 RouteEngine.geocode() 完成，引擎不再處理文字地點。
-    effect 不在此處指定，一律由 categories.json 決定。"""
-    category: str
-    location: LatLng
-    summary: str
-    expires_at: datetime
-    confidence: float = 1.0
-    source_url: Optional[str] = None
-
-
-@dataclass(frozen=True)
-class RouteMetrics:
-    """對應 §4.6。無資料的欄位用 None，不得填 0。"""
-    distance_m: float
-    duration_min_est: float
-    avg_safety_score: float
-    passed_landmarks: dict[str, int]
-    detour_vs_fastest_min: float
-    data_coverage: list[str]
-    lit_coverage_ratio: Optional[float] = None
-    help_points_within_50m: Optional[int] = None
-    police_within_150m: Optional[int] = None
-
-
-class Confidence(str, Enum):
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
-@dataclass(frozen=True)
-class Route:
-    id: str                     # "safest" | "fastest"
-    label: str
-    path_coordinates: list[LatLng]
-    alpha_used: float
-    metrics: RouteMetrics
-    confidence: Confidence
-    reasons: list[str] = field(default_factory=list)
-    warnings: list[str] = field(default_factory=list)
-
-
-@dataclass(frozen=True)
-class RouteResult:
-    """對應 §4 引擎輸出 + §7 Google Maps URL"""
-    selected_route_id: str
-    routes: list[Route]                                  # 至少含 safest 與 fastest
-    dynamic_hazards_considered: list[DynamicHazard]
-    google_maps_url: str
-    disclaimer: str
-
-
-class ChatStatus(str, Enum):
-    COLLECTING_INFO = "collecting_info"
-    ROUTE_READY = "route_ready"
-    ERROR = "error"
-
-
-@dataclass(frozen=True)
-class ChatResult:
-    """對應 §6.2 /api/chat 回應"""
-    status: ChatStatus
-    reply_text: str
-    route_result: Optional[RouteResult] = None
-    error_code: Optional[str] = None
-
-
-# ---------- ABC #1：API Router ⇄ Gemini 邊界 ----------
-# 由 Dev B 實作；Dev A 的路由層只依賴這個介面，不需知道 Gemini 細節。
-
-class ChatService(ABC):
-
-    @abstractmethod
-    async def create_session(self, user_location: Optional[LatLng] = None) -> str:
-        """建立新的對話 session，回傳 session_id。"""
-        raise NotImplementedError
-
-    @abstractmethod
-    async def handle_message(
-        self,
-        session_id: str,
-        message: str,
-        user_location: Optional[LatLng] = None,
-    ) -> ChatResult:
-        """處理一則使用者訊息（內部含 Gemini 對話與 Function Calling），
-        回傳 collecting_info / route_ready / error 三種結果之一。
-        session_id 不存在時 raise SessionNotFound。"""
-        raise NotImplementedError
-
-
-# ---------- ABC #2：Gemini ⇄ 路徑計算/資料層 邊界 ----------
-# 由 Dev A 實作；Dev B 的 Function Calling handler 只依賴這個介面。
-
-class RouteEngine(ABC):
-
-    @abstractmethod
-    async def geocode(
-        self,
-        place_description: str,
-        bias: Optional[LatLng] = None,
-    ) -> Optional[LatLng]:
-        """文字地點轉座標（§9.1）。bias 用於偏向使用者附近的結果。
-        查無結果回傳 None。"""
-        raise NotImplementedError
-
-    @abstractmethod
-    async def calculate_route(
-        self,
-        origin: LatLng,
-        destination: LatLng,
-        priority_alpha: float = 0.6,
-        dynamic_hazards: Sequence[DynamicHazard] = (),
-    ) -> RouteResult:
-        """§4 安全路徑計算 + §7 Google Maps URL 產生。
-        內部同時算 α=0 的最快路線作為對照，兩條都放進 routes。
-        起訖點超出路網覆蓋範圍時 raise OutOfCoverage。"""
-        raise NotImplementedError
-```
-
-介面採 `async`，因為兩邊實際都會做 I/O（Gemini API、geocoding、檔案讀取），FastAPI 也是 async 框架，避免日後回頭改簽章。
+兩人只透過兩個 `interfaces.py` 介面溝通，任一方不需等對方寫完就能先用假實作（mock）開發測試。
 
 ### 8.3 平行開發方式
 
@@ -693,57 +550,3 @@ class RouteEngine(ABC):
 ### 9.3 路燈資料可得性
 
 若選定城市不開放路燈資料，`street_light` 類別留空，`lit_coverage_ratio` 回 `null`，以 `help_point` 密度作為照明 proxy，並在每次回覆顯示 warning。**不得默默把沒資料當成沒風險。**
-
----
-
-## 10. 24 小時執行順序
-
-| 時間 | 可交付成果 |
-|---|---|
-| 0–2h | 確定展示範圍；osmnx 抓路網存本地；政府資料轉換腳本產出第一批 `points/*.json`；`interfaces.py` 定稿；雙方 Fake 實作可跑 |
-| 0–2h（並行） | **驗證 Gemini grounding + function calling 能否同時啟用**（§5.6）；Flutter 地圖、GPS、對話框 UI 骨架接 mock API |
-| 2–6h | Dev A：建圖 + edge 評分 + Dijkstra 跑通，`/api/route/calculate` 可用真實座標回真實路徑；Dev B：slot filling 對話跑通，能正確觸發 `calculate_safe_route` |
-| 6–10h | 接 geocoding；`/api/chat` 端到端打通（文字進、路線出）；Flutter 畫出真實 polyline |
-| 10–14h | 動態點位：Gemini 搜尋 → `report_dynamic_hazard` → 影響計算；A* + heuristic；最快／最安全雙路線對照 |
-| 14–17h | metrics、reasons、warnings、confidence；缺資料降權重與警示；評分函式單元測試 |
-| 17–20h | Google Maps URL 簡化與交接；錯誤與 loading 狀態；免責聲明 UI |
-| 20–24h | 真機測試、錄 demo、整理 `data_sources.md` 與限制說明 |
-
----
-
-## 11. 評審 Demo 劇本
-
-1. 夜間模式地圖上選一個目的地，先顯示最快路線（14 分鐘）。
-2. 對話框輸入「我想走安全一點」——畫出 18 分鐘的推薦線，卡片列出「5 個營業中求助據點」「經過警察局 1 處」「避開 2 段照明不足路段」。
-3. 點任一 marker 顯示名稱、距離與資料來源；點風險資訊顯示資料集最後更新日與覆蓋範圍。
-4. **刻意關掉路燈資料**，展示系統顯示 warning 並降低 confidence，證明系統不會把未知說成安全。
-5. 展示動態點位：對話中提到某路段有事故新聞，重算後路線繞開，並在回覆中說明來源。
-6. 請 Gemini 用一句話解釋取捨：「多走 4 分鐘以避開較高風險區段，並增加可求助據點」。
-
----
-
-## 12. 驗收清單
-
-- [ ] Gemini key 不在 Flutter 程式碼、`--dart-define`、APK 或 Git 中
-- [ ] 任一資料來源都可對應到 `data_sources.md` 的 URL、日期與覆蓋區域
-- [ ] 每條推薦都顯示距離、時間、分數、資料信心與 warnings
-- [ ] 「最快」與「較安全」可並列比較，使用者可手動選擇
-- [ ] 缺資料時降低 confidence 並顯示 warning，而非填 0
-- [ ] 每次提供路線都附免責聲明；全程無「絕對安全」字樣
-- [ ] 使用者表達正遭遇危險時，助手切換為緊急應對回覆
-- [ ] 起訖點超出覆蓋範圍、地點找不到、定位被拒絕都有可理解的畫面
-- [ ] 犯罪資料以 grid／密度呈現，不畫精確歷史位置
-- [ ] 以固定 fixture 對評分函式做單元測試：危險點位增加會降分、資料缺失會降 confidence、α=0 時結果等同最短路徑
-- [ ] A* 與 Dijkstra 在同一組測資上回傳相同路徑（驗證 heuristic admissible）
-
----
-
-## 13. 官方參考
-
-- [Gemini function calling](https://ai.google.dev/gemini-api/docs/function-calling)
-- [Gemini structured output](https://ai.google.dev/gemini-api/docs/structured-output)
-- [Grounding with Google Search](https://ai.google.dev/gemini-api/docs/grounding)
-- [osmnx 文件](https://osmnx.readthedocs.io/)
-- [Google Maps URLs（dir action）](https://developers.google.com/maps/documentation/urls/get-started#directions-action)
-- [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/)
-- [Flutter installation and build](https://docs.flutter.dev/install)

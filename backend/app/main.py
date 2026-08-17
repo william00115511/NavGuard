@@ -4,6 +4,8 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+from app.data.store import get_data_store
+from app.engine.graph import get_road_graph
 from app.errors import ApiError
 from app.routers import chat, route, session
 
@@ -26,8 +28,8 @@ async def api_error_handler(request: Request, exc: ApiError) -> JSONResponse:
 
 @app.exception_handler(RequestValidationError)
 async def validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
-    # 4.5.4節：request 格式錯（如缺 message）一律 400 BAD_REQUEST
-    # 只取 loc/msg，不把 str(exc) 內含的檔案路徑等內部資訊回傳給 client
+    # §6.5：request 格式錯（如缺 message）一律 400 BAD_REQUEST。
+    # 只取 loc/msg，不把 str(exc) 內含的檔案路徑等內部資訊回傳給 client。
     details = "; ".join(f"{'.'.join(str(p) for p in e['loc'])}: {e['msg']}" for e in exc.errors())
     return JSONResponse(
         status_code=400,
@@ -37,14 +39,22 @@ async def validation_error_handler(request: Request, exc: RequestValidationError
 
 @app.exception_handler(Exception)
 async def unhandled_error_handler(request: Request, exc: Exception) -> JSONResponse:
-    # 4.5.4節：其餘未預期例外一律當系統層級 500
+    # §6.5：其餘未預期例外一律當系統層級 500。細節只寫進 log，不回傳給 client
+    # （例外訊息可能含檔案路徑、SQL、上游 API 回應等內部資訊）。
     logger.exception("unhandled error while processing %s", request.url)
     return JSONResponse(
         status_code=500,
-        content={"status": "error", "error_code": "INTERNAL_ERROR", "message": str(exc)},
+        content={"status": "error", "error_code": "INTERNAL_ERROR", "message": "後端內部錯誤"},
     )
 
 
 @app.get("/healthz")
 async def healthz() -> dict:
-    return {"ok": True}
+    """§6.4：除了存活之外，也回報資料實際載入的狀況。"""
+    graph = get_road_graph()
+    store = get_data_store()
+    return {
+        "ok": True,
+        "graph_loaded": bool(graph.nodes),
+        "points_loaded": len(store.static_points),
+    }
