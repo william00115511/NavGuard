@@ -16,7 +16,7 @@ from app.data.schema import PointRecord
 from app.engine.geo import haversine_m
 from app.engine.pathfinding import PathComputation, path_sample_points
 from app.engine.safety import ScoringProfile
-from inner_interface import Confidence, LatLng, RouteMetrics
+from interfaces import Confidence, LatLng, RouteMetrics
 
 _LIT_CATEGORY = "street_light"
 _HELP_CATEGORY = "help_point"

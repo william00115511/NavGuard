@@ -15,7 +15,7 @@ from typing import Optional
 
 from app.engine.route_engine import get_route_engine
 from app.errors import NO_ROUTE_FOUND, OUT_OF_COVERAGE
-from inner_interface import (
+from interfaces import (
     ChatResult,
     ChatService,
     ChatStatus,

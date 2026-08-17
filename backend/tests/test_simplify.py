@@ -6,7 +6,7 @@ from app.maps.simplify import (
     simplify_to_max_points,
 )
 from app.maps.url_builder import MAX_WAYPOINTS, build_google_maps_url
-from inner_interface import LatLng
+from interfaces import LatLng
 
 
 def _zigzag(count: int) -> list[LatLng]:

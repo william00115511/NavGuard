@@ -7,7 +7,7 @@ from app.engine.pathfinding import compute_path, find_node_path, straight_line_h
 from app.engine.safety import EdgeSafetyIndex, build_scoring_profile, filter_active_points
 from app.config import EDGE_SAMPLE_INTERVAL_M
 from app.engine.geo import sample_along
-from inner_interface import LatLng, OutOfCoverageError
+from interfaces import LatLng, OutOfCoverageError
 
 
 @pytest.fixture(scope="module")

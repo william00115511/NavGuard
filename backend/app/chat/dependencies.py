@@ -5,7 +5,7 @@
 """
 
 from app.chat.fake_chat_service import FakeChatService
-from inner_interface import ChatService
+from interfaces import ChatService
 
 _chat_service: ChatService | None = None
 
