@@ -34,9 +34,9 @@ steps:
 
 availableSecrets:
   secretManager:
-    - versionName: projects/$$PROJECT_ID/secrets/ENV_FILE/versions/latest
+    - versionName: projects/288900657769/secrets/ENV_FILE/versions/latest
       env: 'ENV_FILE'
-    - versionName: projects/$$PROJECT_ID/secrets/KEY_JSON/versions/latest
+    - versionName: projects/288900657769/secrets/KEY_JSON/versions/latest
       env: 'KEY_JSON'
 
 options:
