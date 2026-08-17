@@ -222,11 +222,13 @@ h(n) = haversine(n, goal) × (1 - α)
 | `duration_min_est` | 以 1.3 m/s 步行速度估算 |
 | `avg_safety_score` | 各 edge safety 以長度加權平均 |
 | `lit_coverage_ratio` | 採樣點中 30m 內有路燈資料的比例（無路燈資料時為 `null`） |
-| `help_points_within_50m` | 沿線 50m 內可求助據點數 |
-| `police_within_150m` | 沿線 150m 內警察局數 |
-| `passed_landmarks` | 各類別經過數量的 dict |
+| `help_points` | 沿線 50m 內可求助據點的**具體點位列表**（`id`/`lat`/`lng`/`name`），該類別無資料時為 `null`（§6.2 修訂） |
+| `police_stations` | 沿線 150m 內警察局的**具體點位列表**，格式同上，該類別無資料時為 `null`（§6.2 修訂） |
+| `passed_landmarks` | 其餘類別（路燈、危險區域等）經過數量的 dict；`police_station`／`help_point` 已用上面兩個具體點位列表取代，不再重複列在這裡計數 |
 | `detour_vs_fastest_min` | 相較 α=0 路線多花的分鐘數 |
 | `data_coverage` | 本次實際有資料的類別清單 |
+
+⚠️ **修訂**：舊版 `help_points_within_50m`／`police_within_150m` 只回數量，前端沒辦法在地圖上標出實際位置。改成回傳具體點位列表後，前端要顯示數量時自己對列表 `length`，後端不再重複提供一個數字欄位。
 
 ### 4.7 confidence 與 warnings
 
@@ -386,9 +388,13 @@ Response 依進度分三種 `status`：
       "duration_min_est": 18,
       "avg_safety_score": 0.78,
       "lit_coverage_ratio": 0.71,
-      "help_points_within_50m": 5,
-      "police_within_150m": 1,
-      "passed_landmarks": {"street_light": 14, "police_station": 1},
+      "help_points": [
+        {"id": "helppoint_00123", "lat": 25.0479, "lng": 121.5321, "name": "7-Eleven"}
+      ],
+      "police_stations": [
+        {"id": "police_00042", "lat": 25.0481, "lng": 121.5327, "name": "大安分局"}
+      ],
+      "passed_landmarks": {"street_light": 14},
       "detour_vs_fastest_min": 4,
       "data_coverage": ["street_light", "police_station", "help_point"]
     },
