@@ -8,7 +8,11 @@ without touching the engine (§4.3).
 
 from pathlib import Path
 
+from pydantic import Field, SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 BACKEND_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = BACKEND_DIR.parent
 DATA_DIR = BACKEND_DIR / "data"
 POINTS_DIR = DATA_DIR / "points"
 CATEGORIES_PATH = DATA_DIR / "categories.json"
@@ -41,3 +45,19 @@ FALLBACK_DYNAMIC_CATEGORY = "dynamic_unknown"
 
 # §1 原則 1：每次提供路線都必須附上的免責聲明。
 DISCLAIMER = "此建議依公開資料與即時資訊產生，無法保證安全；緊急狀況請立即撥打 110 或 119。"
+
+
+class Settings(BaseSettings):
+    """Runtime-only settings. Secrets are loaded from the ignored root .env."""
+
+    model_config = SettingsConfigDict(
+        env_file=PROJECT_ROOT / ".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    chat_service_backend: str = "fake"
+    gemini_api_key: SecretStr = SecretStr("")
+    gemini_model: str = "gemini-2.5-flash"
+    session_ttl_seconds: float = Field(default=30 * 60, gt=0)
+    max_history_messages: int = Field(default=20, ge=4)
