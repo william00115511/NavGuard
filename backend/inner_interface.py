@@ -46,6 +46,16 @@ class ChatResult:
     route: Optional[RouteResult] = None
     error_code: Optional[str] = None
 
+class SessionNotFoundError(Exception):
+    """session_id 不存在或已過期時，由 handle_message 拋出。
+
+    Session 生命週期（建立、對話歷史、dynamic hazards 暫存、過期清除）
+    完全由 ChatService 實作自行管理（記憶體 dict + TTL 即可），API
+    Router 端不維護自己的 session registry，只單純轉呼叫 create_session /
+    handle_message；接到這個例外時統一轉成 HTTP 404 SESSION_NOT_FOUND。
+    """
+
+
 class ChatService(ABC):
 
     @abstractmethod
@@ -58,6 +68,8 @@ class ChatService(ABC):
         """
         處理一則使用者訊息（內部含 Gemini 對話與 Function Calling），
         回傳 collecting_info / route_ready / error 三種結果之一。
+
+        session_id 不存在（未建立或已過期）時拋出 SessionNotFoundError。
         """
         raise NotImplementedError
 

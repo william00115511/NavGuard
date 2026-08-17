@@ -5,6 +5,7 @@
 """
 
 import uuid
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Sequence
 
@@ -38,7 +39,7 @@ def _hazard_to_point(hazard: DynamicHazard, categories: dict[str, CategoryConfig
         source_type="dynamic_realtime",
         expires_at=expires_at.isoformat(),
         confidence=hazard.confidence,
-        meta={"summary": hazard.summary},
+        meta={"summary": hazard.summary, "_resolved_ttl_hours": ttl_hours},
     )
 
 
@@ -74,8 +75,10 @@ class LocalDataRouteEngine(RouteEngine):
         if computation is None:
             raise RouteNotFoundError(f"起訖點在路網圖上不連通：{origin} -> {destination}")
 
+        # valid_hours 一律 resolve 成實際採用的 TTL（可能來自 category 的
+        # default_ttl_hours），讓 API 層可以據此算出 expires_at 顯示給前端。
         considered_hazards = [
-            hazard
+            replace(hazard, valid_hours=point.meta.get("_resolved_ttl_hours", hazard.valid_hours))
             for hazard, point in zip(dynamic_hazards, dynamic_points)
             if point.id in active_ids
         ]
