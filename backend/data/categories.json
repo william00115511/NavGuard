@@ -2,9 +2,9 @@
   "street_light":    { "label": "路燈",       "effect": "positive", "weight": 1.0, "radius_m": 30,  "kind": "static" },
   "police_station":  { "label": "警察局",     "effect": "positive", "weight": 3.0, "radius_m": 150, "kind": "static" },
   "convenience_store": { "label": "超商",     "effect": "positive", "weight": 2.0, "radius_m": 80,  "kind": "static" },
-  "danger_zone":        { "label": "風險區域",       "effect": "negative", "weight": 2.0, "radius_m": 80,  "kind": "static" },
-  "night_club_hazard":  { "label": "夜店酒吧鬧事區", "effect": "negative", "weight": 2.5, "radius_m": 50,  "kind": "static" },
-  "underpass_hazard":   { "label": "封閉地下道死角", "effect": "negative", "weight": 3.0, "radius_m": 60,  "kind": "static" },
+  "danger_zone":        { "label": "風險區域",       "effect": "negative", "weight": 4.0, "radius_m": 80,  "kind": "static" },
+  "night_club_hazard":  { "label": "夜店酒吧鬧事區", "effect": "negative", "weight": 4.5, "radius_m": 50,  "kind": "static" },
+  "underpass_hazard":   { "label": "封閉地下道死角", "effect": "negative", "weight": 5.0, "radius_m": 60,  "kind": "static" },
   "fire_incident":      { "label": "火警事故",       "effect": "negative", "weight": 4.0, "radius_m": 200, "kind": "dynamic", "default_ttl_hours": 6 },
   "crowd_event":        { "label": "臨時人潮",       "effect": "positive", "weight": 1.5, "radius_m": 100, "kind": "dynamic", "default_ttl_hours": 12 },
   "dynamic_unknown":    { "label": "未分類事件",     "effect": "negative", "weight": 1.0, "radius_m": 100, "kind": "dynamic", "default_ttl_hours": 3 }
