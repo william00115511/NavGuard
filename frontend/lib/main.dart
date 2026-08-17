@@ -1340,8 +1340,8 @@ class RouteMetrics {
     durationMinutes: (json['duration_min_est'] as num? ?? 0).round(),
     avgSafetyScore: (json['avg_safety_score'] as num? ?? 0).toDouble(),
     litCoverageRatio: (json['lit_coverage_ratio'] as num?)?.toDouble(),
-    helpPoints: json['help_points_within_50m'] as int? ?? 0,
-    policeStations: json['police_within_150m'] as int? ?? 0,
+    helpPoints: (json['help_points_within_50m'] as num? ?? 0).toInt(),
+    policeStations: (json['police_within_150m'] as num? ?? 0).toInt(),
   );
 }
 

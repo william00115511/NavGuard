@@ -22,6 +22,8 @@
 4. **API Key 只能在後端。** Gemini key 與任何 server-side key 不得出現在 Flutter 程式碼、`--dart-define`、APK 或 Git 中。Flutter 端只保留有 application restriction（Android package + SHA-1 / iOS bundle ID）的 Maps SDK key。
 5. **不處理受害者個資，不在地圖上畫精確歷史犯罪位置。** 犯罪資料一律以 grid／密度形式呈現。
 6. **MVP 只覆蓋一個城市／行政區**，不得宣稱資料覆蓋全世界。範圍外的請求要明確回覆「此區尚未覆蓋」。
+7. **Gemini 免費層級必備多模型動態降級鏈**。後端 Gateway 必須配置容錯降級鏈（如 `gemini-3.7-flash` -> `gemini-3.1-flash-lite` -> `gemini-flash-latest`），防止 Preview 模型 20 RPD 配額耗盡中斷服務。
+8. **Cloud Run 後端 Server Key 與 iOS Client Key 嚴格分離**。後端地點解析（Places API）必須使用無限制 Server Key，嚴禁複用綁定 iOS Bundle ID 的 Client Key。
 
 ---
 

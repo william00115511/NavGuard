@@ -57,14 +57,22 @@ class Settings(BaseSettings):
     )
 
     chat_service_backend: str = "fake"
+    gemini_api_key: SecretStr = SecretStr("")
+    gemini_model: str = "gemini-3.5-flash-lite"
+    gemini_fallback_models: list[str] = [
+        "gemini-3.1-flash-lite",
+        "gemini-3.7-flash",
+        "gemini-flash-latest",
+        "gemini-3.5-flash",
+    ]
     # Vertex AI 用 service account JSON 金鑰做 OAuth2 驗證，不是字串型 API key；
     # 檔名對齊 Google Cloud 用戶端函式庫慣用的 GOOGLE_APPLICATION_CREDENTIALS 環境變數。
     google_application_credentials: Path = PROJECT_ROOT / "google-credentials.json"
     vertex_location: str = "global"
-    gemini_model: str = "gemini-2.5-flash"
-    # 同時給 Places Geocoding API（正式 API 用）與 Routes API
-    # （backend/evaluation/ 離線驗證子專案用）；該 GCP 專案需分別啟用這兩個 API。
+    # 同時支援 maps_api_key / geocoding_api_key / routes_api_key
     maps_api_key: SecretStr = SecretStr("")
+    geocoding_api_key: SecretStr = SecretStr("")
+    routes_api_key: SecretStr = SecretStr("")
     session_ttl_seconds: float = Field(default=30 * 60, gt=0)
     # §6.6：背景排程多久掃一次過期 session 並回收，與 session_ttl_seconds 互補——
     # 就算沒有請求觸發存取式過期檢查，閒置 session 也會被定期清掉。

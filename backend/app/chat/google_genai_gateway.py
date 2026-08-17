@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, Sequence
 
 from google.genai import types
@@ -10,6 +11,8 @@ from app.chat.gemini_chat_service import (
     ModelReply,
     ToolCall,
 )
+
+logger = logging.getLogger(__name__)
 
 
 SYSTEM_INSTRUCTION = """
@@ -88,9 +91,15 @@ def _response_text(content: types.Content | None) -> str:
 
 
 class GoogleGenAIGateway:
-    def __init__(self, client: Any, model: str) -> None:
+    def __init__(
+        self,
+        client: Any,
+        model: str,
+        fallback_models: Sequence[str] = (),
+    ) -> None:
         self._client = client
-        self._model = model
+        # 優先使用主要 model，後續接上備用 fallback models（去重）
+        self._models = [model] + [m for m in fallback_models if m and m != model]
         self._configs = {
             has_location: self._build_config(has_location)
             for has_location in (True, False)
@@ -112,14 +121,30 @@ class GoogleGenAIGateway:
         *,
         has_user_location: bool = False,
     ) -> ModelReply:
-        try:
-            response = await self._client.aio.models.generate_content(
-                model=self._model,
-                contents=self._to_contents(history),
-                config=self._configs[has_user_location],
-            )
-        except Exception as exc:
-            raise GeminiGatewayError("Gemini request failed") from exc
+        contents = self._to_contents(history)
+        config = self._configs[has_user_location]
+        response = None
+        last_exc: Exception | None = None
+
+        for model_name in self._models:
+            try:
+                response = await self._client.aio.models.generate_content(
+                    model=model_name,
+                    contents=contents,
+                    config=config,
+                )
+                logger.info("Successfully generated model turn with: %s", model_name)
+                break
+            except Exception as exc:
+                logger.warning(
+                    "Gemini model '%s' failed (error: %s). Trying next fallback model...",
+                    model_name,
+                    exc,
+                )
+                last_exc = exc
+
+        if response is None:
+            raise GeminiGatewayError("All Gemini models in fallback chain failed") from last_exc
 
         function_calls = response.function_calls or []
         tool_calls = tuple(
