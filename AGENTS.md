@@ -39,7 +39,7 @@
 │ - 對話框 UI（訊息氣泡 + 路線摘要卡片）       │
 │ - 安全／速度優先滑桿（priority_alpha）       │
 └──────────────────┬───────────────────────────┘
-                   │ HTTPS  POST /api/chat, /api/chat/clear
+                   │ HTTPS  POST /api/session, /api/chat, /api/chat/clear
                    ▼
 ┌──────────────────────────────────────────────┐
 │ FastAPI Backend                              │
@@ -85,15 +85,13 @@
 
 ```json
 {
-  "id": "streetlight_00123",
+  "place_id",
   "category": "street_light",
   "lat": 25.0478,
   "lng": 121.5319,
   "source": "台北市路燈資料_2026",
   "source_type": "static_local",
   "expires_at": null,
-  "confidence": 1.0,
-  "place_id": null,
   "meta": {}
 }
 ```
@@ -226,19 +224,21 @@ h(n) = haversine(n, goal) × (1 - α)
 | `duration_min_est` | 以 1.3 m/s 步行速度估算 |
 | `avg_safety_score` | 各 edge safety 以長度加權平均 |
 | `lit_coverage_ratio` | 採樣點中 30m 內有路燈資料的比例（無路燈資料時為 `null`） |
-| `help_points` | 沿線 50m 內可求助據點的**具體點位列表**（`id`/`lat`/`lng`/`name`），該類別無資料時為 `null`（§6.2 修訂） |
+| `convenience_stores` | 沿線 80m（同 `categories.json` 的 `radius_m`）內 24 小時超商的**具體點位列表**（`place_id`/`lat`/`lng`/`name`），該類別無資料時為 `null`（§6.2 修訂） |
 | `police_stations` | 沿線 150m 內警察局的**具體點位列表**，格式同上，該類別無資料時為 `null`（§6.2 修訂） |
-| `passed_landmarks` | 其餘類別（路燈、危險區域等）經過數量的 dict；`police_station`／`convenience_store` 已用上面兩個具體點位列表取代，不再重複列在這裡計數 |
+| `danger_zones` | 沿線 80m 內危險點位的**具體點位列表**（`place_id` 固定為 `null`／`lat`/`lng`/`name`/`summary`），該類別無資料時為 `null`（§6.2 修訂） |
+| `passed_landmarks` | 其餘類別（路燈等）經過數量的 dict；`police_station`／`convenience_store`／`danger_zone` 已用上面三個具體點位列表取代，不再重複列在這裡計數 |
 | `detour_vs_fastest_min` | 相較 α=0 路線多花的分鐘數 |
 | `data_coverage` | 本次實際有資料的類別清單 |
 
-⚠️ **修訂**：舊版 `help_points_within_50m`／`police_within_150m` 只回數量，前端沒辦法在地圖上標出實際位置。改成回傳具體點位列表後，前端要顯示數量時自己對列表 `length`，後端不再重複提供一個數字欄位。
+⚠️ **修訂**：舊版 `help_points_within_50m`／`police_within_150m` 只回數量，前端沒辦法在地圖上標出實際位置。改成回傳具體點位列表後，前端要顯示數量時自己對列表 `length`，後端不再重複提供一個數字欄位。`danger_zone` 同理也改成具體點位列表（並改名複數 `danger_zones`，與 `convenience_stores`／`police_stations` 命名一致），不再只算經過數量。
 
 ### 4.7 warnings
 
 - 任何類別無覆蓋 → 該權重從公式移除、其餘權重重新正規化、產生一則結構化 `warning`：
   `{ "code": "missing_data_category", "category": "street_light" }`（前端自行查表組文案，見 §6.2）
 - 起訖點超出路網範圍 → 回錯誤，不做外插
+- 這些 warning 物件會放進 §6.2 `route_ready` 回應的**頂層 `warnings` 陣列**，不掛在 `route` 底下——`route` 只放路徑本身與 `metrics`，兩者是平行欄位。
 
 ⚠️ **修訂**：拔掉 `route.confidence`（`high`/`medium`/`low`）欄位——這個值只是
 把 `data_coverage` 與動態點位佔比再摘要成一個粗略等級，實際判斷仍要看
@@ -274,7 +274,7 @@ h(n) = haversine(n, goal) × (1 - α)
 ```json
 {
   "name": "calculate_safe_route",
-  "description": "根據起點與終點，計算一條夜間步行安全路徑，並同時回傳最快路線作為對照。安全優先權重（priority_alpha）由前端直接提供，不是這個工具的參數，也不由 Gemini 決定（見 §5.1）",
+  "description": "根據起點與終點，計算一條夜間步行安全路徑並回傳（僅這一條；引擎內部另外計算最快路線作對照，只用於 metrics 與 URL 簡化，不對外輸出，見 §4.1／§6.2）。安全優先權重（priority_alpha）由前端直接提供，不是這個工具的參數，也不由 Gemini 決定（見 §5.1）",
   "parameters": {
     "type": "object",
     "properties": {
@@ -409,20 +409,23 @@ Response 依進度分三種 `status`：
       "duration_min_est": 18,
       "avg_safety_score": 0.78,
       "lit_coverage_ratio": 0.71,
-      "help_points": [
-        {"id": "helppoint_00123", "lat": 25.0479, "lng": 121.5321, "name": "7-Eleven"}
+      "convenience_stores": [
+        {"place_id": "xxx", "lat": 25.0479, "lng": 121.5321, "name": "7-Eleven" }
       ],
       "police_stations": [
-        {"id": "police_00042", "lat": 25.0481, "lng": 121.5327, "name": "大安分局"}
+        { "place_id": "xxx", "lat": 25.0481, "lng": 121.5327, "name": "大安分局" }
+      ],
+      "danger_zones": [
+        { "place_id": null, "lat": 25.0481, "lng": 121.5327, "name": "綠洲信義", "summary": "深夜醉漢與酒客群聚高發區" }
       ],
       "passed_landmarks": {"street_light": 14},
       "detour_vs_fastest_min": 4,
       "data_coverage": ["street_light", "police_station", "convenience_store"]
-    },
-    "warnings": [
-      { "code": "missing_data_category", "category": "danger_zone" }
-    ]
+    }
   },
+  "warnings": [
+    { "code": "missing_data_category", "category": "danger_zone" }
+  ],
   "dynamic_hazards_considered": [
     {
       "category": "fire_incident",
@@ -435,12 +438,7 @@ Response 依進度分三種 `status`：
   "google_maps_url": "https://www.google.com/maps/dir/?api=1&origin=...&travelmode=walking"
 }
 ```
-`route.warnings` 的 `code` 目前有三種，`category`／`summary` 依 code 才有值：
-| code | 說明 | 附帶欄位 |
-|---|---|---|
-| `missing_data_category` | 某靜態類別在此區沒有覆蓋，未納入評分（§4.7） | `category`：類別 key（如 `street_light`） |
-| `unknown_hazard_category` | Gemini 回報的即時事件類別未登記，已用 `dynamic_unknown` 低權重計入（§5.4 規則 2） | `category`：原始（未登記的）類別 key |
-| `hazard_expired` | 即時事件已過期，未納入本次計算 | `summary`：該事件的簡述 |
+`warnings` 是跟 `route` 平行的**頂層欄位**（不是 `route.warnings`），沒有任何缺資料或異常時為空陣列 `[]`。
 
 **C. `error`**
 ```json
@@ -453,7 +451,7 @@ Response 依進度分三種 `status`：
 
 常見 `error_code`：`GEOCODING_FAILED`、`OUT_OF_COVERAGE`（起訖點超出路網範圍）、`NO_ROUTE_FOUND`、`UPSTREAM_TIMEOUT`。
 
-**前端行為**：`collecting_info` 與 `error` 把 `reply_text` 當作助手訊息顯示在對話框；`route_ready` 沒有 `reply_text`，前端依 `route.metrics` 與 `route.warnings` 自行組文案、在地圖畫出 `route.path_coordinates` 的 polyline、標出 `passed_landmarks` 的 marker，並顯示可展開的路線摘要卡片與「在 Google Maps 開啟導航」按鈕。
+**前端行為**：`collecting_info` 與 `error` 把 `reply_text` 當作助手訊息顯示在對話框；`route_ready` 沒有 `reply_text`，前端依 `route.metrics` 與頂層 `warnings`（見上方範例，不是 `route.warnings`）自行組文案、在地圖畫出 `route.path_coordinates` 的 polyline、標出 `convenience_stores`／`police_stations`／`danger_zones` 的 marker，並顯示可展開的路線摘要卡片與「在 Google Maps 開啟導航」按鈕。
 
 ### 6.2.1 `POST /api/chat/clear`
 
@@ -485,7 +483,7 @@ Request：
 ```
 `dynamic_hazards` 此處直接吃**座標**（`DynamicHazard` 內部型別），因為 geocoding 屬於 Function Calling handler 的職責，不屬於引擎。
 
-Response：與 6.2 `route_ready` 的 `route` / `dynamic_hazards_considered` 部分相同結構（外層多一個 `status: "ok"`）。
+Response：與 6.2 `route_ready` 的 `route` / `warnings` / `dynamic_hazards_considered` 部分相同結構（外層多一個 `status: "ok"`）。
 
 ### 6.4 `GET /healthz`
 
