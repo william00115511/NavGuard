@@ -1,7 +1,10 @@
-"""System-level error types.
+"""系統層級錯誤型別（AGENTS.md §6.5）。
 
-Per ForAI.md 4.5.4：業務邏輯失敗（聽不懂地點、資訊不足等）一律回 HTTP 200，
-body 用 status: "error" 表示；只有系統層級錯誤才用這裡的 HTTP 錯誤碼。
+§6.5 的分界：
+- **業務邏輯失敗**（聽不懂地點、資訊不足、超出覆蓋範圍、找不到路徑）一律回
+  HTTP 200，body 用 `status: "error"` + `error_code`——請求本身是有效的，
+  只是這次的結果失敗。這類失敗以 inner_interface 的領域例外表達，不在這裡。
+- **系統層級錯誤**才用 HTTP 錯誤碼，就是下面這些。
 """
 
 
@@ -28,15 +31,19 @@ class SessionNotFoundError(ApiError):
     error_code = "SESSION_NOT_FOUND"
 
 
-class UpstreamError(ApiError):
-    """Gemini API timeout, route engine exception, etc."""
+class UpstreamTimeoutError(ApiError):
+    """Gemini 或 geocoding 逾時。"""
 
+    status_code = 504
+    error_code = "UPSTREAM_TIMEOUT"
+
+
+class InternalError(ApiError):
     status_code = 500
     error_code = "INTERNAL_ERROR"
 
 
-class RouteNotFoundError(ApiError):
-    """起訖點在路網圖上不連通，找不到可行路徑。"""
-
-    status_code = 500
-    error_code = "ROUTE_NOT_FOUND"
+# §6.2 常見的業務層 error_code，回在 HTTP 200 的 body 裡。
+GEOCODING_FAILED = "GEOCODING_FAILED"
+OUT_OF_COVERAGE = "OUT_OF_COVERAGE"
+NO_ROUTE_FOUND = "NO_ROUTE_FOUND"
