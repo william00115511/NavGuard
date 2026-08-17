@@ -1,0 +1,57 @@
+[
+  {
+    "id": "helppoint_00001",
+    "category": "help_point",
+    "lat": 25.0445,
+    "lng": 121.535,
+    "source": "夜間營業據點示範資料(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": { "name": "示範超商（24h）" }
+  },
+  {
+    "id": "helppoint_00002",
+    "category": "help_point",
+    "lat": 25.0375,
+    "lng": 121.535,
+    "source": "夜間營業據點示範資料(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": { "name": "示範藥局（夜間營業）" }
+  },
+  {
+    "id": "helppoint_00003",
+    "category": "help_point",
+    "lat": 25.0305,
+    "lng": 121.535,
+    "source": "夜間營業據點示範資料(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": { "name": "示範飯店大廳" }
+  },
+  {
+    "id": "helppoint_00004",
+    "category": "help_point",
+    "lat": 25.0235,
+    "lng": 121.535,
+    "source": "夜間營業據點示範資料(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": { "name": "示範超商（24h）" }
+  },
+  {
+    "id": "helppoint_00005",
+    "category": "help_point",
+    "lat": 25.0165,
+    "lng": 121.535,
+    "source": "夜間營業據點示範資料(demo)",
+    "source_type": "static_local",
+    "expires_at": null,
+    "confidence": 1.0,
+    "meta": { "name": "示範加油站（24h）" }
+  }
+]
