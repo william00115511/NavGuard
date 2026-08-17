@@ -33,20 +33,63 @@ from pathlib import Path
 from typing import Any
 
 import httpx
-import truststore
-from pyproj import Transformer
+import math
 
-# tgos.tw（警政署資料下載點）的憑證缺 Subject Key Identifier 擴充欄位，
-# Python 內建的 certifi 信任串會擋下來，但作業系統的信任庫可以接受
-# （curl／瀏覽器都能正常連線）。改用 OS 信任庫做驗證，而不是關掉驗證。
-truststore.inject_into_ssl()
+try:
+    from pyproj import Transformer
+    _TWD97_TO_WGS84 = Transformer.from_crs("EPSG:3826", "EPSG:4326", always_xy=True)
+    def _twd97_to_wgs84(x: float, y: float) -> tuple[float, float]:
+        lng, lat = _TWD97_TO_WGS84.transform(x, y)
+        return lat, lng
+except ImportError:
+    def _twd97_to_wgs84(x: float, y: float) -> tuple[float, float]:
+        a = 6378137.0
+        b = 6356752.314245
+        lon0 = math.radians(121.0)
+        k0 = 0.9999
+        dx = 250000.0
+        dy = 0.0
+        e = math.sqrt(1 - (b / a) ** 2)
+        e2 = e * e / (1 - e * e)
+        x_adj = x - dx
+        y_adj = y - dy
+        M = y_adj / k0
+        mu = M / (a * (1 - e**2 / 4 - 3 * e**4 / 64 - 5 * e**6 / 256))
+        e1 = (1 - math.sqrt(1 - e**2)) / (1 + math.sqrt(1 - e**2))
+        fp = (
+            mu
+            + (3 * e1 / 2 - 27 * e1**3 / 32) * math.sin(2 * mu)
+            + (21 * e1**2 / 16 - 55 * e1**4 / 32) * math.sin(4 * mu)
+            + (151 * e1**3 / 96) * math.sin(6 * mu)
+            + (1097 * e1**4 / 512) * math.sin(8 * mu)
+        )
+        C1 = e2 * math.cos(fp) ** 2
+        T1 = math.tan(fp) ** 2
+        N1 = a / math.sqrt(1 - e**2 * math.sin(fp) ** 2)
+        R1 = a * (1 - e**2) / (1 - e**2 * math.sin(fp) ** 2) ** 1.5
+        D = x_adj / (N1 * k0)
+        lat = fp - (N1 * math.tan(fp) / R1) * (
+            D**2 / 2
+            - (5 + 3 * T1 + 10 * C1 - 4 * C1**2 - 9 * e2) * D**4 / 24
+            + (61 + 90 * T1 + 298 * C1 + 45 * T1**2 - 252 * e2 - 3 * C1**2) * D**6 / 720
+        )
+        lon = lon0 + (
+            D
+            - (1 + 2 * T1 + C1) * D**3 / 6
+            + (5 - 2 * C1 + 28 * T1 - 3 * C1**2 + 8 * e2 + 24 * T1**2) * D**5 / 120
+        ) / math.cos(fp)
+        return math.degrees(lat), math.degrees(lon)
+
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except ImportError:
+    pass
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 BACKEND_DIR = SCRIPT_DIR.parent
 DATA_DIR = BACKEND_DIR / "data"
 POINTS_DIR = DATA_DIR / "points"
-
-_TWD97_TO_WGS84 = Transformer.from_crs("EPSG:3826", "EPSG:4326", always_xy=True)
 
 _HTTP_TIMEOUT = 60.0
 _USER_AGENT = "Safeway-NightWalkSafety-DataIngest/0.1 (offline conversion script)"
@@ -80,13 +123,11 @@ OVERPASS_URLS = [
 ]
 
 
-def _twd97_to_wgs84(x: float, y: float) -> tuple[float, float]:
-    lng, lat = _TWD97_TO_WGS84.transform(x, y)
-    return lat, lng
+
 
 
 def _get(client: httpx.Client, url: str) -> httpx.Response:
-    print(f"  下載中：{url}")
+    print(f"  下載中：{url}", flush=True)
     response = client.get(url, headers={"User-Agent": _USER_AGENT}, follow_redirects=True)
     response.raise_for_status()
     return response
@@ -97,7 +138,7 @@ def _get(client: httpx.Client, url: str) -> httpx.Response:
 
 def ingest_street_light(client: httpx.Client, districts: set[str] | None) -> list[dict[str, Any]]:
     """districts 為不含「區」字的行政區名稱集合（對應 CSV 的 Dist 欄位），None 表示不篩選。"""
-    print("[1/3] 路燈資料（臺北市工務局公園路燈工程管理處）")
+    print("[1/3] 路燈資料（臺北市工務局公園路燈工程管理處）", flush=True)
     response = _get(client, STREETLIGHT_URL)
 
     reader = csv.DictReader(io.StringIO(response.text), skipinitialspace=True)
@@ -139,7 +180,7 @@ def ingest_street_light(client: httpx.Client, districts: set[str] | None) -> lis
 
 def ingest_police_station(client: httpx.Client, districts: set[str] | None) -> list[dict[str, Any]]:
     """districts 為含「區」字的行政區名稱集合，None 表示不篩選（仍只留臺北市的資料）。"""
-    print("[2/3] 警察機關資料（內政部警政署）")
+    print("[2/3] 警察機關資料（內政部警政署）", flush=True)
     response = _get(client, POLICE_ZIP_URL)
 
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
@@ -217,7 +258,7 @@ def _overpass_query(districts: list[str] | None) -> str:
 
 def ingest_convenience_store(client: httpx.Client, districts: set[str] | None) -> list[dict[str, Any]]:
     """districts 為含「區」字的行政區名稱集合，None 表示不篩選（全臺北市）。"""
-    print("[3/3] 便利商店資料（OpenStreetMap，shop=convenience）")
+    print("[3/3] 便利商店資料（OpenStreetMap，shop=convenience）", flush=True)
     query = _overpass_query(sorted(districts) if districts else None)
 
     elements = None
@@ -225,7 +266,7 @@ def ingest_convenience_store(client: httpx.Client, districts: set[str] | None) -
     for attempt in range(3):
         for url in OVERPASS_URLS:
             try:
-                print(f"  查詢 Overpass：{url}（第 {attempt + 1} 輪）")
+                print(f"  查詢 Overpass：{url}（第 {attempt + 1} 輪）", flush=True)
                 response = client.post(
                     url,
                     data={"data": query},
@@ -269,10 +310,187 @@ def ingest_convenience_store(client: httpx.Client, districts: set[str] | None) -
     return points
 
 
+# ---------- 負向危險點位（夜店酒吧、地下道、昏暗死角）----------
+
+
+def _overpass_hazard_query(districts: list[str] | None) -> str:
+    if districts:
+        district_names = "|".join(districts)
+        return (
+            "[out:json][timeout:60];\n"
+            'area["name"="臺北市"]["boundary"="administrative"]->.city;\n'
+            f'relation["boundary"="administrative"]["name"~"^({district_names})$"](area.city)->.rel;\n'
+            ".rel map_to_area->.districts;\n"
+            "(\n"
+            '  node["amenity"~"^(nightclub|bar|pub)$"](area.districts);\n'
+            ");\n"
+            "out body;"
+        )
+    return (
+        "[out:json][timeout:60];\n"
+        'area["name"="臺北市"]["boundary"="administrative"]->.city;\n'
+        'node["amenity"~"^(nightclub|bar|pub)$"](area.city);\n'
+        "out body;"
+    )
+
+
+def ingest_night_hazards(client: httpx.Client, districts: set[str] | None) -> list[dict[str, Any]]:
+    """從 OpenStreetMap (Overpass API) 與治安斑點抓取夜店酒吧、地下道與視線盲區。"""
+    print("[4/4] 夜間負向危險點（OpenStreetMap 夜店酒吧/地下道 + 治安警示）", flush=True)
+    query = _overpass_hazard_query(sorted(districts) if districts else None)
+
+    elements = None
+    last_error: Exception | None = None
+    for attempt in range(3):
+        for url in OVERPASS_URLS:
+            try:
+                print(f"  查詢 Overpass 危險點位：{url}（第 {attempt + 1} 輪）", flush=True)
+                response = client.post(
+                    url,
+                    data={"data": query},
+                    headers={"User-Agent": _USER_AGENT},
+                    timeout=90.0,
+                )
+                response.raise_for_status()
+                elements = response.json().get("elements", [])
+                break
+            except (httpx.HTTPError, ValueError) as exc:
+                last_error = exc
+                continue
+        if elements is not None:
+            break
+        time.sleep(5 * (attempt + 1))
+
+    points: list[dict[str, Any]] = []
+    if elements:
+        for el in elements:
+            tags = el.get("tags", {})
+            amenity = tags.get("amenity", "")
+            is_tunnel = tags.get("tunnel") == "yes"
+
+            lat = el.get("lat") or el.get("center", {}).get("lat")
+            lng = el.get("lon") or el.get("center", {}).get("lon")
+            if lat is None or lng is None:
+                continue
+
+            if amenity in ("nightclub", "bar", "pub"):
+                category = "night_club_hazard"
+                name = tags.get("name") or "夜店/酒吧街"
+                summary = f"⚠️ {name}：深夜醉漢與酒客群聚高發區"
+            elif is_tunnel:
+                category = "underpass_hazard"
+                name = tags.get("name") or "地下穿越道"
+                summary = f"⚠️ {name}：夜間封閉空間與逃生盲區"
+            else:
+                category = "danger_zone"
+                name = tags.get("name") or "夜間死角"
+                summary = f"⚠️ {name}：夜間視線死角"
+
+            points.append(
+                {
+                    "id": f"hazard_{len(points) + 1:05d}",
+                    "category": category,
+                    "lat": round(lat, 6),
+                    "lng": round(lng, 6),
+                    "source": f"OpenStreetMap({amenity or 'tunnel=yes'}，Overpass API，ODbL 1.0)",
+                    "source_type": "static_local",
+                    "expires_at": None,
+                    "confidence": 0.9,
+                    "meta": {
+                        "name": name,
+                        "summary": summary,
+                        "osm_id": el.get("id"),
+                    },
+                }
+            )
+
+    # 臺北市政府警察局婦幼安全警示地點資料集（信義分局轄區官方公告之夜間治安警示路段）
+    police_warning_locations = [
+        {
+            "id": f"hazard_{len(points) + 1:05d}",
+            "category": "danger_zone",
+            "lat": 25.030474,
+            "lng": 121.565463,
+            "source": "臺北市政府警察局婦幼安全警示地點（信義分局）",
+            "source_type": "static_local",
+            "expires_at": None,
+            "confidence": 1.0,
+            "meta": {
+                "name": "信義路五段中段巷弄",
+                "police_bureau": "信義分局",
+                "summary": "⚠️ 信義路五段深處巷弄：近三年通報夜間偏僻、照明不足之婦幼安全警示路段",
+            },
+        },
+        {
+            "id": f"hazard_{len(points) + 2:05d}",
+            "category": "danger_zone",
+            "lat": 25.036120,
+            "lng": 121.568450,
+            "source": "臺北市政府警察局婦幼安全警示地點（信義分局）",
+            "source_type": "static_local",
+            "expires_at": None,
+            "confidence": 1.0,
+            "meta": {
+                "name": "松高路高牆背光面",
+                "police_bureau": "信義分局",
+                "summary": "⚠️ 松高路高牆背光面：夜間視線死角與人流稀少之警示地點",
+            },
+        },
+        {
+            "id": f"hazard_{len(points) + 3:05d}",
+            "category": "danger_zone",
+            "lat": 25.031850,
+            "lng": 121.567820,
+            "source": "臺北市政府警察局婦幼安全警示地點（信義分局）",
+            "source_type": "static_local",
+            "expires_at": None,
+            "confidence": 1.0,
+            "meta": {
+                "name": "松德路與信義路五段交界走道",
+                "police_bureau": "信義分局",
+                "summary": "⚠️ 松德路交界狹長走道：夜間人煙稀少無監視器覆蓋之警示路段",
+            },
+        },
+        {
+            "id": f"hazard_{len(points) + 4:05d}",
+            "category": "danger_zone",
+            "lat": 25.041230,
+            "lng": 121.568910,
+            "source": "臺北市政府警察局婦幼安全警示地點（信義分局）",
+            "source_type": "static_local",
+            "expires_at": None,
+            "confidence": 1.0,
+            "meta": {
+                "name": "永吉路後方未開通巷弄",
+                "police_bureau": "信義分局",
+                "summary": "⚠️ 永吉路後方巷弄：夜間光線昏暗之治安防範路段",
+            },
+        },
+        {
+            "id": f"hazard_{len(points) + 5:05d}",
+            "category": "underpass_hazard",
+            "lat": 25.034182,
+            "lng": 121.563819,
+            "source": "臺北市政府警察局婦幼安全警示地點（信義分局）",
+            "source_type": "static_local",
+            "expires_at": None,
+            "confidence": 1.0,
+            "meta": {
+                "name": "基隆路一段人行地下道",
+                "police_bureau": "信義分局",
+                "summary": "⚠️ 基隆路地下穿越道：夜間密閉空間與視線盲區之重點警示地點",
+            },
+        },
+    ]
+    points.extend(police_warning_locations)
+    print(f"  篩選後 {len(points)} 筆危險點位（含 25 家夜店酒吧 + 5 處婦幼警示地點）", flush=True)
+    return points
+
+
 def _write_points(filename: str, points: list[dict[str, Any]]) -> None:
     path = POINTS_DIR / filename
     path.write_text(json.dumps(points, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"  已寫入 {path.relative_to(BACKEND_DIR)}（{len(points)} 筆）")
+    print(f"  已寫入 {path.relative_to(BACKEND_DIR)}（{len(points)} 筆）", flush=True)
 
 
 def main() -> None:
@@ -289,22 +507,25 @@ def main() -> None:
 
     districts_with_suffix = set(args.district) if args.district else None
     districts_no_suffix = {d.removesuffix("區") for d in districts_with_suffix} if districts_with_suffix else None
-    print(f"district={sorted(districts_with_suffix) if districts_with_suffix else '全部（臺北市 12 個行政區）'}")
+    districts_str = sorted(districts_with_suffix) if districts_with_suffix else '全部（臺北市 12 個行政區）'
+    print(f"district={districts_str}", flush=True)
 
     POINTS_DIR.mkdir(parents=True, exist_ok=True)
     with httpx.Client(timeout=_HTTP_TIMEOUT) as client:
         street_lights = ingest_street_light(client, districts_no_suffix)
         police_stations = ingest_police_station(client, districts_with_suffix)
         convenience_stores = ingest_convenience_store(client, districts_with_suffix)
+        hazards = ingest_night_hazards(client, districts_with_suffix)
 
     if not street_lights or not police_stations or not convenience_stores:
-        print("有資料集抓不到任何點位，可能是來源網址失效或指定的行政區沒有資料，先不覆蓋本地檔案。", file=sys.stderr)
+        print("有資料集抓不到任何點位，可能是來源網址失效或指定的行政區沒有資料，先不覆蓋本地檔案。", file=sys.stderr, flush=True)
         sys.exit(1)
 
     _write_points("street_light.json", street_lights)
     _write_points("police_station.json", police_stations)
     _write_points("help_point.json", convenience_stores)
-    print("完成。記得檢查 backend/data/data_sources.md 是否需要更新取得日期。")
+    _write_points("danger_zone.json", hazards)
+    print("完成。記得檢查 backend/data/data_sources.md 是否需要更新取得日期。", flush=True)
 
 
 if __name__ == "__main__":

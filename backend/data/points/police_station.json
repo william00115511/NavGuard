@@ -2,134 +2,6 @@
   {
     "id": "police_00001",
     "category": "police_station",
-    "lat": 25.037831,
-    "lng": 121.533143,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "大安分局",
-      "name_en": "Daan Precinct",
-      "address": "臺北市大安區仁愛路3段2號",
-      "phone": "02 23259850"
-    }
-  },
-  {
-    "id": "police_00002",
-    "category": "police_station",
-    "lat": 25.011144,
-    "lng": 121.538029,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "羅斯福路派出所",
-      "name_en": "Roosevelt Rd. Police Station",
-      "address": "臺北市大安區羅斯福路4段113巷13號",
-      "phone": "02 27355761"
-    }
-  },
-  {
-    "id": "police_00003",
-    "category": "police_station",
-    "lat": 25.017953,
-    "lng": 121.551934,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "臥龍街派出所",
-      "name_en": "Wolong St. Police Station",
-      "address": "臺北市大安區臥龍街185號",
-      "phone": "02 27334439"
-    }
-  },
-  {
-    "id": "police_00004",
-    "category": "police_station",
-    "lat": 25.038958,
-    "lng": 121.543927,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "敦化南路派出所",
-      "name_en": "Dunhua S. Rd. Police Station",
-      "address": "臺北市大安區復興南路1段219之1號",
-      "phone": "02 27710400"
-    }
-  },
-  {
-    "id": "police_00005",
-    "category": "police_station",
-    "lat": 25.032955,
-    "lng": 121.552088,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "安和路派出所",
-      "name_en": "Anhe Rd. Police Station",
-      "address": "臺北市大安區信義路4段216號",
-      "phone": "02 27025232"
-    }
-  },
-  {
-    "id": "police_00006",
-    "category": "police_station",
-    "lat": 25.031161,
-    "lng": 121.54499,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "瑞安街派出所",
-      "name_en": "Ruian St. Police Station",
-      "address": "臺北市大安區瑞安街23巷17號",
-      "phone": "02 27054164"
-    }
-  },
-  {
-    "id": "police_00007",
-    "category": "police_station",
-    "lat": 25.026614,
-    "lng": 121.530495,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "和平東路派出所",
-      "name_en": "Heping E. Rd. Police Station",
-      "address": "臺北市大安區和平東路1段143號",
-      "phone": "02 23218073"
-    }
-  },
-  {
-    "id": "police_00008",
-    "category": "police_station",
-    "lat": 25.037737,
-    "lng": 121.534048,
-    "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-    "source_type": "static_local",
-    "expires_at": null,
-    "confidence": 1.0,
-    "meta": {
-      "name": "新生南路派出所",
-      "name_en": "Xinsheng S. Rd. Police Station",
-      "address": "臺北市大安區仁愛路3段18號",
-      "phone": "02 23258611"
-    }
-  },
-  {
-    "id": "police_00009",
-    "category": "police_station",
     "lat": 25.033153,
     "lng": 121.567689,
     "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
@@ -144,7 +16,7 @@
     }
   },
   {
-    "id": "police_00010",
+    "id": "police_00002",
     "category": "police_station",
     "lat": 25.023674,
     "lng": 121.555199,
@@ -160,7 +32,7 @@
     }
   },
   {
-    "id": "police_00011",
+    "id": "police_00003",
     "category": "police_station",
     "lat": 25.026609,
     "lng": 121.563889,
@@ -176,7 +48,7 @@
     }
   },
   {
-    "id": "police_00012",
+    "id": "police_00004",
     "category": "police_station",
     "lat": 25.037726,
     "lng": 121.581973,
@@ -192,7 +64,7 @@
     }
   },
   {
-    "id": "police_00013",
+    "id": "police_00005",
     "category": "police_station",
     "lat": 25.045664,
     "lng": 121.575846,
@@ -208,7 +80,7 @@
     }
   },
   {
-    "id": "police_00014",
+    "id": "police_00006",
     "category": "police_station",
     "lat": 25.033153,
     "lng": 121.567689,

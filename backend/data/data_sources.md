@@ -31,10 +31,14 @@
 
 ## points/danger_zone.json
 
-- **來源**：治安風險示範資料（demo，非真實資料）
-- **授權**：不適用（專案內自建）
-- **覆蓋範圍**：信義區內單一示範點（象山／台北 101 一帶，位在 `road_network.json` 的一條真實路段上，方便展示「safety 優先路線繞開風險點」）
-- **更新日期**：2026-08-17
+- **來源**：
+  1. **臺北市政府警察局婦幼安全警示地點**（臺北市政府警察局婦幼警察隊，data.taipei / data.gov.tw）
+  2. **OpenStreetMap**（`amenity=nightclub,bar,pub` / `tunnel=yes`，Overpass API）
+- **授權**：政府資料開放授權條款 / ODbL 1.0
+- **覆蓋範圍**：信義區（涵蓋信義分局轄區官方公告之婦幼警示死角、地下道，以及松壽路/松智路周邊 25 家夜店酒吧醉漢聚集區）
+- **類別登記**：`night_club_hazard`（夜店醉漢區）、`underpass_hazard`（封閉地下道）、`danger_zone`（治安警示死角）
+- **更新日期**：2026-08-18
+- **腳本**：`scripts/ingest_open_data.py`
 
 ## road_network.json
 

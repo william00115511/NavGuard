@@ -19,6 +19,7 @@ from typing import Optional, Protocol, Sequence
 from app.config import DEFAULT_ALPHA, DISCLAIMER, FALLBACK_DYNAMIC_CATEGORY, WALK_SPEED_MPS
 from app.data.schema import CategoryConfig, PointRecord
 from app.data.store import DataStore, get_data_store
+from app.engine.geo import haversine_m
 from app.engine.graph import RoadGraph, get_road_graph
 from app.engine.metrics import build_metrics, decide_confidence
 from app.engine.pathfinding import PathComputation, compute_path
@@ -135,6 +136,8 @@ class LocalDataRouteEngine(RouteEngine):
             google_maps_url=self._build_maps_url(safest, fastest),
             disclaimer=DISCLAIMER,
         )
+
+
 
     def _build_maps_url(self, safest: PathComputation, fastest: PathComputation) -> str:
         # §7.3：用最快路線當參考，強制保留安全路線偏離它最遠的轉折點，
