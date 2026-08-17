@@ -40,6 +40,19 @@ class DynamicHazard:
 
 
 @dataclass(frozen=True)
+class RouteWarning:
+    """Structured warning so the frontend can localize/style without parsing backend prose.
+
+    `category` is set for missing-data-coverage and unknown-hazard-category warnings;
+    `summary` is set for expired-hazard warnings (carries the hazard's own summary text).
+    """
+
+    code: str
+    category: Optional[str] = None
+    summary: Optional[str] = None
+
+
+@dataclass(frozen=True)
 class RouteMetrics:
     """對應 §4.6。無資料的欄位用 None，不得填 0。"""
 
@@ -68,8 +81,7 @@ class Route:
     alpha_used: float
     metrics: RouteMetrics
     confidence: Confidence
-    reasons: list[str] = field(default_factory=list)
-    warnings: list[str] = field(default_factory=list)
+    warnings: list[RouteWarning] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -91,27 +103,21 @@ class ChatStatus(str, Enum):
 
 @dataclass(frozen=True)
 class ChatResult:
-    """對應 §6.2 /api/chat 回應"""
+    """對應 §6.2 /api/chat 回應。
+
+    reply_text is only set for collecting_info（追問）與 error（錯誤說明）——
+    這兩種是天生需要對話式文字的情境。route_ready 不帶 reply_text：路線結果
+    改由 route_result 內的結構化資料表達，前端自己組文案（見 §5.1 修訂）。
+    """
 
     status: ChatStatus
-    reply_text: str
+    reply_text: Optional[str] = None
     route_result: Optional[RouteResult] = None
     error_code: Optional[str] = None
 
 
 # ---------- 領域例外 ----------
-# 這些是「業務邏輯失敗」，依 §6.5 最終會被轉成 HTTP 200 + status: "error"，
-# 只有 SessionNotFoundError 屬於系統層級（HTTP 404）。
-
-
-class SessionNotFoundError(Exception):
-    """session_id 不存在或已過期時，由 handle_message 拋出。
-
-    Session 生命週期（建立、對話歷史、dynamic hazards 暫存、過期清除）
-    完全由 ChatService 實作自行管理（記憶體 dict + TTL，§6.6）；API Router
-    端不維護自己的 session registry，只單純轉呼叫 create_session /
-    handle_message，接到這個例外時轉成 HTTP 404 SESSION_NOT_FOUND。
-    """
+# 這些是「業務邏輯失敗」，依 §6.5 最終會被轉成 HTTP 200 + status: "error"。
 
 
 class OutOfCoverageError(Exception):
@@ -129,24 +135,32 @@ class NoRouteFoundError(Exception):
 class ChatService(ABC):
 
     @abstractmethod
-    async def create_session(self, user_location: Optional[LatLng] = None) -> str:
-        """建立新的對話 session，回傳 session_id。"""
-        raise NotImplementedError
-
-    @abstractmethod
     async def handle_message(
         self,
-        session_id: str,
+        client_id: str,
         message: str,
         user_location: Optional[LatLng] = None,
         priority_alpha: Optional[float] = None,
     ) -> ChatResult:
         """處理一則使用者訊息（內部含 Gemini 對話與 Function Calling），
         回傳 collecting_info / route_ready / error 三種結果之一。
-        session_id 不存在時 raise SessionNotFoundError。
+
+        client_id 由前端自行產生並持久化（例如裝置安裝時建立一次的 UUID），
+        不需要先呼叫任何「建立 session」端點交換 ID。第一次見到某個
+        client_id 時自動建立新的對話狀態；同一個 client_id 之後的呼叫沿用
+        同一份歷史。實作內部固定只保留最多 N 個活躍 session（依配置，見
+        AGENTS.md §6.6），超過時逐出最久未使用的一個，所以這裡永遠不會因為
+        「session 不存在」而失敗。
 
         priority_alpha（安全優先權重）由前端 UI 直接提供，不經 Gemini 判斷；
         未帶時使用預設值（見實作，AGENTS.md §5.1）。"""
+        raise NotImplementedError
+
+    @abstractmethod
+    async def clear_context(self, client_id: str) -> None:
+        """清除這個 client_id 的對話歷史，下一則訊息視為全新對話的開始。
+
+        對不存在的 client_id 呼叫是安全的（no-op），不視為錯誤。"""
         raise NotImplementedError
 
 

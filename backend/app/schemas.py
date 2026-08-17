@@ -9,7 +9,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from interfaces import DynamicHazard, LatLng, Route, RouteMetrics, RouteResult
+from interfaces import DynamicHazard, LatLng, Route, RouteMetrics, RouteResult, RouteWarning
 
 
 class LatLngIn(BaseModel):
@@ -20,24 +20,13 @@ class LatLngIn(BaseModel):
         return LatLng(lat=self.lat, lng=self.lng)
 
 
-# ---------- §6.1 POST /api/session ----------
-
-
-class CreateSessionRequest(BaseModel):
-    # 選填，用於 geocoding bias 與 origin: "current_location" 的解析。
-    user_location: Optional[LatLngIn] = None
-
-
-class CreateSessionResponse(BaseModel):
-    session_id: str
-    created_at: datetime
-
-
 # ---------- §6.2 POST /api/chat ----------
 
 
 class ChatRequest(BaseModel):
-    session_id: str
+    # 前端自行產生並持久化的識別碼（例如裝置安裝時建立一次的 UUID）；不需要
+    # 先呼叫任何「建立 session」端點交換 ID（§6.6 修訂）。
+    client_id: str = Field(min_length=1)
     message: str
     user_location: Optional[LatLngIn] = None
     # 安全優先權重，由前端 UI（例如滑桿）提供；不經 Gemini 判斷（AGENTS.md §5.1）。
@@ -51,6 +40,14 @@ class DynamicHazardOut(BaseModel):
     confidence: float
     expires_at: datetime
     source_url: Optional[str] = None
+
+
+class RouteWarningOut(BaseModel):
+    """結構化警告碼，前端依 code 自行決定文案／樣式，不解析後端組好的中文句子。"""
+
+    code: str
+    category: Optional[str] = None
+    summary: Optional[str] = None
 
 
 class RouteMetricsOut(BaseModel):
@@ -67,35 +64,35 @@ class RouteMetricsOut(BaseModel):
 
 
 class RouteOut(BaseModel):
-    id: str
-    label: str
     path_coordinates: list[list[float]]  # [[lat, lng], ...]，前端直接畫 polyline
     alpha_used: float
     confidence: str
     metrics: RouteMetricsOut
-    reasons: list[str]
-    warnings: list[str]
-
-
-class RouteResultOut(BaseModel):
-    selected_route_id: str
-    routes: list[RouteOut]
-    dynamic_hazards_considered: list[DynamicHazardOut]
-    google_maps_url: str
-    disclaimer: str
+    warnings: list[RouteWarningOut]
 
 
 class ChatResponse(BaseModel):
-    session_id: str
     status: str
-    reply_text: str
+    # 只有 collecting_info（追問）與 error（錯誤說明）才有值；route_ready 不帶
+    # reply_text，路線結果改由下面的結構化欄位表達（§5.1 修訂）。
+    reply_text: Optional[str] = None
     error_code: Optional[str] = None
     # 以下只有 status == "route_ready" 時才有值。
     disclaimer: Optional[str] = None
-    selected_route_id: Optional[str] = None
-    routes: Optional[list[RouteOut]] = None
+    route: Optional[RouteOut] = None
     dynamic_hazards_considered: Optional[list[DynamicHazardOut]] = None
     google_maps_url: Optional[str] = None
+
+
+# ---------- POST /api/chat/clear ----------
+
+
+class ClearContextRequest(BaseModel):
+    client_id: str = Field(min_length=1)
+
+
+class ClearContextResponse(BaseModel):
+    status: str = "ok"
 
 
 # ---------- §6.3 POST /api/route/calculate ----------
@@ -124,13 +121,12 @@ class RouteCalculateRequest(BaseModel):
 
 
 class RouteCalculateResponse(BaseModel):
-    """成功時是 §6.2 的 routes 部分；業務失敗時依 §6.5 仍是 HTTP 200 + status error。"""
+    """成功時是 §6.2 的 route 部分；業務失敗時依 §6.5 仍是 HTTP 200 + status error。"""
 
     status: str
     error_code: Optional[str] = None
     message: Optional[str] = None
-    selected_route_id: Optional[str] = None
-    routes: Optional[list[RouteOut]] = None
+    route: Optional[RouteOut] = None
     dynamic_hazards_considered: Optional[list[DynamicHazardOut]] = None
     google_maps_url: Optional[str] = None
     disclaimer: Optional[str] = None
@@ -143,16 +139,17 @@ def metrics_to_out(metrics: RouteMetrics) -> RouteMetricsOut:
     return RouteMetricsOut(**vars(metrics))
 
 
+def warning_to_out(warning: RouteWarning) -> RouteWarningOut:
+    return RouteWarningOut(code=warning.code, category=warning.category, summary=warning.summary)
+
+
 def route_to_out(route: Route) -> RouteOut:
     return RouteOut(
-        id=route.id,
-        label=route.label,
         path_coordinates=[[p.lat, p.lng] for p in route.path_coordinates],
         alpha_used=route.alpha_used,
         confidence=route.confidence.value,
         metrics=metrics_to_out(route.metrics),
-        reasons=route.reasons,
-        warnings=route.warnings,
+        warnings=[warning_to_out(w) for w in route.warnings],
     )
 
 
@@ -166,11 +163,8 @@ def hazard_to_out(hazard: DynamicHazard) -> DynamicHazardOut:
     )
 
 
-def route_result_to_out(result: RouteResult) -> RouteResultOut:
-    return RouteResultOut(
-        selected_route_id=result.selected_route_id,
-        routes=[route_to_out(r) for r in result.routes],
-        dynamic_hazards_considered=[hazard_to_out(h) for h in result.dynamic_hazards_considered],
-        google_maps_url=result.google_maps_url,
-        disclaimer=result.disclaimer,
-    )
+def selected_route_to_out(result: RouteResult) -> RouteOut:
+    """§4/§6.2 修訂：引擎內部仍算兩條路線（供 detour 對照與 §7 URL 簡化用），
+    但 API 只對外回傳前端安全參數（priority_alpha）對應的那一條。"""
+    selected = next(r for r in result.routes if r.id == result.selected_route_id)
+    return route_to_out(selected)
