@@ -14,7 +14,7 @@ Calling 處理常式唯一需要依賴的介面；Dev B 開發階段可先用假
 import uuid
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Sequence
+from typing import Optional, Protocol, Sequence
 
 from app.config import DEFAULT_ALPHA, DISCLAIMER, FALLBACK_DYNAMIC_CATEGORY, WALK_SPEED_MPS
 from app.data.schema import CategoryConfig, PointRecord
@@ -23,7 +23,6 @@ from app.engine.graph import RoadGraph, get_road_graph
 from app.engine.metrics import build_metrics, build_reasons, decide_confidence
 from app.engine.pathfinding import PathComputation, compute_path
 from app.engine.safety import EdgeSafetyIndex, build_scoring_profile, filter_active_points
-from app.geocoding.nominatim import geocode_with_nominatim
 from app.maps.url_builder import build_google_maps_url
 from interfaces import (
     DynamicHazard,
@@ -34,26 +33,48 @@ from interfaces import (
     RouteResult,
 )
 
+
+class Geocoder(Protocol):
+    async def geocode(
+        self,
+        place_description: str,
+        bias: Optional[LatLng] = None,
+    ) -> Optional[LatLng]:
+        """文字地點轉座標（§9.1）；查無結果回傳 None。"""
+
 _FALLBACK_TTL_HOURS = 3.0
 _SAFEST_ROUTE_ID = "safest"
 _FASTEST_ROUTE_ID = "fastest"
 
 
 class LocalDataRouteEngine(RouteEngine):
-    def __init__(self, data_store: Optional[DataStore] = None, graph: Optional[RoadGraph] = None):
+    def __init__(
+        self,
+        data_store: Optional[DataStore] = None,
+        graph: Optional[RoadGraph] = None,
+        geocoder: Optional[Geocoder] = None,
+    ):
         self._data_store = data_store or get_data_store()
         self._graph = graph or get_road_graph()
         self._static_points = filter_active_points(self._data_store.static_points)
         self._profile = build_scoring_profile(self._data_store.categories, self._static_points)
         # 靜態分數只在這裡算一次，之後每次請求只疊加動態點位（§4.1）。
         self._index = EdgeSafetyIndex(self._graph, self._static_points, self._profile)
+        self._geocoder = geocoder
+
+    def set_geocoder(self, geocoder: Geocoder) -> None:
+        """geocoder 依賴 Gemini client，需在對話層 wiring 完成後才能設定
+        （app/chat/dependencies.py），與這個引擎本身的建構分開兩步驟。"""
+        self._geocoder = geocoder
 
     async def geocode(
         self,
         place_description: str,
         bias: Optional[LatLng] = None,
     ) -> Optional[LatLng]:
-        return await geocode_with_nominatim(place_description, bias=bias)
+        if self._geocoder is None:
+            raise RuntimeError("LocalDataRouteEngine.geocode: geocoder 尚未設定")
+        return await self._geocoder.geocode(place_description, bias=bias)
 
     async def calculate_route(
         self,

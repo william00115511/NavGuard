@@ -527,14 +527,18 @@ https://www.google.com/maps/dir/?api=1
 
 ## 9. 未定案事項
 
-### 9.1 Geocoding 服務（阻塞 Dev A 與 Dev B）
+### 9.1 Geocoding 服務（已定案）
 
-使用者輸入與 Gemini 回報的地點都是文字，引擎需要座標，中間需 Geocoding：
+使用者輸入與 Gemini 回報的地點都是文字，引擎需要座標，中間需 Geocoding。
 
-- **預算允許**：Google Geocoding API（與 Google Maps 交接一致性最好）
-- **免費**：OpenStreetMap Nominatim（有頻率限制，1 req/s，需設 User-Agent；動態點位可能一次要查多筆，要注意排隊）
+**採用 Gemini + Google Search Grounding**（`app/geocoding/gemini_geocoder.py`），取代原本評估的 Nominatim／Google Geocoding API：
 
-無論選哪個，都要對結果做**覆蓋範圍檢查**：解析出的座標若不在路網範圍內，直接回 `OUT_OF_COVERAGE`。
+- Gemini 用即時搜尋結果理解地點語意（連鎖店分館、口語地標、模糊地址），比純字串比對式的 Geocoding API 更能處理歧義。
+- 「挑最近的候選」維持 deterministic：Gemini 只負責回傳語意上可能相符的候選座標清單，實際離 `bias`（使用者目前位置）最近的一筆由後端用 haversine 公式計算決定，不讓 LLM 自己做數值判斷（呼應原則 2 的精神）。
+- 候選座標另有一層粗略的台灣經緯度範圍檢查，擋掉明顯搜尋錯國家的幻覺結果。
+- 查無結果或請求失敗一律回傳 `None`，由呼叫方轉成 `GEOCODING_FAILED`（§6.5），與原本的合約一致。
+
+無論哪種實作，都要對結果做**覆蓋範圍檢查**：解析出的座標若不在路網範圍內，直接回 `OUT_OF_COVERAGE`。
 
 ### 9.2 展示範圍（阻塞所有人）
 
