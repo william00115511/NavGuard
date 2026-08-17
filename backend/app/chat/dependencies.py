@@ -35,26 +35,23 @@ def get_chat_service() -> ChatService:
                     "CHAT_SERVICE_BACKEND=gemini requires MAPS_API_KEY (or GEOCODING_API_KEY / ROUTES_API_KEY)"
                 )
 
-            api_key = settings.gemini_api_key.get_secret_value()
             credentials_path = settings.google_application_credentials
-            if api_key and api_key != "YOUR_API_KEY_HERE":
-                client = genai.Client(api_key=api_key)
-            elif credentials_path.is_file():
-                credentials = service_account.Credentials.from_service_account_file(
-                    str(credentials_path),
-                    scopes=["https://www.googleapis.com/auth/cloud-platform"],
-                )
-                client = genai.Client(
-                    vertexai=True,
-                    project=credentials.project_id,
-                    location=settings.vertex_location,
-                    credentials=credentials,
-                )
-            else:
+            if not credentials_path.is_file():
                 raise RuntimeError(
-                    "CHAT_SERVICE_BACKEND=gemini requires GEMINI_API_KEY or a Vertex AI service "
-                    f"account JSON key at {credentials_path}"
+                    "CHAT_SERVICE_BACKEND=gemini requires a Vertex AI service account JSON key "
+                    f"at {credentials_path}"
                 )
+
+            credentials = service_account.Credentials.from_service_account_file(
+                str(credentials_path),
+                scopes=["https://www.googleapis.com/auth/cloud-platform"],
+            )
+            client = genai.Client(
+                vertexai=True,
+                project=credentials.project_id,
+                location=settings.vertex_location,
+                credentials=credentials,
+            )
 
             gateway = GoogleGenAIGateway(
                 client=client,

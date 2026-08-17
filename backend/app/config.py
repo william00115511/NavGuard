@@ -52,7 +52,6 @@ class Settings(BaseSettings):
     )
 
     chat_service_backend: str = "fake"
-    gemini_api_key: SecretStr = SecretStr("")
     gemini_model: str = "gemini-3.5-flash-lite"
     gemini_fallback_models: list[str] = [
         "gemini-3.1-flash-lite",
