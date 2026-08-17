@@ -1,0 +1,4 @@
+## Copy this file to android/local.properties and replace the placeholder.
+## This is a restricted Android Maps SDK key, never a server/Gemini key.
+sdk.dir=/path/to/Android/sdk
+MAPS_API_KEY=AIzaSy_REPLACE_WITH_RESTRICTED_ANDROID_MAPS_KEY
