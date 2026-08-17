@@ -60,5 +60,9 @@ class Settings(BaseSettings):
     gemini_api_key: SecretStr = SecretStr("")
     gemini_model: str = "gemini-2.5-flash"
     geocoding_api_key: SecretStr = SecretStr("")
+    # 只給 backend/evaluation/ 離線驗證子專案用（呼叫 Google Routes API 拿
+    # Google 實際會導航的路線來跟我們自己的路線比對），正式 API 不依賴這把 key。
+    # 可以跟 geocoding_api_key 共用同一把，但該 GCP 專案要另外啟用 Routes API。
+    routes_api_key: SecretStr = SecretStr("")
     session_ttl_seconds: float = Field(default=30 * 60, gt=0)
     max_history_messages: int = Field(default=20, ge=4)
