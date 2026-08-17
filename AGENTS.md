@@ -33,25 +33,26 @@
 ┌──────────────────────────────────────────────┐
 │ Flutter App                                  │
 │ - google_maps_flutter 畫 polyline 與 marker  │
-│ - geolocator 取目前位置作為預設起點          │ ← Frontend Dev
+│ - geolocator 取目前位置作為預設起點          │
 │ - 對話框 UI（訊息氣泡 + 路線摘要卡片）       │
+│ - 安全／速度優先滑桿（priority_alpha）       │
 └──────────────────┬───────────────────────────┘
                    │ HTTPS  POST /api/session, /api/chat
                    ▼
 ┌──────────────────────────────────────────────┐
 │ FastAPI Backend                              │
 │ ┌──────────────────────────────────────────┐ │
-│ │ API Router：路由、session、錯誤處理      │ │  ← Dev A
+│ │ API Router：路由、session、錯誤處理      │ │
 │ └──────────────────┬───────────────────────┘ │
 │                    │ ChatService (ABC)       │
 │ ┌──────────────────▼───────────────────────┐ │
-│ │ 對話協調層：Gemini Function Calling      │ │  ← Dev B
-│ │ - slot filling                           │ │
+│ │ 對話協調層：Gemini Function Calling      │ │
+│ │ - slot filling（origin / destination）   │ │
 │ │ - 即時新聞搜尋 → 動態點位回報            │ │
 │ └──────────────────┬───────────────────────┘ │
 │                    │ RouteEngine (ABC)       │
 │ ┌──────────────────▼───────────────────────┐ │
-│ │ 路徑計算引擎：建圖 → 加權 → A*           │ │  ← Dev A
+│ │ 路徑計算引擎：建圖 → 加權 → A*           │ │
 │ │ + Google Maps URL 產生器                 │ │
 │ └──────────────────┬───────────────────────┘ │
 └────────────────────┼─────────────────────────┘
@@ -243,9 +244,8 @@ h(n) = haversine(n, goal) × (1 - α)
 |---|---|---|
 | `origin` | 是（但可由 GPS 自動帶入） | 起點文字描述或座標 |
 | `destination` | 是 | 終點文字描述 |
-| `priority_alpha` | **否** | 0~1 安全優先權重，未表態時用預設 0.6 |
 
-⚠️ **`priority_alpha` 不列為必填 slot。** 強迫使用者回答「你希望多安全」會產生尷尬的追問（「那你大概想走多快？」），而且使用者通常答不出來。正確做法：origin 與 destination 齊全就直接算，α 用預設值；若使用者訊息中含有「盡量安全」「趕時間」等語意，Gemini 才調整 α。路線回傳後使用者可再說「再安全一點」，重算即可。
+⚠️ **`priority_alpha`（安全優先權重）不是 slot filling 的一部分，由前端直接提供，不經 Gemini 判斷。** 前端用 UI（例如滑桿）讓使用者自己調整安全 vs 速度的權重，每次 `/api/chat` 請求都帶上這個數值（§6.2），未調整時預設 0.6；後端觸發 `calculate_safe_route`（§5.3）時直接代入這個值。原因：強迫使用者在對話中回答「你希望多安全」會產生尷尬的追問（「那你大概想走多快？」），使用者通常也答不出來；讓 Gemini 從語氣猜測數值更是不精確、不可重現。改由前端 UI 提供，使用者可隨時滑動重算，也更符合「安全相關數值一律 deterministic」的精神（原則 2）。
 
 ### 5.2 執行順序
 
@@ -262,13 +262,12 @@ h(n) = haversine(n, goal) × (1 - α)
 ```json
 {
   "name": "calculate_safe_route",
-  "description": "根據起點、終點與安全優先程度，計算一條夜間步行安全路徑，並同時回傳最快路線作為對照",
+  "description": "根據起點與終點，計算一條夜間步行安全路徑，並同時回傳最快路線作為對照。安全優先權重（priority_alpha）由前端直接提供，不是這個工具的參數，也不由 Gemini 決定（見 §5.1）",
   "parameters": {
     "type": "object",
     "properties": {
       "origin": {"type": "string", "description": "起點地址或地標描述；使用者未指定時填 \"current_location\""},
-      "destination": {"type": "string", "description": "終點地址或地標描述"},
-      "priority_alpha": {"type": "number", "description": "0到1之間，0代表完全速度優先，1代表完全安全優先。使用者未明確表態時省略此參數"}
+      "destination": {"type": "string", "description": "終點地址或地標描述"}
     },
     "required": ["origin", "destination"]
   }
@@ -349,9 +348,11 @@ Request：
 {
   "session_id": "sess_8f2a1c",
   "message": "我想從台北車站走到公館夜市，希望盡量安全",
-  "user_location": {"lat": 25.0330, "lng": 121.5654}
+  "user_location": {"lat": 25.0330, "lng": 121.5654},
+  "priority_alpha": 0.6
 }
 ```
+`priority_alpha` 由前端滑桿等 UI 直接提供（§5.1），選填，未帶時後端用預設值 0.6；這個值不經 Gemini，後端觸發 `calculate_safe_route` 時直接代入。
 
 Response 依進度分三種 `status`：
 
@@ -506,44 +507,26 @@ https://www.google.com/maps/dir/?api=1
 
 ---
 
-## 8. 分工與解耦介面
+## 8. 未定案事項
 
-### 8.1 分工
+### 8.1 地點解析：Gemini 解析語意 + Google Places API 模糊搜尋（已定案）
 
-| | 負責範圍 |
-|---|---|
-| **Dev A** | `/api/session`、`/api/chat`、`/api/route/calculate`、`/healthz` 等 HTTP 路由、session 管理、錯誤處理（§6）＋ 路徑計算引擎（§4）＋ 本地資料讀取與轉換腳本（§3）＋ Google Maps URL 產生（§7） |
-| **Dev B** | 與 Gemini API 對話、slot filling（§5.1）、`calculate_safe_route` 與 `report_dynamic_hazard` 兩個工具的觸發與後處理邏輯（§5.3、§5.4）、system instruction 調校 |
+使用者輸入是自由文字，Gemini 在上游（`gemini_chat_service.py` 的 function calling）先把它解析成明確的地點描述（`place_description`），但引擎需要的是座標，且模糊地點（連鎖店分館、口語地標）不能用純字串比對式的地址 Geocoding API 處理——這件事之前試過 Nominatim，準確度不夠；也試過完全交給 Gemini + Google Search Grounding 自己生座標，但 LLM 生成的數值不夠穩定可信賴。
 
-兩人只透過兩個 `interfaces.py` 介面溝通，任一方不需等對方寫完就能先用假實作（mock）開發測試。
+現在改用 **Google Places API（New）的 Text Search**（`app/geocoding/google_places_geocoder.py`）：
 
-### 8.3 平行開發方式
+- 把 `place_description` 丟給 Places API 的 `places:searchText`，交由專門的地點搜尋引擎做模糊比對，回傳一批候選地點（例如「新光三越」會回傳多間分店）。
+- 有 `bias`（使用者目前位置）時會帶 `locationBias`（軟性偏向、非硬性篩選）避免分店數超過單頁上限（`pageSize=20`）的連鎖店擠不進候選清單。
+- 「挑最近的候選」維持 deterministic：候選清單中實際離 `bias` 最近的一筆由後端用 haversine 公式**靜態計算**決定作為最終地點，不讓任何 LLM 或第三方 API 的排序結果直接當答案（呼應原則 2：安全與數值相關的判斷一律由後端 deterministic 程式碼計算）。
+- 候選座標另有一層粗略的台灣經緯度範圍檢查，擋掉明顯搜尋錯國家的同名地點。
+- 查無結果或請求失敗一律回傳 `None`，由呼叫方轉成 `GEOCODING_FAILED`（§6.5）。
 
-- **Dev A** 先寫 `FakeChatService(ChatService)`（固定回傳一則 `route_ready` 假資料），把 API Router、session 儲存、錯誤處理串起來測試，不等 Dev B。
-- **Dev B** 先寫 `FakeRouteEngine(RouteEngine)`（固定回傳假座標、假 metrics、假 URL），專心把 Gemini 對話流程、slot filling、兩個工具的觸發邏輯調通，不等 Dev A 的演算法。
-- 兩邊做好後，把各自真實實作（`GeminiChatService`、`LocalGraphRouteEngine`）替換掉假物件即可整合，不需改動對方程式碼——因為溝通型別已先講好。
+結果一律做**覆蓋範圍檢查**：解析出的座標若不在路網範圍內，直接回 `OUT_OF_COVERAGE`。
 
----
-
-## 9. 未定案事項
-
-### 9.1 Geocoding 服務（已定案）
-
-使用者輸入與 Gemini 回報的地點都是文字，引擎需要座標，中間需 Geocoding。
-
-**採用 Gemini + Google Search Grounding**（`app/geocoding/gemini_geocoder.py`），取代原本評估的 Nominatim／Google Geocoding API：
-
-- Gemini 用即時搜尋結果理解地點語意（連鎖店分館、口語地標、模糊地址），比純字串比對式的 Geocoding API 更能處理歧義。
-- 「挑最近的候選」維持 deterministic：Gemini 只負責回傳語意上可能相符的候選座標清單，實際離 `bias`（使用者目前位置）最近的一筆由後端用 haversine 公式計算決定，不讓 LLM 自己做數值判斷（呼應原則 2 的精神）。
-- 候選座標另有一層粗略的台灣經緯度範圍檢查，擋掉明顯搜尋錯國家的幻覺結果。
-- 查無結果或請求失敗一律回傳 `None`，由呼叫方轉成 `GEOCODING_FAILED`（§6.5），與原本的合約一致。
-
-無論哪種實作，都要對結果做**覆蓋範圍檢查**：解析出的座標若不在路網範圍內，直接回 `OUT_OF_COVERAGE`。
-
-### 9.2 展示範圍（阻塞所有人）
+### 8.2 展示範圍（阻塞所有人）
 
 必須先確定是哪個城市／行政區、多大範圍。這決定 osmnx 抓多大的圖、要下載哪些政府資料集、以及路燈資料是否存在。
 
-### 9.3 路燈資料可得性
+### 8.3 路燈資料可得性
 
 若選定城市不開放路燈資料，`street_light` 類別留空，`lit_coverage_ratio` 回 `null`，以 `help_point` 密度作為照明 proxy，並在每次回覆顯示 warning。**不得默默把沒資料當成沒風險。**
