@@ -1,0 +1,3 @@
+// Copy this file to ios/Flutter/Local.xcconfig and replace the placeholder.
+// This is a restricted iOS Maps SDK key, never a server/Gemini key.
+GOOGLE_MAPS_API_KEY = AIzaSy_REPLACE_WITH_RESTRICTED_IOS_MAPS_KEY
