@@ -7,6 +7,7 @@ from datetime import datetime
 from enum import Enum
 from time import monotonic
 from typing import Any, Callable, Protocol, Sequence
+from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
@@ -20,6 +21,7 @@ from interfaces import (
     OutOfCoverageError,
     RouteEngine,
     RouteResult,
+    SessionNotFoundError,
 )
 
 
@@ -87,29 +89,29 @@ class GeminiChatService(ChatService):
         *,
         session_ttl_seconds: float = 30 * 60,
         max_history_messages: int = 20,
-        client_count: int = 50,
         clock: Callable[[], float] = monotonic,
     ) -> None:
         if session_ttl_seconds <= 0:
             raise ValueError("session_ttl_seconds must be positive")
         if max_history_messages < 4:
             raise ValueError("max_history_messages must be at least 4")
-        if client_count < 1:
-            raise ValueError("client_count must be at least 1")
         self._gateway = gateway
         self._route_engine = route_engine
         self._session_ttl_seconds = session_ttl_seconds
         self._max_history_messages = max_history_messages
         self._clock = clock
-        # client_id 固定是 "1".."N"（純數字字串，見 AGENTS.md §6.1），所以直接
-        # 一次配好 N 個 session，不需要 LRU 之類的容量逐出機制。
-        self._sessions: dict[str, _SessionState] = {
-            str(i): _SessionState(last_access_at=self._clock())
-            for i in range(1, client_count + 1)
-        }
+        self._sessions: dict[str, _SessionState] = {}
 
-    async def clear_context(self, client_id: str) -> None:
-        session = self._sessions.get(client_id)
+    async def create_session(self, user_location: LatLng | None = None) -> str:
+        session_id = f"sess_{uuid4().hex[:12]}"
+        self._sessions[session_id] = _SessionState(
+            user_location=user_location,
+            last_access_at=self._clock(),
+        )
+        return session_id
+
+    async def clear_context(self, session_id: str) -> None:
+        session = self._sessions.get(session_id)
         if session is None:
             return
         session.history.clear()
@@ -118,15 +120,18 @@ class GeminiChatService(ChatService):
 
     async def handle_message(
         self,
-        client_id: str,
+        session_id: str,
         message: str,
         user_location: LatLng | None = None,
         priority_alpha: float | None = None,
     ) -> ChatResult:
+        session = self._sessions.get(session_id)
+        if session is None or self._is_expired(session):
+            self._sessions.pop(session_id, None)
+            raise SessionNotFoundError(f"session_id 不存在或已過期: {session_id}")
         if not message.strip():
             return self._error("INVALID_MESSAGE", "請輸入路線需求。")
 
-        session = self._get_session(client_id)
         async with session.lock:
             if user_location is not None:
                 session.user_location = user_location
@@ -136,18 +141,13 @@ class GeminiChatService(ChatService):
             )
             return await self._handle_session_message(session, message.strip(), resolved_alpha)
 
-    def _get_session(self, client_id: str) -> _SessionState:
-        session = self._sessions.get(client_id)
-        if session is None:
-            # 理論上不會發生（client_id 固定是 "1".."N"，已在建構時配好），
-            # 保底自動建立，呼應「第一次出現的 client_id 直接可用」的既有
-            # 約定（AGENTS.md §6.1）。
-            session = _SessionState(last_access_at=self._clock())
-            self._sessions[client_id] = session
-        elif self._is_expired(session):
-            session.history.clear()
-            session.user_location = None
-        return session
+    async def reap_expired_sessions(self) -> int:
+        """§6.6：定時回收，由背景排程呼叫，與 handle_message 的存取觸發式
+        過期檢查互補——就算沒有任何請求進來，閒置的 session 也會被定期清掉。"""
+        expired = [sid for sid, session in self._sessions.items() if self._is_expired(session)]
+        for session_id in expired:
+            del self._sessions[session_id]
+        return len(expired)
 
     async def _handle_session_message(
         self,

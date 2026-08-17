@@ -20,13 +20,24 @@ class LatLngIn(BaseModel):
         return LatLng(lat=self.lat, lng=self.lng)
 
 
+# ---------- §6.1 POST /api/session ----------
+
+
+class CreateSessionRequest(BaseModel):
+    user_location: Optional[LatLngIn] = None
+
+
+class CreateSessionResponse(BaseModel):
+    session_id: str
+    created_at: datetime
+
+
 # ---------- §6.2 POST /api/chat ----------
 
 
 class ChatRequest(BaseModel):
-    # 固定的裝置編號，"1".."N"（N 台展示裝置，見 AGENTS.md §6.1）；不需要
-    # 先呼叫任何「建立 session」端點交換 ID（§6.6 修訂）。
-    client_id: str = Field(min_length=1)
+    # 後端配發的 session_id，須先呼叫 POST /api/session 換到（AGENTS.md §6.1）。
+    session_id: str = Field(min_length=1)
     message: str
     user_location: Optional[LatLngIn] = None
     # 安全優先權重，由前端 UI（例如滑桿）提供；不經 Gemini 判斷（AGENTS.md §5.1）。
@@ -96,7 +107,7 @@ class ChatResponse(BaseModel):
 
 
 class ClearContextRequest(BaseModel):
-    client_id: str = Field(min_length=1)
+    session_id: str = Field(min_length=1)
 
 
 class ClearContextResponse(BaseModel):

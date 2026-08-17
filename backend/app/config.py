@@ -66,10 +66,10 @@ class Settings(BaseSettings):
     # （backend/evaluation/ 離線驗證子專案用）；該 GCP 專案需分別啟用這兩個 API。
     maps_api_key: SecretStr = SecretStr("")
     session_ttl_seconds: float = Field(default=30 * 60, gt=0)
+    # §6.6：背景排程多久掃一次過期 session 並回收，與 session_ttl_seconds 互補——
+    # 就算沒有請求觸發存取式過期檢查，閒置 session 也會被定期清掉。
+    session_reap_interval_seconds: float = Field(default=5 * 60, gt=0)
     max_history_messages: int = Field(default=20, ge=4)
-    # §6.1：client_id 固定就是 "1".."N"（前端一共部署 N 台裝置），不是任意產生的
-    # UUID，所以後端直接一次配好 N 個 session，不需要 LRU 之類的容量逐出機制。
-    client_count: int = Field(default=50, ge=1)
 
     @field_validator("google_application_credentials")
     @classmethod

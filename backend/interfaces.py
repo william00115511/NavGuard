@@ -137,6 +137,13 @@ class NoRouteFoundError(Exception):
     """起訖點都在覆蓋範圍內，但在路網圖上不連通。"""
 
 
+# 這是系統層級錯誤（§6.5），不是業務邏輯失敗：session_id 從未存在，或已經
+# 過期／被定時回收清掉。前端收到後應重新呼叫 create_session 換一個新的
+# session_id，不是重試同一個請求。
+class SessionNotFoundError(Exception):
+    """session_id 不存在或已過期（§6.1）。"""
+
+
 # ---------- ABC #1：API Router ⇄ Gemini 邊界 ----------
 # 由 Dev B 實作；Dev A 的路由層只依賴這個介面，不需知道 Gemini 細節。
 
@@ -144,9 +151,17 @@ class NoRouteFoundError(Exception):
 class ChatService(ABC):
 
     @abstractmethod
+    async def create_session(self, user_location: Optional[LatLng] = None) -> str:
+        """建立一個新的對話 session，回傳後端配發的 session_id（AGENTS.md §6.1）。
+
+        前端必須先呼叫這個端點換到 session_id，才能開始 /api/chat 對話；
+        session_id 不是前端自行產生的。"""
+        raise NotImplementedError
+
+    @abstractmethod
     async def handle_message(
         self,
-        client_id: str,
+        session_id: str,
         message: str,
         user_location: Optional[LatLng] = None,
         priority_alpha: Optional[float] = None,
@@ -154,22 +169,29 @@ class ChatService(ABC):
         """處理一則使用者訊息（內部含 Gemini 對話與 Function Calling），
         回傳 collecting_info / route_ready / error 三種結果之一。
 
-        client_id 由前端自行產生並持久化（例如裝置安裝時建立一次的 UUID），
-        不需要先呼叫任何「建立 session」端點交換 ID。第一次見到某個
-        client_id 時自動建立新的對話狀態；同一個 client_id 之後的呼叫沿用
-        同一份歷史。實作內部固定只保留最多 N 個活躍 session（依配置，見
-        AGENTS.md §6.6），超過時逐出最久未使用的一個，所以這裡永遠不會因為
-        「session 不存在」而失敗。
+        session_id 必須是先前 create_session() 配發過的值。不存在或已經
+        過期（超過 TTL 未使用，或已被定時回收）時 raise
+        SessionNotFoundError，由呼叫方轉成系統層級 404（§6.5）；前端收到後
+        應重新呼叫 create_session 換一個新的 session_id，不是重試原請求。
 
         priority_alpha（安全優先權重）由前端 UI 直接提供，不經 Gemini 判斷；
         未帶時使用預設值（見實作，AGENTS.md §5.1）。"""
         raise NotImplementedError
 
     @abstractmethod
-    async def clear_context(self, client_id: str) -> None:
-        """清除這個 client_id 的對話歷史，下一則訊息視為全新對話的開始。
+    async def clear_context(self, session_id: str) -> None:
+        """清除這個 session_id 的對話歷史，下一則訊息視為全新對話的開始。
 
-        對不存在的 client_id 呼叫是安全的（no-op），不視為錯誤。"""
+        對不存在的 session_id 呼叫是安全的（no-op），不視為錯誤——這是使用者
+        主動要求的清空動作，不需要 session 已存在才能執行。"""
+        raise NotImplementedError
+
+    @abstractmethod
+    async def reap_expired_sessions(self) -> int:
+        """定時回收已過期（超過 TTL 未使用）的 session，釋放記憶體（§6.6）。
+
+        由背景排程呼叫，不是使用者觸發的動作；回傳這次實際回收掉的 session
+        數量，供 log／監控使用。"""
         raise NotImplementedError
 
 

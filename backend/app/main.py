@@ -1,18 +1,49 @@
+import asyncio
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+from app.chat.dependencies import get_chat_service
+from app.config import Settings
 from app.data.store import get_data_store
 from app.engine.graph import get_road_graph
 from app.errors import ApiError
-from app.routers import chat, route
+from app.routers import chat, route, session
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Safeway Backend", version="0.1.0")
 
+async def _reap_sessions_periodically(interval_seconds: float) -> None:
+    """§6.6：背景排程定時回收過期 session，與存取觸發式的過期檢查互補。"""
+    chat_service = get_chat_service()
+    while True:
+        await asyncio.sleep(interval_seconds)
+        try:
+            reaped = await chat_service.reap_expired_sessions()
+            if reaped:
+                logger.info("reaped %d expired session(s)", reaped)
+        except Exception:
+            logger.exception("session reap failed")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    settings = Settings()
+    reap_task = asyncio.create_task(
+        _reap_sessions_periodically(settings.session_reap_interval_seconds)
+    )
+    try:
+        yield
+    finally:
+        reap_task.cancel()
+
+
+app = FastAPI(title="Safeway Backend", version="0.1.0", lifespan=lifespan)
+
+app.include_router(session.router)
 app.include_router(chat.router)
 app.include_router(route.router)
 
