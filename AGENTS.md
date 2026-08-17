@@ -93,6 +93,7 @@
   "source_type": "static_local",
   "expires_at": null,
   "confidence": 1.0,
+  "place_id": null,
   "meta": {}
 }
 ```
@@ -100,6 +101,7 @@
 - `source_type`：`static_local`（本地離線資料）或 `dynamic_realtime`（3.4 節 Gemini 即時搜尋加入）
 - `expires_at`：靜態固定 `null`（永久）；動態需 ISO 時間字串，過期後計算自動忽略
 - `confidence`：靜態政府資料固定 1.0；動態新聞來源可 < 1.0（如 0.6），讓公式知道可信度較低而自動打折
+- `place_id`：來自 Google Places API 的資料才有值（目前是 `police_station`、`convenience_store`），其餘類別固定 `null`
 
 不同類別各自一檔案（`street_light.json`、`police_station.json`、`danger_zone.json`…），啟動時掃描整個目錄自動載入符合 schema 的檔案。**新增點位類型只需新增資料檔 + 在 `categories.json` 登記一筆設定，完全不用改程式邏輯。**
 
@@ -111,7 +113,7 @@
 {
   "street_light":   { "effect": "positive", "weight": 1.0, "radius_m": 30,  "kind": "static" },
   "police_station": { "effect": "positive", "weight": 3.0, "radius_m": 150, "kind": "static" },
-  "help_point":     { "effect": "positive", "weight": 2.0, "radius_m": 80,  "kind": "static" },
+  "convenience_store": { "effect": "positive", "weight": 2.0, "radius_m": 80,  "kind": "static" },
   "danger_zone":    { "effect": "negative", "weight": 2.0, "radius_m": 80,  "kind": "static" },
   "fire_incident":  { "effect": "negative", "weight": 4.0, "radius_m": 200, "kind": "dynamic", "default_ttl_hours": 6 },
   "crowd_event":    { "effect": "positive", "weight": 1.5, "radius_m": 100, "kind": "dynamic", "default_ttl_hours": 12 },
@@ -121,7 +123,7 @@
 
 公式不認識具體類別名稱，只認識「正面／負面、影響半徑、權重」。未來加任何新類別，只要加一行設定 + 對應資料檔即可。
 
-`help_point`：夜間仍營業、可明確求助的地點（24h 超商、藥局、飯店大廳）。若城市不開放路燈資料，此類別是主要的照明 proxy。
+`convenience_store`：目前僅涵蓋 24 小時營業的超商（Google Places API，見 `data_sources.md`）；藥局、飯店大廳等其他可求助據點類型未來如需要再擴充。若城市不開放路燈資料，此類別是主要的照明 proxy。
 
 `dynamic_unknown`：Gemini 回報了 `categories.json` 中不存在的類別時的 fallback（見 5.4）。
 
@@ -226,7 +228,7 @@ h(n) = haversine(n, goal) × (1 - α)
 | `lit_coverage_ratio` | 採樣點中 30m 內有路燈資料的比例（無路燈資料時為 `null`） |
 | `help_points` | 沿線 50m 內可求助據點的**具體點位列表**（`id`/`lat`/`lng`/`name`），該類別無資料時為 `null`（§6.2 修訂） |
 | `police_stations` | 沿線 150m 內警察局的**具體點位列表**，格式同上，該類別無資料時為 `null`（§6.2 修訂） |
-| `passed_landmarks` | 其餘類別（路燈、危險區域等）經過數量的 dict；`police_station`／`help_point` 已用上面兩個具體點位列表取代，不再重複列在這裡計數 |
+| `passed_landmarks` | 其餘類別（路燈、危險區域等）經過數量的 dict；`police_station`／`convenience_store` 已用上面兩個具體點位列表取代，不再重複列在這裡計數 |
 | `detour_vs_fastest_min` | 相較 α=0 路線多花的分鐘數 |
 | `data_coverage` | 本次實際有資料的類別清單 |
 
@@ -415,7 +417,7 @@ Response 依進度分三種 `status`：
       ],
       "passed_landmarks": {"street_light": 14},
       "detour_vs_fastest_min": 4,
-      "data_coverage": ["street_light", "police_station", "help_point"]
+      "data_coverage": ["street_light", "police_station", "convenience_store"]
     },
     "warnings": [
       { "code": "missing_data_category", "category": "danger_zone" }
@@ -580,4 +582,4 @@ https://www.google.com/maps/dir/?api=1
 
 ### 8.3 路燈資料可得性
 
-若選定城市不開放路燈資料，`street_light` 類別留空，`lit_coverage_ratio` 回 `null`，以 `help_point` 密度作為照明 proxy，並在每次回覆顯示 warning。**不得默默把沒資料當成沒風險。**
+若選定城市不開放路燈資料，`street_light` 類別留空，`lit_coverage_ratio` 回 `null`，以 `convenience_store` 密度作為照明 proxy，並在每次回覆顯示 warning。**不得默默把沒資料當成沒風險。**

@@ -46,6 +46,7 @@ def _parse_point(raw: dict, source_file: str) -> Optional[PointRecord]:
         source_type=raw["source_type"],
         expires_at=raw.get("expires_at"),
         confidence=raw.get("confidence", 1.0),
+        place_id=raw.get("place_id"),
         meta=raw.get("meta", {}),
     )
 

@@ -1,7 +1,7 @@
 {
   "street_light":    { "label": "路燈",       "effect": "positive", "weight": 1.0, "radius_m": 30,  "kind": "static" },
   "police_station":  { "label": "警察局",     "effect": "positive", "weight": 3.0, "radius_m": 150, "kind": "static" },
-  "help_point":      { "label": "可求助據點", "effect": "positive", "weight": 2.0, "radius_m": 80,  "kind": "static" },
+  "convenience_store": { "label": "超商",     "effect": "positive", "weight": 2.0, "radius_m": 80,  "kind": "static" },
   "danger_zone":        { "label": "風險區域",       "effect": "negative", "weight": 2.0, "radius_m": 80,  "kind": "static" },
   "night_club_hazard":  { "label": "夜店酒吧鬧事區", "effect": "negative", "weight": 2.5, "radius_m": 50,  "kind": "static" },
   "underpass_hazard":   { "label": "封閉地下道死角", "effect": "negative", "weight": 3.0, "radius_m": 60,  "kind": "static" },

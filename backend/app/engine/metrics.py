@@ -21,7 +21,7 @@ from app.engine.safety import ScoringProfile
 from interfaces import LatLng, NearbyPoint, RouteMetrics
 
 _LIT_CATEGORY = "street_light"
-_HELP_CATEGORY = "help_point"
+_HELP_CATEGORY = "convenience_store"
 _POLICE_CATEGORY = "police_station"
 
 _METERS_PER_DEGREE_LAT = 111_320.0

@@ -1,7 +1,7 @@
 [
   {
     "id": "helppoint_00001",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.028378,
     "lng": 121.568216,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -16,7 +16,7 @@
   },
   {
     "id": "helppoint_00002",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.028434,
     "lng": 121.568829,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -31,7 +31,7 @@
   },
   {
     "id": "helppoint_00003",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.02316,
     "lng": 121.569488,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -46,7 +46,7 @@
   },
   {
     "id": "helppoint_00004",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.021983,
     "lng": 121.568865,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -61,7 +61,7 @@
   },
   {
     "id": "helppoint_00005",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.024863,
     "lng": 121.56923,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -76,7 +76,7 @@
   },
   {
     "id": "helppoint_00006",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.024998,
     "lng": 121.569477,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -91,7 +91,7 @@
   },
   {
     "id": "helppoint_00007",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.024102,
     "lng": 121.570413,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -106,7 +106,7 @@
   },
   {
     "id": "helppoint_00008",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041293,
     "lng": 121.566704,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -121,7 +121,7 @@
   },
   {
     "id": "helppoint_00009",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.025811,
     "lng": 121.566351,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -136,7 +136,7 @@
   },
   {
     "id": "helppoint_00010",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.023993,
     "lng": 121.555652,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -151,7 +151,7 @@
   },
   {
     "id": "helppoint_00011",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.028014,
     "lng": 121.556798,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -166,7 +166,7 @@
   },
   {
     "id": "helppoint_00012",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041798,
     "lng": 121.563748,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -181,7 +181,7 @@
   },
   {
     "id": "helppoint_00013",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040836,
     "lng": 121.562479,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -196,7 +196,7 @@
   },
   {
     "id": "helppoint_00014",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.030935,
     "lng": 121.560266,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -211,7 +211,7 @@
   },
   {
     "id": "helppoint_00015",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.025787,
     "lng": 121.554399,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -226,7 +226,7 @@
   },
   {
     "id": "helppoint_00016",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040402,
     "lng": 121.563199,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -241,7 +241,7 @@
   },
   {
     "id": "helppoint_00017",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.031237,
     "lng": 121.561105,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -256,7 +256,7 @@
   },
   {
     "id": "helppoint_00018",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.031709,
     "lng": 121.566906,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -271,7 +271,7 @@
   },
   {
     "id": "helppoint_00019",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.023356,
     "lng": 121.563347,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -286,7 +286,7 @@
   },
   {
     "id": "helppoint_00020",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.024585,
     "lng": 121.563547,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -301,7 +301,7 @@
   },
   {
     "id": "helppoint_00021",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.025191,
     "lng": 121.571375,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -316,7 +316,7 @@
   },
   {
     "id": "helppoint_00022",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.035823,
     "lng": 121.578565,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -331,7 +331,7 @@
   },
   {
     "id": "helppoint_00023",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.027542,
     "lng": 121.564892,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -346,7 +346,7 @@
   },
   {
     "id": "helppoint_00024",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.027015,
     "lng": 121.563835,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -361,7 +361,7 @@
   },
   {
     "id": "helppoint_00025",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.027147,
     "lng": 121.563723,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -376,7 +376,7 @@
   },
   {
     "id": "helppoint_00026",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.026235,
     "lng": 121.566095,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -391,7 +391,7 @@
   },
   {
     "id": "helppoint_00027",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045495,
     "lng": 121.569003,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -406,7 +406,7 @@
   },
   {
     "id": "helppoint_00028",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043138,
     "lng": 121.565875,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -421,7 +421,7 @@
   },
   {
     "id": "helppoint_00029",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.047305,
     "lng": 121.566503,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -436,7 +436,7 @@
   },
   {
     "id": "helppoint_00030",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.047148,
     "lng": 121.566765,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -451,7 +451,7 @@
   },
   {
     "id": "helppoint_00031",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041286,
     "lng": 121.565227,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -466,7 +466,7 @@
   },
   {
     "id": "helppoint_00032",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.038887,
     "lng": 121.585931,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -481,7 +481,7 @@
   },
   {
     "id": "helppoint_00033",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.038713,
     "lng": 121.585996,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -496,7 +496,7 @@
   },
   {
     "id": "helppoint_00034",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.037709,
     "lng": 121.583325,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -511,7 +511,7 @@
   },
   {
     "id": "helppoint_00035",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.042805,
     "lng": 121.583404,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -526,7 +526,7 @@
   },
   {
     "id": "helppoint_00036",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040629,
     "lng": 121.58507,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -541,7 +541,7 @@
   },
   {
     "id": "helppoint_00037",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.044795,
     "lng": 121.580956,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -556,7 +556,7 @@
   },
   {
     "id": "helppoint_00038",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.02439,
     "lng": 121.553844,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -571,7 +571,7 @@
   },
   {
     "id": "helppoint_00039",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040663,
     "lng": 121.565069,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -586,7 +586,7 @@
   },
   {
     "id": "helppoint_00040",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.026837,
     "lng": 121.568567,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -601,7 +601,7 @@
   },
   {
     "id": "helppoint_00041",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.026178,
     "lng": 121.557384,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -616,7 +616,7 @@
   },
   {
     "id": "helppoint_00042",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.036931,
     "lng": 121.569103,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -631,7 +631,7 @@
   },
   {
     "id": "helppoint_00043",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040111,
     "lng": 121.571834,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -646,7 +646,7 @@
   },
   {
     "id": "helppoint_00044",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.035364,
     "lng": 121.567701,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -661,7 +661,7 @@
   },
   {
     "id": "helppoint_00045",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.037927,
     "lng": 121.574552,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -676,7 +676,7 @@
   },
   {
     "id": "helppoint_00046",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.034806,
     "lng": 121.573647,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -691,7 +691,7 @@
   },
   {
     "id": "helppoint_00047",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.018678,
     "lng": 121.558946,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -706,7 +706,7 @@
   },
   {
     "id": "helppoint_00048",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.034402,
     "lng": 121.562086,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -721,7 +721,7 @@
   },
   {
     "id": "helppoint_00049",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.034442,
     "lng": 121.575532,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -736,7 +736,7 @@
   },
   {
     "id": "helppoint_00050",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.033259,
     "lng": 121.558919,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -751,7 +751,7 @@
   },
   {
     "id": "helppoint_00051",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040663,
     "lng": 121.577067,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -766,7 +766,7 @@
   },
   {
     "id": "helppoint_00052",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040676,
     "lng": 121.576868,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -781,7 +781,7 @@
   },
   {
     "id": "helppoint_00053",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.031663,
     "lng": 121.55957,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -796,7 +796,7 @@
   },
   {
     "id": "helppoint_00054",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.032186,
     "lng": 121.557603,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -811,7 +811,7 @@
   },
   {
     "id": "helppoint_00055",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.031935,
     "lng": 121.558716,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -826,7 +826,7 @@
   },
   {
     "id": "helppoint_00056",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.031696,
     "lng": 121.55946,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -841,7 +841,7 @@
   },
   {
     "id": "helppoint_00057",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040719,
     "lng": 121.574111,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -856,7 +856,7 @@
   },
   {
     "id": "helppoint_00058",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040776,
     "lng": 121.582659,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -871,7 +871,7 @@
   },
   {
     "id": "helppoint_00059",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.037372,
     "lng": 121.575138,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -886,7 +886,7 @@
   },
   {
     "id": "helppoint_00060",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.034572,
     "lng": 121.573639,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -901,7 +901,7 @@
   },
   {
     "id": "helppoint_00061",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041718,
     "lng": 121.567248,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -916,7 +916,7 @@
   },
   {
     "id": "helppoint_00062",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.035163,
     "lng": 121.557725,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -931,7 +931,7 @@
   },
   {
     "id": "helppoint_00063",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.033746,
     "lng": 121.557732,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -946,7 +946,7 @@
   },
   {
     "id": "helppoint_00064",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.039682,
     "lng": 121.577943,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -961,7 +961,7 @@
   },
   {
     "id": "helppoint_00065",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.032508,
     "lng": 121.574652,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -976,7 +976,7 @@
   },
   {
     "id": "helppoint_00066",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.032805,
     "lng": 121.574659,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -991,7 +991,7 @@
   },
   {
     "id": "helppoint_00067",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.035179,
     "lng": 121.577014,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1006,7 +1006,7 @@
   },
   {
     "id": "helppoint_00068",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.03918,
     "lng": 121.576592,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1021,7 +1021,7 @@
   },
   {
     "id": "helppoint_00069",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.042328,
     "lng": 121.563582,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1036,7 +1036,7 @@
   },
   {
     "id": "helppoint_00070",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.028428,
     "lng": 121.563385,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1051,7 +1051,7 @@
   },
   {
     "id": "helppoint_00071",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.042479,
     "lng": 121.566175,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1066,7 +1066,7 @@
   },
   {
     "id": "helppoint_00072",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043348,
     "lng": 121.562886,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1081,7 +1081,7 @@
   },
   {
     "id": "helppoint_00073",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.03782,
     "lng": 121.578264,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1096,7 +1096,7 @@
   },
   {
     "id": "helppoint_00074",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.029116,
     "lng": 121.56474,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1111,7 +1111,7 @@
   },
   {
     "id": "helppoint_00075",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043596,
     "lng": 121.572209,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1126,7 +1126,7 @@
   },
   {
     "id": "helppoint_00076",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.042027,
     "lng": 121.568582,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1141,7 +1141,7 @@
   },
   {
     "id": "helppoint_00077",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043444,
     "lng": 121.568859,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1156,7 +1156,7 @@
   },
   {
     "id": "helppoint_00078",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.029162,
     "lng": 121.561434,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1171,7 +1171,7 @@
   },
   {
     "id": "helppoint_00079",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.027148,
     "lng": 121.562302,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1186,7 +1186,7 @@
   },
   {
     "id": "helppoint_00080",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.023047,
     "lng": 121.555471,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1201,7 +1201,7 @@
   },
   {
     "id": "helppoint_00081",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.022512,
     "lng": 121.569105,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1216,7 +1216,7 @@
   },
   {
     "id": "helppoint_00082",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.028494,
     "lng": 121.557055,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1231,7 +1231,7 @@
   },
   {
     "id": "helppoint_00083",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045003,
     "lng": 121.580825,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1246,7 +1246,7 @@
   },
   {
     "id": "helppoint_00084",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.04626,
     "lng": 121.57707,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1261,7 +1261,7 @@
   },
   {
     "id": "helppoint_00085",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.042259,
     "lng": 121.574163,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1276,7 +1276,7 @@
   },
   {
     "id": "helppoint_00086",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043046,
     "lng": 121.578017,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1291,7 +1291,7 @@
   },
   {
     "id": "helppoint_00087",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043379,
     "lng": 121.576198,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1306,7 +1306,7 @@
   },
   {
     "id": "helppoint_00088",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045829,
     "lng": 121.570179,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1321,7 +1321,7 @@
   },
   {
     "id": "helppoint_00089",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.021911,
     "lng": 121.556602,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1336,7 +1336,7 @@
   },
   {
     "id": "helppoint_00090",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.047257,
     "lng": 121.577587,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1351,7 +1351,7 @@
   },
   {
     "id": "helppoint_00091",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.025847,
     "lng": 121.562057,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1366,7 +1366,7 @@
   },
   {
     "id": "helppoint_00092",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045241,
     "lng": 121.578941,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1381,7 +1381,7 @@
   },
   {
     "id": "helppoint_00093",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041657,
     "lng": 121.578974,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1396,7 +1396,7 @@
   },
   {
     "id": "helppoint_00094",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043514,
     "lng": 121.578016,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1411,7 +1411,7 @@
   },
   {
     "id": "helppoint_00095",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.034303,
     "lng": 121.560061,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1426,7 +1426,7 @@
   },
   {
     "id": "helppoint_00096",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.04697,
     "lng": 121.566737,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1441,7 +1441,7 @@
   },
   {
     "id": "helppoint_00097",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.042374,
     "lng": 121.564857,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1456,7 +1456,7 @@
   },
   {
     "id": "helppoint_00098",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.030157,
     "lng": 121.560999,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1471,7 +1471,7 @@
   },
   {
     "id": "helppoint_00099",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.039456,
     "lng": 121.576665,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1486,7 +1486,7 @@
   },
   {
     "id": "helppoint_00100",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.04642,
     "lng": 121.577946,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1501,7 +1501,7 @@
   },
   {
     "id": "helppoint_00101",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.039493,
     "lng": 121.565234,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1516,7 +1516,7 @@
   },
   {
     "id": "helppoint_00102",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.038774,
     "lng": 121.566853,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1531,7 +1531,7 @@
   },
   {
     "id": "helppoint_00103",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.04066,
     "lng": 121.567025,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1546,7 +1546,7 @@
   },
   {
     "id": "helppoint_00104",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.049131,
     "lng": 121.578757,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1561,7 +1561,7 @@
   },
   {
     "id": "helppoint_00105",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.047804,
     "lng": 121.578033,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1576,7 +1576,7 @@
   },
   {
     "id": "helppoint_00106",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.037173,
     "lng": 121.577144,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1591,7 +1591,7 @@
   },
   {
     "id": "helppoint_00107",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.044617,
     "lng": 121.581002,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1606,7 +1606,7 @@
   },
   {
     "id": "helppoint_00108",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.019941,
     "lng": 121.557584,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1621,7 +1621,7 @@
   },
   {
     "id": "helppoint_00109",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041798,
     "lng": 121.56725,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1636,7 +1636,7 @@
   },
   {
     "id": "helppoint_00110",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.026753,
     "lng": 121.567582,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1651,7 +1651,7 @@
   },
   {
     "id": "helppoint_00111",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045755,
     "lng": 121.572777,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1666,7 +1666,7 @@
   },
   {
     "id": "helppoint_00112",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043128,
     "lng": 121.581381,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1681,7 +1681,7 @@
   },
   {
     "id": "helppoint_00113",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.020244,
     "lng": 121.557214,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1696,7 +1696,7 @@
   },
   {
     "id": "helppoint_00114",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.029684,
     "lng": 121.561621,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1711,7 +1711,7 @@
   },
   {
     "id": "helppoint_00115",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.044615,
     "lng": 121.57722,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1726,7 +1726,7 @@
   },
   {
     "id": "helppoint_00116",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.037833,
     "lng": 121.579415,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1741,7 +1741,7 @@
   },
   {
     "id": "helppoint_00117",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043091,
     "lng": 121.568663,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1756,7 +1756,7 @@
   },
   {
     "id": "helppoint_00118",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.025448,
     "lng": 121.55611,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1771,7 +1771,7 @@
   },
   {
     "id": "helppoint_00119",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.024108,
     "lng": 121.568564,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1786,7 +1786,7 @@
   },
   {
     "id": "helppoint_00120",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.035005,
     "lng": 121.57623,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1801,7 +1801,7 @@
   },
   {
     "id": "helppoint_00121",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.03623,
     "lng": 121.559354,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1816,7 +1816,7 @@
   },
   {
     "id": "helppoint_00122",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.039843,
     "lng": 121.578696,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1831,7 +1831,7 @@
   },
   {
     "id": "helppoint_00123",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.040357,
     "lng": 121.563172,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1846,7 +1846,7 @@
   },
   {
     "id": "helppoint_00124",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045696,
     "lng": 121.574124,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1861,7 +1861,7 @@
   },
   {
     "id": "helppoint_00125",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.04351,
     "lng": 121.574041,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1876,7 +1876,7 @@
   },
   {
     "id": "helppoint_00126",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045703,
     "lng": 121.573989,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1891,7 +1891,7 @@
   },
   {
     "id": "helppoint_00127",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041014,
     "lng": 121.575434,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1906,7 +1906,7 @@
   },
   {
     "id": "helppoint_00128",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.039319,
     "lng": 121.583299,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1921,7 +1921,7 @@
   },
   {
     "id": "helppoint_00129",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.049276,
     "lng": 121.578865,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1936,7 +1936,7 @@
   },
   {
     "id": "helppoint_00130",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043928,
     "lng": 121.561573,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1951,7 +1951,7 @@
   },
   {
     "id": "helppoint_00131",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.030986,
     "lng": 121.561116,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1966,7 +1966,7 @@
   },
   {
     "id": "helppoint_00132",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.024871,
     "lng": 121.567134,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1981,7 +1981,7 @@
   },
   {
     "id": "helppoint_00133",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.020442,
     "lng": 121.556888,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -1996,7 +1996,7 @@
   },
   {
     "id": "helppoint_00134",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.027582,
     "lng": 121.565637,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -2011,7 +2011,7 @@
   },
   {
     "id": "helppoint_00135",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.041187,
     "lng": 121.579541,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -2026,7 +2026,7 @@
   },
   {
     "id": "helppoint_00136",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.045391,
     "lng": 121.574259,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -2041,7 +2041,7 @@
   },
   {
     "id": "helppoint_00137",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.044474,
     "lng": 121.575294,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -2056,7 +2056,7 @@
   },
   {
     "id": "helppoint_00138",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.035742,
     "lng": 121.576536,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -2071,7 +2071,7 @@
   },
   {
     "id": "helppoint_00139",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.035948,
     "lng": 121.561092,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
@@ -2086,7 +2086,7 @@
   },
   {
     "id": "helppoint_00140",
-    "category": "help_point",
+    "category": "convenience_store",
     "lat": 25.043654,
     "lng": 121.571894,
     "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",

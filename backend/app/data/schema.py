@@ -16,6 +16,7 @@ class PointRecord:
     source_type: str  # "static_local" | "dynamic_realtime"
     expires_at: Optional[str] = None
     confidence: float = 1.0
+    place_id: Optional[str] = None
     meta: dict = field(default_factory=dict)
 
 

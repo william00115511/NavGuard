@@ -13,21 +13,21 @@
 
 ## points/police_station.json
 
-- **來源**：各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）
-- **URL**：https://www.tgos.tw/tgos/VirtualDir/Product/9927eb8a-efed-40c0-8bc4-83121ad6834a/1150729.zip
-- **授權**：政府資料開放授權條款
+- **來源**：Google Places API（New）Nearby Search，`includedTypes=["police"]`
+- **授權**：Google Maps Platform 服務條款（需要有效的 `MAPS_API_KEY` 並啟用 Places API）
 - **覆蓋範圍**：大安區、信義區
-- **更新日期**：2026-08-17
+- **更新日期**：2026-08-18
 - **腳本**：`scripts/ingest_open_data.py`
+- **備註**：每筆記錄的 `place_id` 是 `PointRecord` 的獨立欄位（不放在 `meta`）；`meta` 帶 Places 回傳的 `name`（displayName）、`address`（formattedAddress）、`phone`（nationalPhoneNumber，如有）。不再使用信心值折扣（`confidence` 沿用 schema 預設 1.0）。
 
-## points/help_point.json
+## points/convenience_store.json
 
-- **來源**：OpenStreetMap contributors（`shop=convenience`，Overpass API）
-- **授權**：ODbL 1.0
+- **來源**：Google Places API（New）Nearby Search，`includedTypes=["convenience_store"]`，僅保留 `regularOpeningHours` 判定為全年無休 24 小時營業的分店
+- **授權**：Google Maps Platform 服務條款（需要有效的 `MAPS_API_KEY` 並啟用 Places API）
 - **覆蓋範圍**：大安區、信義區
-- **更新日期**：2026-08-17
+- **更新日期**：2026-08-18
 - **腳本**：`scripts/ingest_open_data.py`
-- **備註**：Overpass 查詢行政區時必須用 `relation[...](area.city)` + `map_to_area` 過濾，不能寫成 `area(area.city)["name"="X"]`——後者不會真的按地理範圍過濾，同名行政區會全部混進來（例如「信義區」臺北市、基隆市都有，曾經把基隆信義區的店家也一起抓進來）。
+- **備註**：類別代號為 `convenience_store`（原 `help_point` 已停用）。每筆記錄的 `place_id` 是 `PointRecord` 的獨立欄位（不放在 `meta`）；`meta` 帶 Places 回傳的 `name`（displayName，已內含品牌／分店名稱，不再另外拆 `brand` 欄位）、`address`（formattedAddress）。此類別目前只涵蓋 24 小時超商，不含藥局／飯店大廳等其他可求助據點類型。不再使用信心值折扣（`confidence` 沿用 schema 預設 1.0）。
 
 ## points/danger_zone.json
 

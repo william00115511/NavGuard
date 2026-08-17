@@ -1,6 +1,7 @@
 """一次性／可重跑的開放資料轉換腳本（AGENTS.md §3.1）。
 
-從政府開放資料 API 直接下載原始資料，轉成 §3.2 統一點位格式，覆蓋
+路燈走政府開放資料 API；警局與超商改走 Google Places API（New）Nearby
+Search，換取準確地址／place_id（§3.2 統一點位格式）。全部轉換完覆蓋
 `backend/data/points/` 下對應的本地檔案。執行期系統不會呼叫這支腳本，
 資料要更新時由人手動重跑即可。
 
@@ -8,15 +9,22 @@
 預設（不加 --district）會抓臺北市全部 12 個行政區的資料。這不只是為了
 路燈那 14 萬筆資料的下載/解析效能，更重要的是 `EdgeSafetyIndex` 在
 啟動時對每條 edge 的每個取樣點都會掃過全部靜態點位、沒有空間索引
-（app/engine/safety.py 的 raw_edge_score），全臺北市三類點位一次全塞
-下去（14萬 + 3000 + 105）實測會把啟動時間拖到 8 秒以上；只轉換展示用
-到的行政區（例如 `--district 中正區 大安區`）可以把三類合計壓到幾千筆，
-啟動幾乎感覺不到。
+（app/engine/safety.py 的 raw_edge_score），全臺北市點位一次全塞下去
+實測會把啟動時間拖到 8 秒以上；只轉換展示用到的行政區（例如
+`--district 中正區 大安區`）可以把合計壓到幾千筆，啟動幾乎感覺不到。
+
+**費用注意**：警局／超商的 Nearby Search 是計費 API，每個查詢格都算一次
+請求；行政區面積越大（尤其士林／北投／內湖／文山這種含大片山區的區）鋪出
+的格數越多，即使該格沒有任何結果也照樣計費。全市 12 區一次跑完可能是數百
+到上千次請求，跑之前建議先用 `--district` 限縮範圍。
 
 用法：
     cd backend
     .venv/Scripts/python.exe scripts/ingest_open_data.py
     .venv/Scripts/python.exe scripts/ingest_open_data.py --district 大安區 信義區
+
+需要專案根目錄的 .env 設定 MAPS_API_KEY，且該 GCP 專案已啟用 Places API
+（New）。
 """
 
 from __future__ import annotations
@@ -25,15 +33,14 @@ import argparse
 import csv
 import io
 import json
+import math
 import re
 import sys
 import time
-import zipfile
 from pathlib import Path
 from typing import Any
 
 import httpx
-import math
 
 try:
     from pyproj import Transformer
@@ -91,8 +98,14 @@ BACKEND_DIR = SCRIPT_DIR.parent
 DATA_DIR = BACKEND_DIR / "data"
 POINTS_DIR = DATA_DIR / "points"
 
+# app.config 在 backend/ 底下，直接執行 scripts/ingest_open_data.py 時
+# sys.path[0] 是 scripts/ 而不是 backend/，要手動補進去才 import 得到。
+sys.path.insert(0, str(BACKEND_DIR))
+from app.config import Settings  # noqa: E402
+
 _HTTP_TIMEOUT = 60.0
 _USER_AGENT = "Safeway-NightWalkSafety-DataIngest/0.1 (offline conversion script)"
+_METERS_PER_DEGREE_LAT = 111_320.0
 
 # 臺北市 12 個行政區（含「區」字，對應警政署地址、Overpass 行政區名稱的格式）。
 TAIPEI_DISTRICTS: tuple[str, ...] = (
@@ -110,17 +123,38 @@ TAIPEI_DISTRICTS: tuple[str, ...] = (
     "文山區",
 )
 
-# 警政署地址欄固定以「臺北市／台北市」+ 行政區名稱開頭，例如「臺北市大安區仁愛路3段2號」。
+# Google Places 回傳的 formattedAddress 常帶郵遞區號／「台灣」開頭
+# （例如「106台灣台北市大安區仁愛路三段2號」），所以用 search 而非 match。
 _DISTRICT_ADDR_RE = re.compile(r"(?:臺北市|台北市)([一-鿿]{2,3}區)")
 
 STREETLIGHT_URL = "https://tppkl.blob.core.windows.net/blobfs/TaipeiLight.csv"
-POLICE_ZIP_URL = "https://www.tgos.tw/tgos/VirtualDir/Product/9927eb8a-efed-40c0-8bc4-83121ad6834a/1150729.zip"
 # 公用 Overpass 主機常常忙碌，準備幾個鏡像站輪流試。
 OVERPASS_URLS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
     "https://lz4.overpass-api.de/api/interpreter",
 ]
+
+PLACES_SEARCH_NEARBY_URL = "https://places.googleapis.com/v1/places:searchNearby"
+_PLACES_TIMEOUT = 15.0
+_PLACES_RETRY = 3
+# Nearby Search（New）單次上限 20 筆，且不支援分頁（那是舊版 API 才有的
+# next_page_token）；一格剛好回滿 20 筆代表可能還有店家被裁掉，見
+# _places_search_nearby 的飽和自動細分邏輯。
+_PLACES_MAX_RESULT_COUNT = 20
+_PLACES_MAX_SUBDIVIDE = 2
+
+# 查詢格半徑：警局密度低、半徑可以大一點省呼叫次數；超商密集，半徑太大
+# 一格就會超過 20 筆上限（見上）而要一直往下細分，反而更貴。
+_POLICE_GRID_RADIUS_M = 900.0
+_CONVENIENCE_GRID_RADIUS_M = 350.0
+
+_POLICE_FIELD_MASK = (
+    "places.id,places.displayName,places.formattedAddress,places.location,places.nationalPhoneNumber"
+)
+_CONVENIENCE_FIELD_MASK = (
+    "places.id,places.displayName,places.formattedAddress,places.location,places.regularOpeningHours"
+)
 
 
 
@@ -175,138 +209,243 @@ def ingest_street_light(client: httpx.Client, districts: set[str] | None) -> lis
     return points
 
 
-# ---------- 警局 ----------
+# ---------- 行政區 bounding box（Overpass，警局／超商查詢格鋪面用）----------
 
 
-def ingest_police_station(client: httpx.Client, districts: set[str] | None) -> list[dict[str, Any]]:
-    """districts 為含「區」字的行政區名稱集合，None 表示不篩選（仍只留臺北市的資料）。"""
-    print("[2/3] 警察機關資料（內政部警政署）", flush=True)
-    response = _get(client, POLICE_ZIP_URL)
-
-    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
-        # 壓縮檔裡還有一份 manifest.csv（純中繼資料，非點位），要排除掉。
-        csv_name = next(
-            name for name in zf.namelist() if name.lower().endswith(".csv") and "manifest" not in name.lower()
-        )
-        raw_bytes = zf.read(csv_name)
-
-    reader = csv.DictReader(io.StringIO(raw_bytes.decode("utf-8-sig")))
-    points: list[dict[str, Any]] = []
-    total = 0
-    for row in reader:
-        total += 1
-        address = row.get("地址", "")
-        match = _DISTRICT_ADDR_RE.match(address)
-        if match is None:
-            continue  # 非臺北市地址
-        district = match.group(1)
-        if districts is not None and district not in districts:
-            continue
-        try:
-            x, y = float(row["POINT_X"]), float(row["POINT_Y"])
-        except (KeyError, ValueError, TypeError):
-            continue
-        lat, lng = _twd97_to_wgs84(x, y)
-        points.append(
-            {
-                "id": f"police_{len(points) + 1:05d}",
-                "category": "police_station",
-                "lat": round(lat, 6),
-                "lng": round(lng, 6),
-                "source": "各縣(市)警察(分)局暨所屬分駐(派出)所地址資料（內政部警政署，data.gov.tw）",
-                "source_type": "static_local",
-                "expires_at": None,
-                "confidence": 1.0,
-                "meta": {
-                    "name": row.get("中文單位名稱", "").strip(),
-                    "name_en": row.get("英文單位名稱", "").strip(),
-                    "address": address.strip(),
-                    "phone": row.get("電話", "").strip(),
-                },
-            }
-        )
-    print(f"  全國 {total} 筆 -> 篩選後 {len(points)} 筆")
-    return points
-
-
-# ---------- 便利商店（help_point）----------
-
-
-def _overpass_query(districts: list[str] | None) -> str:
-    if districts:
-        # 注意：不能寫成 `area(area.city)["name"="X"]`——那個寫法不會真的按
-        # 「屬於 area.city 範圍內」過濾，同名行政區會全部混進來（例如「信義區」
-        # 臺北市、基隆市都有，曾經把基隆信義區的店家也抓進來）。正確做法是先用
-        # `relation[...](area.city)` 過濾出屬於臺北市的 relation，
-        # 再用 `map_to_area` 轉成後續查詢可用的 area。
-        district_names = "|".join(districts)
-        return (
-            "[out:json][timeout:60];\n"
-            'area["name"="臺北市"]["boundary"="administrative"]->.city;\n'
-            f'relation["boundary"="administrative"]["name"~"^({district_names})$"](area.city)->.rel;\n'
-            ".rel map_to_area->.districts;\n"
-            'node["shop"="convenience"](area.districts);\n'
-            "out body;"
-        )
-    return (
+def _district_bbox(client: httpx.Client, district: str) -> tuple[float, float, float, float]:
+    """回傳 (south, west, north, east)。用行政區 relation 的 bounding box 鋪查詢格，
+    不是精確的行政區多邊形——邊界附近撈到鄰區的點位，靠下面 _DISTRICT_ADDR_RE
+    比對地址字串濾掉（跟舊版政府資料的做法一致）。
+    """
+    query = (
         "[out:json][timeout:60];\n"
         'area["name"="臺北市"]["boundary"="administrative"]->.city;\n'
-        'node["shop"="convenience"](area.city);\n'
-        "out body;"
+        f'relation["boundary"="administrative"]["name"="{district}"](area.city);\n'
+        "out bb;"
     )
-
-
-def ingest_convenience_store(client: httpx.Client, districts: set[str] | None) -> list[dict[str, Any]]:
-    """districts 為含「區」字的行政區名稱集合，None 表示不篩選（全臺北市）。"""
-    print("[3/3] 便利商店資料（OpenStreetMap，shop=convenience）", flush=True)
-    query = _overpass_query(sorted(districts) if districts else None)
-
-    elements = None
     last_error: Exception | None = None
     for attempt in range(3):
         for url in OVERPASS_URLS:
             try:
-                print(f"  查詢 Overpass：{url}（第 {attempt + 1} 輪）", flush=True)
                 response = client.post(
-                    url,
-                    data={"data": query},
-                    headers={"User-Agent": _USER_AGENT},
-                    timeout=90.0,
+                    url, data={"data": query}, headers={"User-Agent": _USER_AGENT}, timeout=90.0
                 )
                 response.raise_for_status()
                 elements = response.json()["elements"]
-                break
-            except (httpx.HTTPError, ValueError) as exc:
+                if elements and "bounds" in elements[0]:
+                    bounds = elements[0]["bounds"]
+                    return bounds["minlat"], bounds["minlon"], bounds["maxlat"], bounds["maxlon"]
+            except (httpx.HTTPError, ValueError, KeyError) as exc:
                 last_error = exc
                 continue
-        if elements is not None:
-            break
         time.sleep(5 * (attempt + 1))
+    raise RuntimeError(f"抓不到「{district}」的行政區範圍（Overpass），最後一次錯誤：{last_error}")
 
-    if elements is None:
-        raise RuntimeError(f"所有 Overpass 端點都失敗了，最後一次錯誤：{last_error}")
+
+def _grid_centers(bbox: tuple[float, float, float, float], radius_m: float) -> list[tuple[float, float]]:
+    """用固定半徑的圓格鋪滿 bbox。格距取半徑的 1.4 倍，讓相鄰圓幾乎不留縫但不過度重疊。"""
+    south, west, north, east = bbox
+    ref_lat = (south + north) / 2
+    lat_step_deg = (radius_m * 1.4) / _METERS_PER_DEGREE_LAT
+    lng_step_deg = (radius_m * 1.4) / (_METERS_PER_DEGREE_LAT * max(math.cos(math.radians(ref_lat)), 1e-6))
+    lat_count = math.ceil((north - south) / lat_step_deg) + 1
+    lng_count = math.ceil((east - west) / lng_step_deg) + 1
+    return [
+        (south + i * lat_step_deg, west + j * lng_step_deg) for i in range(lat_count) for j in range(lng_count)
+    ]
+
+
+# ---------- Google Places API（New）Nearby Search ----------
+
+
+def _places_search_nearby(
+    client: httpx.Client,
+    api_key: str,
+    lat: float,
+    lng: float,
+    radius_m: float,
+    included_type: str,
+    field_mask: str,
+    depth: int = 0,
+) -> list[dict[str, Any]]:
+    body = {
+        "includedTypes": [included_type],
+        "maxResultCount": _PLACES_MAX_RESULT_COUNT,
+        "locationRestriction": {
+            "circle": {"center": {"latitude": lat, "longitude": lng}, "radius": radius_m}
+        },
+        "languageCode": "zh-TW",
+        "regionCode": "TW",
+    }
+
+    places: list[dict[str, Any]] = []
+    last_error: Exception | None = None
+    for attempt in range(_PLACES_RETRY):
+        try:
+            response = client.post(
+                PLACES_SEARCH_NEARBY_URL,
+                json=body,
+                headers={
+                    "Content-Type": "application/json",
+                    "X-Goog-Api-Key": api_key,
+                    "X-Goog-FieldMask": field_mask,
+                },
+                timeout=_PLACES_TIMEOUT,
+            )
+            response.raise_for_status()
+            places = response.json().get("places", [])
+            break
+        except httpx.HTTPError as exc:
+            last_error = exc
+            time.sleep(2 * (attempt + 1))
+    else:
+        raise RuntimeError(f"Places API 查詢失敗（{included_type} @ {lat:.5f},{lng:.5f}）：{last_error}")
+
+    # New Nearby Search 沒有分頁；一格剛好回滿代表可能還有店家被裁掉，切成 4 個
+    # 象限格用一半半徑重查（有深度上限，避免面積異常大或極密集區域無限遞迴）。
+    if len(places) >= _PLACES_MAX_RESULT_COUNT and depth < _PLACES_MAX_SUBDIVIDE:
+        sub_radius = radius_m / 2
+        offset_deg_lat = sub_radius / _METERS_PER_DEGREE_LAT
+        meters_per_deg_lng = _METERS_PER_DEGREE_LAT * max(math.cos(math.radians(lat)), 1e-6)
+        offset_deg_lng = sub_radius / meters_per_deg_lng
+        sub_centers = [
+            (lat + offset_deg_lat, lng + offset_deg_lng),
+            (lat + offset_deg_lat, lng - offset_deg_lng),
+            (lat - offset_deg_lat, lng + offset_deg_lng),
+            (lat - offset_deg_lat, lng - offset_deg_lng),
+        ]
+        places = []
+        for sub_lat, sub_lng in sub_centers:
+            places.extend(
+                _places_search_nearby(
+                    client, api_key, sub_lat, sub_lng, sub_radius, included_type, field_mask, depth + 1
+                )
+            )
+    return places
+
+
+def _is_24_hours(regular_opening_hours: dict[str, Any] | None) -> bool:
+    """Google 對「全年無休、24 小時營業」的慣例表示法：只有一個 period，且沒有 close 欄位。"""
+    if not regular_opening_hours:
+        return False
+    periods = regular_opening_hours.get("periods") or []
+    if len(periods) != 1:
+        return False
+    open_time = periods[0].get("open", {})
+    return (
+        "close" not in periods[0]
+        and open_time.get("day") == 0
+        and open_time.get("hour") == 0
+        and open_time.get("minute") == 0
+    )
+
+
+def _search_district_places(
+    client: httpx.Client,
+    api_key: str,
+    districts: list[str],
+    radius_m: float,
+    included_type: str,
+    field_mask: str,
+) -> dict[str, dict[str, Any]]:
+    """對每個行政區鋪查詢格、呼叫 Nearby Search，回傳依 place_id 去重後的結果
+    （查詢格互相重疊、細分遞迴都可能重覆撈到同一家店）。"""
+    by_place_id: dict[str, dict[str, Any]] = {}
+    for district in districts:
+        bbox = _district_bbox(client, district)
+        centers = _grid_centers(bbox, radius_m)
+        print(f"  {district}：{len(centers)} 個查詢格", flush=True)
+        for lat, lng in centers:
+            places = _places_search_nearby(client, api_key, lat, lng, radius_m, included_type, field_mask)
+            for place in places:
+                place_id = place.get("id")
+                address = place.get("formattedAddress", "")
+                match = _DISTRICT_ADDR_RE.search(address)
+                if place_id is None or match is None or match.group(1) != district:
+                    continue  # 查詢格跨到鄰區邊界，過濾掉不屬於這個行政區的結果
+                by_place_id[place_id] = place
+    return by_place_id
+
+
+# ---------- 警局 ----------
+
+
+def ingest_police_station(
+    client: httpx.Client, api_key: str, districts_with_suffix: set[str] | None
+) -> list[dict[str, Any]]:
+    print("[2/3] 警察機關資料（Google Places API，type=police）", flush=True)
+    target_districts = sorted(districts_with_suffix) if districts_with_suffix else list(TAIPEI_DISTRICTS)
+
+    by_place_id = _search_district_places(
+        client, api_key, target_districts, _POLICE_GRID_RADIUS_M, "police", _POLICE_FIELD_MASK
+    )
 
     points: list[dict[str, Any]] = []
-    for el in elements:
-        tags = el.get("tags", {})
+    for place in by_place_id.values():
+        location = place.get("location", {})
         points.append(
             {
-                "id": f"helppoint_{len(points) + 1:05d}",
-                "category": "help_point",
-                "lat": round(el["lat"], 6),
-                "lng": round(el["lon"], 6),
-                "source": "OpenStreetMap contributors（shop=convenience，Overpass API，ODbL 1.0）",
+                "id": f"police_{len(points) + 1:05d}",
+                "category": "police_station",
+                "lat": round(location["latitude"], 6),
+                "lng": round(location["longitude"], 6),
+                "source": "Google Places API（New），type=police",
                 "source_type": "static_local",
                 "expires_at": None,
-                "confidence": 0.9,  # OSM 為志願者維護資料，非官方普查，信心值略低於政府資料
+                "place_id": place["id"],
                 "meta": {
-                    "name": tags.get("name"),
-                    "brand": tags.get("brand"),
-                    "osm_id": el.get("id"),
+                    "name": place.get("displayName", {}).get("text", ""),
+                    "address": place.get("formattedAddress", ""),
+                    "phone": place.get("nationalPhoneNumber", ""),
                 },
             }
         )
-    print(f"  篩選後 {len(points)} 筆")
+    print(f"  合計 {len(points)} 筆", flush=True)
+    return points
+
+
+# ---------- 便利商店（convenience_store，僅 24 小時營業）----------
+
+
+def ingest_convenience_store(
+    client: httpx.Client, api_key: str, districts_with_suffix: set[str] | None
+) -> list[dict[str, Any]]:
+    print("[3/3] 便利商店資料（Google Places API，type=convenience_store，僅 24 小時營業）", flush=True)
+    target_districts = sorted(districts_with_suffix) if districts_with_suffix else list(TAIPEI_DISTRICTS)
+
+    by_place_id = _search_district_places(
+        client,
+        api_key,
+        target_districts,
+        _CONVENIENCE_GRID_RADIUS_M,
+        "convenience_store",
+        _CONVENIENCE_FIELD_MASK,
+    )
+
+    points: list[dict[str, Any]] = []
+    skipped_not_24h = 0
+    for place in by_place_id.values():
+        if not _is_24_hours(place.get("regularOpeningHours")):
+            skipped_not_24h += 1
+            continue
+        location = place.get("location", {})
+        points.append(
+            {
+                "id": f"convenience_{len(points) + 1:05d}",
+                "category": "convenience_store",
+                "lat": round(location["latitude"], 6),
+                "lng": round(location["longitude"], 6),
+                "source": "Google Places API（New），type=convenience_store，僅 24 小時營業",
+                "source_type": "static_local",
+                "expires_at": None,
+                "place_id": place["id"],
+                "meta": {
+                    "name": place.get("displayName", {}).get("text", ""),
+                    "address": place.get("formattedAddress", ""),
+                },
+            }
+        )
+    print(f"  非 24 小時營業濾掉 {skipped_not_24h} 筆 -> 合計 {len(points)} 筆", flush=True)
     return points
 
 
@@ -510,11 +649,22 @@ def main() -> None:
     districts_str = sorted(districts_with_suffix) if districts_with_suffix else '全部（臺北市 12 個行政區）'
     print(f"district={districts_str}", flush=True)
 
+    settings = Settings()
+    api_key = settings.maps_api_key.get_secret_value()
+    if not api_key or api_key == "YOUR_API_KEY_HERE":
+        print(
+            "MAPS_API_KEY 未設定（專案根目錄的 .env）。警局／超商資料改走 Google Places API，"
+            "需要一把已啟用 Places API（New）的金鑰，先中止。",
+            file=sys.stderr,
+            flush=True,
+        )
+        sys.exit(1)
+
     POINTS_DIR.mkdir(parents=True, exist_ok=True)
     with httpx.Client(timeout=_HTTP_TIMEOUT) as client:
         street_lights = ingest_street_light(client, districts_no_suffix)
-        police_stations = ingest_police_station(client, districts_with_suffix)
-        convenience_stores = ingest_convenience_store(client, districts_with_suffix)
+        police_stations = ingest_police_station(client, api_key, districts_with_suffix)
+        convenience_stores = ingest_convenience_store(client, api_key, districts_with_suffix)
         hazards = ingest_night_hazards(client, districts_with_suffix)
 
     if not street_lights or not police_stations or not convenience_stores:
@@ -523,7 +673,7 @@ def main() -> None:
 
     _write_points("street_light.json", street_lights)
     _write_points("police_station.json", police_stations)
-    _write_points("help_point.json", convenience_stores)
+    _write_points("convenience_store.json", convenience_stores)
     _write_points("danger_zone.json", hazards)
     print("完成。記得檢查 backend/data/data_sources.md 是否需要更新取得日期。", flush=True)
 
