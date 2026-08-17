@@ -18,7 +18,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from app.config import DEFAULT_ALPHA
 from evaluation.config import (
     BOOTSTRAP_CONFIDENCE,
     BOOTSTRAP_ITERATIONS,
@@ -28,13 +27,14 @@ from evaluation.config import (
     REPORT_HTML_PATH,
     REPORT_MD_PATH,
     RESULTS_CSV_PATH,
+    SAFEST_ROUTE_ALPHA,
 )
 
 _PREFIXES = ("google", "our_fastest", "our_safest")
 _PREFIX_LABELS = {
     "google": "Google 路線",
     "our_fastest": "我們的最快路線（α=0）",
-    "our_safest": f"我們的安全路線（α={DEFAULT_ALPHA}）",
+    "our_safest": f"我們的安全路線（α={SAFEST_ROUTE_ALPHA}）",
 }
 
 _REQUIRED_FLOAT_SUFFIXES = ("distance_m", "duration_min_est", "avg_safety_score", "detour_vs_fastest_min")
@@ -205,7 +205,7 @@ def render_markdown(summary: Summary, failures: list[tuple[str, str]]) -> str:
         "",
         f"- 成功比對樣本數：{summary.n_success}（另有 {summary.n_failed} 組未納入，見文末「未納入案例」）",
         f"- 起訖點：從路網隨機取樣，直線距離介於 {MIN_SCENARIO_DISTANCE_M:.0f}m–{MAX_SCENARIO_DISTANCE_M:.0f}m",
-        f"- 我們的安全路線使用 α={DEFAULT_ALPHA}；我們的最快路線 α=0 作為代價面對照組",
+        f"- 我們的安全路線使用 α={SAFEST_ROUTE_ALPHA}；我們的最快路線 α=0 作為代價面對照組",
         "- 三條路線的安全分數都由 app/engine/safety.py 與 app/engine/metrics.py 既有、未修改的公式計算，"
         "細節見文末「方法論」",
         "",
@@ -395,7 +395,7 @@ def render_html(summary: Summary, failures: list[tuple[str, str]]) -> str:
   <p class="meta">
     成功比對樣本數 {summary.n_success}（另有 {summary.n_failed} 組未納入）·
     起訖點隨機取樣，直線距離 {MIN_SCENARIO_DISTANCE_M:.0f}m–{MAX_SCENARIO_DISTANCE_M:.0f}m ·
-    我們的安全路線 α={DEFAULT_ALPHA}
+    我們的安全路線 α={SAFEST_ROUTE_ALPHA}
   </p>
 
   <div class="cards">

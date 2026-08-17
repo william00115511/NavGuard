@@ -25,6 +25,10 @@ MAX_SAMPLE_ATTEMPTS_PER_SCENARIO = 50
 DEFAULT_N_SCENARIOS = 30
 DEFAULT_SEED = 42
 
+# our_safest 路線評估用的安全權重 α，跟 app/config.py 的 DEFAULT_ALPHA（正式
+# 服務的預設值）刻意分開設定，改這裡不影響任何使用者看得到的路線。
+SAFEST_ROUTE_ALPHA = 1.0
+
 GOOGLE_ROUTES_URL = "https://routes.googleapis.com/directions/v2:computeRoutes"
 GOOGLE_ROUTES_TIMEOUT_S = 10.0
 
