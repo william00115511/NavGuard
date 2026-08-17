@@ -18,7 +18,7 @@ from app.data.schema import PointRecord
 from app.engine.geo import haversine_m
 from app.engine.pathfinding import PathComputation, path_sample_points
 from app.engine.safety import ScoringProfile
-from interfaces import Confidence, LatLng, RouteMetrics
+from interfaces import Confidence, LatLng, NearbyPoint, RouteMetrics
 
 _LIT_CATEGORY = "street_light"
 _HELP_CATEGORY = "help_point"
@@ -64,15 +64,26 @@ def _nearby_points(sample: LatLng, buckets: _GridBuckets, lat_deg: float, lng_de
 
 def _count_near(samples: Sequence[LatLng], points: Sequence[PointRecord], radius_m: float) -> int:
     """沿線 radius_m 內的點位數（同一個點位只算一次）。"""
+    return len(_records_near(samples, points, radius_m))
+
+
+def _records_near(samples: Sequence[LatLng], points: Sequence[PointRecord], radius_m: float) -> list[PointRecord]:
+    """沿線 radius_m 內的具體點位（同一個點位只算一次），供前端畫 marker 用。"""
     buckets, lat_deg, lng_deg = _build_grid(points, radius_m)
-    hit_ids: set[int] = set()
+    hit_ids: set[str] = set()
+    result: list[PointRecord] = []
     for s in samples:
         for p in _nearby_points(s, buckets, lat_deg, lng_deg):
-            if id(p) in hit_ids:
+            if p.id in hit_ids:
                 continue
             if haversine_m(s, LatLng(lat=p.lat, lng=p.lng)) <= radius_m:
-                hit_ids.add(id(p))
-    return len(hit_ids)
+                hit_ids.add(p.id)
+                result.append(p)
+    return result
+
+
+def _to_nearby_point(p: PointRecord) -> NearbyPoint:
+    return NearbyPoint(id=p.id, lat=p.lat, lng=p.lng, name=p.meta.get("name"))
 
 
 def _coverage_ratio(samples: Sequence[LatLng], points: Sequence[PointRecord], radius_m: float) -> float:
@@ -99,8 +110,12 @@ def build_metrics(
 ) -> RouteMetrics:
     samples = path_sample_points(computation.edges) or list(computation.path_coordinates)
 
+    # 警局／可求助據點下面改回傳具體點位列表，不再在這裡重複統計數量
+    # （§4.6 修訂：數量可由前端對列表 len()，不需要後端另外算一次）。
     passed_landmarks: dict[str, int] = {}
     for name, category in profile.categories.items():
+        if name in (_POLICE_CATEGORY, _HELP_CATEGORY):
+            continue
         count = _count_near(samples, _points_of(points, name), category.radius_m)
         if count:
             passed_landmarks[name] = count
@@ -115,19 +130,19 @@ def build_metrics(
         passed_landmarks=passed_landmarks,
         detour_vs_fastest_min=round(detour_vs_fastest_min, 1),
         data_coverage=data_coverage,
-        # 三個 metric 都遵守同一條規則：該類別沒有任何資料時回 None 而非 0。
+        # 三個 metric 都遵守同一條規則：該類別沒有任何資料時回 None 而非 0／空陣列。
         lit_coverage_ratio=(
             round(_coverage_ratio(samples, _points_of(points, _LIT_CATEGORY), LIT_COVERAGE_RADIUS_M), 3)
             if _LIT_CATEGORY in present
             else None
         ),
-        help_points_within_50m=(
-            _count_near(samples, _points_of(points, _HELP_CATEGORY), HELP_POINT_RADIUS_M)
+        help_points=(
+            [_to_nearby_point(p) for p in _records_near(samples, _points_of(points, _HELP_CATEGORY), HELP_POINT_RADIUS_M)]
             if _HELP_CATEGORY in present
             else None
         ),
-        police_within_150m=(
-            _count_near(samples, _points_of(points, _POLICE_CATEGORY), POLICE_RADIUS_M)
+        police_stations=(
+            [_to_nearby_point(p) for p in _records_near(samples, _points_of(points, _POLICE_CATEGORY), POLICE_RADIUS_M)]
             if _POLICE_CATEGORY in present
             else None
         ),

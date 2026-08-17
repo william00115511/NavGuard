@@ -40,6 +40,19 @@ class DynamicHazard:
 
 
 @dataclass(frozen=True)
+class NearbyPoint:
+    """沿路線附近的一個具體點位（警局／可求助據點），供前端直接畫 marker。
+
+    只帶顯示需要的欄位，不是完整 PointRecord（source/confidence 等對前端沒意義）。
+    """
+
+    id: str
+    lat: float
+    lng: float
+    name: Optional[str] = None
+
+
+@dataclass(frozen=True)
 class RouteWarning:
     """Structured warning so the frontend can localize/style without parsing backend prose.
 
@@ -63,8 +76,11 @@ class RouteMetrics:
     detour_vs_fastest_min: float
     data_coverage: list[str]
     lit_coverage_ratio: Optional[float] = None
-    help_points_within_50m: Optional[int] = None
-    police_within_150m: Optional[int] = None
+    # 警局／可求助據點沿線已有具體點位列表（見下方兩欄），不再另外統計數量；
+    # 需要數量時前端自己 len()。None 代表該類別在此區無資料（§1 原則 3），
+    # 不是 0 筆。
+    police_stations: Optional[list[NearbyPoint]] = None
+    help_points: Optional[list[NearbyPoint]] = None
 
 
 class Confidence(str, Enum):

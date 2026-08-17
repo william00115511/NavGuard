@@ -108,10 +108,26 @@ def test_route_calculate_alpha_zero_matches_fastest_route():
 
 
 def test_metrics_use_null_not_zero_for_uncovered_categories():
-    """§1 原則 3：沒有覆蓋的類別回 null，不能填 0。"""
+    """§1 原則 3：沒有覆蓋的類別回 null，不能填 0 或空陣列。"""
     metrics = _calculate().json()["route"]["metrics"]
-    for field in ("lit_coverage_ratio", "help_points_within_50m", "police_within_150m"):
-        assert metrics[field] is None or metrics[field] >= 0
+    assert metrics["lit_coverage_ratio"] is None or metrics["lit_coverage_ratio"] >= 0
+    for field in ("police_stations", "help_points"):
+        assert metrics[field] is None or isinstance(metrics[field], list)
+
+
+def test_route_ready_returns_concrete_police_and_help_point_locations():
+    """route_ready 沿線警局／可求助據點回傳具體點位（lat/lng），不是統計數量。"""
+    metrics = _calculate().json()["route"]["metrics"]
+    assert "police_within_150m" not in metrics
+    assert "help_points_within_50m" not in metrics
+    for field in ("police_stations", "help_points"):
+        points = metrics[field]
+        if not points:
+            continue
+        for point in points:
+            assert isinstance(point["lat"], float)
+            assert isinstance(point["lng"], float)
+            assert "id" in point
 
 
 def test_route_calculate_rejects_out_of_coverage_with_http_200():
