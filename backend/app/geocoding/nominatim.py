@@ -14,7 +14,7 @@ from typing import Optional
 
 import httpx
 
-from inner_interface import LatLng
+from interfaces import LatLng
 
 _NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 _USER_AGENT = "Safeway-NightWalkSafety/0.1 (hackathon demo)"

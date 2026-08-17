@@ -14,7 +14,7 @@ from typing import Callable, Optional, Sequence
 
 from app.engine.geo import haversine_m
 from app.engine.graph import Edge, EdgeKey, RoadGraph
-from inner_interface import LatLng
+from interfaces import LatLng
 
 
 @dataclass(frozen=True)

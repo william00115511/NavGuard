@@ -7,7 +7,7 @@
 from typing import Sequence
 
 from app.maps.simplify import simplify_preserving_divergence
-from inner_interface import LatLng
+from interfaces import LatLng
 
 # §7.2：中繼點在一般消費端網頁／App 實測穩定支援約 9~10 個，保守取 9。
 MAX_WAYPOINTS = 9

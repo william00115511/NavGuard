@@ -25,7 +25,7 @@ from app.engine.pathfinding import PathComputation, compute_path
 from app.engine.safety import EdgeSafetyIndex, build_scoring_profile, filter_active_points
 from app.geocoding.nominatim import geocode_with_nominatim
 from app.maps.url_builder import build_google_maps_url
-from inner_interface import (
+from interfaces import (
     DynamicHazard,
     LatLng,
     NoRouteFoundError,

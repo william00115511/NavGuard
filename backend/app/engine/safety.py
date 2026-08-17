@@ -18,7 +18,7 @@ from app.config import SAFETY_SIGMOID_K
 from app.data.schema import CategoryConfig, PointRecord
 from app.engine.geo import haversine_m
 from app.engine.graph import Edge, EdgeKey, RoadGraph
-from inner_interface import LatLng
+from interfaces import LatLng
 
 
 def decay(distance_m: float, radius_m: float) -> float:

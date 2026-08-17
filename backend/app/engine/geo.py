@@ -2,7 +2,7 @@
 
 import math
 
-from inner_interface import LatLng
+from interfaces import LatLng
 
 _EARTH_RADIUS_M = 6_371_000.0
 
