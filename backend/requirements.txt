@@ -2,3 +2,5 @@ fastapi>=0.115
 uvicorn[standard]>=0.30
 pydantic>=2.7
 httpx>=0.27
+pyproj>=3.7       # TWD97 (EPSG:3826) -> WGS84 座標轉換
+truststore>=0.10  # tgos.tw 憑證需要 OS 信任庫才能驗證通過
