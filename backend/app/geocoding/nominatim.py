@@ -14,12 +14,14 @@ from typing import Optional
 
 import httpx
 
+from app.engine.geo import haversine_m
 from interfaces import LatLng
 
 _NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 _USER_AGENT = "Safeway-NightWalkSafety/0.1 (hackathon demo)"
 _MIN_INTERVAL_S = 1.0  # Nominatim Usage Policy
 _BIAS_DEGREES = 0.15  # 約 15 公里，用來把搜尋結果偏向使用者附近
+_RESULT_LIMIT = 8  # 同名地標（如連鎖店多分店）可能有多筆結果，取多筆再挑最近的
 
 _throttle_lock = asyncio.Lock()
 _last_request_at = 0.0
@@ -40,7 +42,13 @@ async def geocode_with_nominatim(
     timeout: float = 5.0,
 ) -> Optional[LatLng]:
     """查無結果或請求失敗一律回傳 None，交由呼叫方轉成 GEOCODING_FAILED（§6.5）。"""
-    params: dict[str, str | int] = {"q": place_description, "format": "json", "limit": 1}
+    params: dict[str, str | int] = {
+        "q": place_description,
+        "format": "json",
+        "limit": _RESULT_LIMIT,
+        "countrycodes": "tw",
+        "accept-language": "zh-TW",
+    }
     if bias is not None:
         params["viewbox"] = (
             f"{bias.lng - _BIAS_DEGREES},{bias.lat + _BIAS_DEGREES},"
@@ -62,5 +70,7 @@ async def geocode_with_nominatim(
 
     if not results:
         return None
-    first = results[0]
-    return LatLng(lat=float(first["lat"]), lng=float(first["lon"]))
+    candidates = [LatLng(lat=float(r["lat"]), lng=float(r["lon"])) for r in results]
+    if bias is None:
+        return candidates[0]
+    return min(candidates, key=lambda c: haversine_m(bias, c))
