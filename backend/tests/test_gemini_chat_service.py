@@ -61,9 +61,16 @@ class ScriptedGateway:
     def __init__(self, replies: Sequence[ModelReply | Exception]) -> None:
         self._replies = deque(replies)
         self.histories: list[tuple[ConversationMessage, ...]] = []
+        self.has_user_location_calls: list[bool] = []
 
-    async def generate(self, history: Sequence[ConversationMessage]) -> ModelReply:
+    async def generate(
+        self,
+        history: Sequence[ConversationMessage],
+        *,
+        has_user_location: bool = False,
+    ) -> ModelReply:
         self.histories.append(tuple(history))
+        self.has_user_location_calls.append(has_user_location)
         reply = self._replies.popleft()
         if isinstance(reply, Exception):
             raise reply
@@ -203,6 +210,17 @@ def test_current_location_uses_session_location_and_geocode_bias() -> None:
     assert result.status is ChatStatus.ROUTE_READY
     assert engine.calculate_calls[0][0] == user_location
     assert engine.geocode_biases == [user_location]
+    assert gateway.has_user_location_calls == [True, True]
+
+
+def test_gateway_is_told_when_no_user_location_is_available() -> None:
+    gateway = ScriptedGateway([ModelReply(text="請問你的起點是哪裡？")])
+    service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = run(service.create_session())
+
+    run(service.handle_message(session_id, "幫我規劃路線"))
+
+    assert gateway.has_user_location_calls == [False]
 
 
 def test_geocoding_failure_is_recorded_for_next_turn() -> None:

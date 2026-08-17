@@ -21,6 +21,16 @@ calculate_safe_route。不得自行編造座標、路線、距離、安全分數
 危險，停止一般導航並建議聯絡當地緊急服務、前往明亮且有人員的公共場所。
 """.strip()
 
+LOCATION_AVAILABLE_NOTE = (
+    "系統狀態：目前已取得使用者的目前位置，使用者若想以目前位置作為起點，"
+    "calculate_safe_route 的 origin 可填 current_location。"
+)
+
+LOCATION_UNAVAILABLE_NOTE = (
+    "系統狀態：目前尚未取得使用者的目前位置，不得將 origin 填為 "
+    "current_location。若使用者想以目前位置出發，請引導使用者改為提供明確的地址或地標。"
+)
+
 
 CALCULATE_SAFE_ROUTE_TOOL = types.Tool(
     function_declarations=[
@@ -58,8 +68,16 @@ class GoogleGenAIGateway:
     def __init__(self, client: Any, model: str) -> None:
         self._client = client
         self._model = model
-        self._config = types.GenerateContentConfig(
-            system_instruction=SYSTEM_INSTRUCTION,
+        self._configs = {
+            has_location: self._build_config(has_location)
+            for has_location in (True, False)
+        }
+
+    @staticmethod
+    def _build_config(has_user_location: bool) -> types.GenerateContentConfig:
+        location_note = LOCATION_AVAILABLE_NOTE if has_user_location else LOCATION_UNAVAILABLE_NOTE
+        return types.GenerateContentConfig(
+            system_instruction=f"{SYSTEM_INSTRUCTION}\n\n{location_note}",
             tools=[CALCULATE_SAFE_ROUTE_TOOL],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
             temperature=0.2,
@@ -68,12 +86,14 @@ class GoogleGenAIGateway:
     async def generate(
         self,
         history: Sequence[ConversationMessage],
+        *,
+        has_user_location: bool = False,
     ) -> ModelReply:
         try:
             response = await self._client.aio.models.generate_content(
                 model=self._model,
                 contents=self._to_contents(history),
-                config=self._config,
+                config=self._configs[has_user_location],
             )
         except Exception as exc:
             raise GeminiGatewayError("Gemini request failed") from exc

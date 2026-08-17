@@ -62,7 +62,12 @@ class ConversationMessage:
 
 
 class GeminiGateway(Protocol):
-    async def generate(self, history: Sequence[ConversationMessage]) -> ModelReply:
+    async def generate(
+        self,
+        history: Sequence[ConversationMessage],
+        *,
+        has_user_location: bool = False,
+    ) -> ModelReply:
         """Generate the next model turn for the supplied conversation."""
 
 
@@ -129,9 +134,13 @@ class GeminiChatService(ChatService):
         message: str,
     ) -> ChatResult:
         self._append_history(session, ConversationMessage(kind="user", text=message))
+        has_user_location = session.user_location is not None
 
         try:
-            reply = await self._gateway.generate(session.history)
+            reply = await self._gateway.generate(
+                session.history,
+                has_user_location=has_user_location,
+            )
         except (GeminiGatewayError, TimeoutError):
             return self._error("GEMINI_UNAVAILABLE", "目前無法理解路線需求，請稍後再試。")
 
@@ -204,7 +213,10 @@ class GeminiChatService(ChatService):
 
         final_raw_content = None
         try:
-            final_reply = await self._gateway.generate(session.history)
+            final_reply = await self._gateway.generate(
+                session.history,
+                has_user_location=has_user_location,
+            )
             final_text = final_reply.text.strip()
             if not final_reply.tool_calls:
                 final_raw_content = final_reply.raw_content
