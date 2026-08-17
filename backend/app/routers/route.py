@@ -17,10 +17,11 @@ from app.schemas import (
     RouteCalculateRequest,
     RouteCalculateResponse,
     hazard_to_out,
+    route_endpoint_to_out,
     selected_route_to_out,
     warnings_to_out,
 )
-from interfaces import DynamicHazard, NoRouteFoundError, OutOfCoverageError
+from interfaces import DynamicHazard, NoRouteFoundError, OutOfCoverageError, RouteEndpoint
 
 router = APIRouter(prefix="/api", tags=["route"])
 
@@ -54,9 +55,11 @@ def _to_hazard(raw: DynamicHazardIn) -> DynamicHazard:
 )
 async def calculate_route(request: RouteCalculateRequest) -> RouteCalculateResponse:
     try:
+        # 這個端點直接吃座標、不經文字解析，起訖點固定沒有 place_id/name
+        # （§6.3 修訂）。
         result = await get_route_engine().calculate_route(
-            origin=request.origin.to_latlng(),
-            destination=request.destination.to_latlng(),
+            origin=RouteEndpoint(lat=request.origin.lat, lng=request.origin.lng),
+            destination=RouteEndpoint(lat=request.destination.lat, lng=request.destination.lng),
             priority_alpha=request.priority_alpha,
             dynamic_hazards=[_to_hazard(h) for h in request.dynamic_hazards],
         )
@@ -71,6 +74,8 @@ async def calculate_route(request: RouteCalculateRequest) -> RouteCalculateRespo
         route=selected_route_to_out(result),
         warnings=warnings_to_out(result),
         dynamic_hazards_considered=[hazard_to_out(h) for h in result.dynamic_hazards_considered],
+        origin=route_endpoint_to_out(result.origin),
+        destination=route_endpoint_to_out(result.destination),
         google_maps_url=result.google_maps_url,
         disclaimer=result.disclaimer,
     )

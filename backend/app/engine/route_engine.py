@@ -30,6 +30,7 @@ from interfaces import (
     LatLng,
     NoRouteFoundError,
     Route,
+    RouteEndpoint,
     RouteEngine,
     RouteResult,
     RouteWarning,
@@ -41,7 +42,7 @@ class Geocoder(Protocol):
         self,
         place_description: str,
         bias: Optional[LatLng] = None,
-    ) -> Optional[LatLng]:
+    ) -> Optional[RouteEndpoint]:
         """文字地點轉座標（§9.1）；查無結果回傳 None。"""
 
 _FALLBACK_TTL_HOURS = 3.0
@@ -73,15 +74,15 @@ class LocalDataRouteEngine(RouteEngine):
         self,
         place_description: str,
         bias: Optional[LatLng] = None,
-    ) -> Optional[LatLng]:
+    ) -> Optional[RouteEndpoint]:
         if self._geocoder is None:
             raise RuntimeError("LocalDataRouteEngine.geocode: geocoder 尚未設定")
         return await self._geocoder.geocode(place_description, bias=bias)
 
     async def calculate_route(
         self,
-        origin: LatLng,
-        destination: LatLng,
+        origin: RouteEndpoint,
+        destination: RouteEndpoint,
         priority_alpha: float = DEFAULT_ALPHA,
         dynamic_hazards: Sequence[DynamicHazard] = (),
     ) -> RouteResult:
@@ -89,8 +90,8 @@ class LocalDataRouteEngine(RouteEngine):
 
         # 覆蓋範圍檢查先做：超出範圍時 nearest_node 會 raise OutOfCoverageError，
         # 不必先花時間算分數（§4.7）。
-        origin_node = self._graph.nearest_node(origin)
-        destination_node = self._graph.nearest_node(destination)
+        origin_node = self._graph.nearest_node(LatLng(lat=origin.lat, lng=origin.lng))
+        destination_node = self._graph.nearest_node(LatLng(lat=destination.lat, lng=destination.lng))
 
         considered, dynamic_points, hazard_warnings = self._prepare_hazards(dynamic_hazards)
         safety_by_edge = self._index.safety_scores(dynamic_points)
@@ -130,6 +131,8 @@ class LocalDataRouteEngine(RouteEngine):
             dynamic_hazards_considered=considered,
             google_maps_url=self._build_maps_url(safest, fastest),
             disclaimer=DISCLAIMER,
+            origin=origin,
+            destination=destination,
             warnings=list(warnings),
         )
 

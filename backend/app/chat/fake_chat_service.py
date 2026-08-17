@@ -23,6 +23,7 @@ from interfaces import (
     LatLng,
     NoRouteFoundError,
     OutOfCoverageError,
+    RouteEndpoint,
     SessionNotFoundError,
 )
 
@@ -30,8 +31,11 @@ SESSION_TTL = timedelta(minutes=30)
 
 # 展示範圍內的固定起訖點，讓假回覆也跑一次真實引擎（而不是硬編路徑數值）。
 # 座標對應信義區真實 OSM 路網（見 tests/test_pathfinding.py 開頭的節點說明）。
-_DEMO_ORIGIN = LatLng(lat=25.01848, lng=121.557416)
-_DEMO_DESTINATION = LatLng(lat=25.04478, lng=121.584105)
+# _DEMO_ORIGIN 沒有 name：跟使用者 GPS 定位一樣視為非地標的純座標
+# （AGENTS.md §6.2 修訂）；_DEMO_DESTINATION 帶固定假名稱，模擬 destination
+# 一律有意義、需要名稱顯示的情境。
+_DEMO_ORIGIN = RouteEndpoint(lat=25.01848, lng=121.557416)
+_DEMO_DESTINATION = RouteEndpoint(lat=25.04478, lng=121.584105, name="示範終點（信義區）")
 
 
 @dataclass
@@ -84,7 +88,13 @@ class FakeChatService(ChatService):
         if user_location is not None:
             session.user_location = user_location
 
-        origin = session.user_location or _DEMO_ORIGIN
+        # session.user_location 是 GPS 座標，跟 _DEMO_ORIGIN 一樣視為非地標的
+        # 純座標，不補名稱（AGENTS.md §6.2 修訂）。
+        origin = (
+            RouteEndpoint(lat=session.user_location.lat, lng=session.user_location.lng)
+            if session.user_location is not None
+            else _DEMO_ORIGIN
+        )
         try:
             result = await get_route_engine().calculate_route(
                 origin=origin,

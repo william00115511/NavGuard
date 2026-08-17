@@ -14,6 +14,7 @@ from interfaces import (
     ChatStatus,
     LatLng,
     Route,
+    RouteEndpoint,
     RouteEngine,
     RouteMetrics,
     RouteResult,
@@ -55,6 +56,10 @@ def make_route_result(alpha: float = 0.6) -> RouteResult:
         dynamic_hazards_considered=[],
         google_maps_url="https://www.google.com/maps/dir/?api=1",
         disclaimer="此建議無法保證安全。",
+        origin=RouteEndpoint(lat=25.0478, lng=121.5319, place_id="place_origin", name="台北車站"),
+        destination=RouteEndpoint(
+            lat=25.0170, lng=121.5340, place_id="place_destination", name="公館夜市"
+        ),
     )
 
 
@@ -80,24 +85,24 @@ class ScriptedGateway:
 
 class FakeRouteEngine(RouteEngine):
     def __init__(self) -> None:
-        self.calculate_calls: list[tuple[LatLng, LatLng, float]] = []
+        self.calculate_calls: list[tuple[RouteEndpoint, RouteEndpoint, float]] = []
         self.geocode_biases: list[LatLng | None] = []
 
     async def geocode(
         self,
         place_description: str,
         bias: LatLng | None = None,
-    ) -> LatLng | None:
+    ) -> RouteEndpoint | None:
         self.geocode_biases.append(bias)
         return {
-            "台北車站": LatLng(lat=25.0478, lng=121.5319),
-            "公館夜市": LatLng(lat=25.0170, lng=121.5340),
+            "台北車站": RouteEndpoint(lat=25.0478, lng=121.5319, place_id="place_taipei_main_station", name="台北車站"),
+            "公館夜市": RouteEndpoint(lat=25.0170, lng=121.5340, place_id="place_gongguan_night_market", name="公館夜市"),
         }.get(place_description)
 
     async def calculate_route(
         self,
-        origin: LatLng,
-        destination: LatLng,
+        origin: RouteEndpoint,
+        destination: RouteEndpoint,
         priority_alpha: float = 0.6,
         dynamic_hazards=(),
     ) -> RouteResult:
@@ -110,15 +115,15 @@ class FailingGeocodeEngine(FakeRouteEngine):
         self,
         place_description: str,
         bias: LatLng | None = None,
-    ) -> LatLng | None:
+    ) -> RouteEndpoint | None:
         raise RuntimeError("geocoder unavailable")
 
 
 class FailingRouteEngine(FakeRouteEngine):
     async def calculate_route(
         self,
-        origin: LatLng,
-        destination: LatLng,
+        origin: RouteEndpoint,
+        destination: RouteEndpoint,
         priority_alpha: float = 0.6,
         dynamic_hazards=(),
     ) -> RouteResult:
@@ -295,7 +300,11 @@ def test_current_location_uses_session_location_and_geocode_bias() -> None:
     )
 
     assert result.status is ChatStatus.ROUTE_READY
-    assert engine.calculate_calls[0][0] == user_location
+    origin = engine.calculate_calls[0][0]
+    assert (origin.lat, origin.lng) == (user_location.lat, user_location.lng)
+    # GPS 定位不是一個有意義的地標，place_id/name 保持 None（AGENTS.md §6.2 修訂）。
+    assert origin.place_id is None
+    assert origin.name is None
     assert engine.geocode_biases == [user_location]
     assert gateway.has_user_location_calls == [True]
 

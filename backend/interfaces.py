@@ -40,6 +40,23 @@ class DynamicHazard:
 
 
 @dataclass(frozen=True)
+class RouteEndpoint:
+    """路線起點或終點，schema 跟 NearbyPoint 一致，可比照沿線點位丟進 Place API
+    顯示（AGENTS.md §6.2 修訂）。
+
+    `place_id`／`name` 只有在這個點位對應到一個有意義的地點（經 §8.1 的
+    Places API 解析出來）時才有值。使用者目前定位（GPS 座標，非地標）作為
+    起點的情況下，兩者一律是 None，只保留座標，不得瞎猜一個名稱
+    （§1 原則 3）。`destination` 必定經過文字解析，因此一律有值。
+    """
+
+    lat: float
+    lng: float
+    place_id: Optional[str] = None
+    name: Optional[str] = None
+
+
+@dataclass(frozen=True)
 class NearbyPoint:
     """沿路線附近的一個具體點位（警局／可求助據點／危險點位），供前端直接畫 marker。
 
@@ -111,6 +128,8 @@ class RouteResult:
     dynamic_hazards_considered: list[DynamicHazard]
     google_maps_url: str
     disclaimer: str
+    origin: RouteEndpoint
+    destination: RouteEndpoint
     warnings: list[RouteWarning] = field(default_factory=list)
 
 
@@ -216,16 +235,18 @@ class RouteEngine(ABC):
         self,
         place_description: str,
         bias: Optional[LatLng] = None,
-    ) -> Optional[LatLng]:
-        """文字地點轉座標（§9.1）。bias 用於偏向使用者附近的結果。
+    ) -> Optional[RouteEndpoint]:
+        """文字地點轉座標（§9.1），連同 Places API 解析出來的 place_id／name 一起
+        回傳（§6.2 修訂），因為文字地點永遠是有意義的地標，供 route_ready 的
+        `origin`／`destination` 欄位直接使用。bias 用於偏向使用者附近的結果。
         查無結果回傳 None。"""
         raise NotImplementedError
 
     @abstractmethod
     async def calculate_route(
         self,
-        origin: LatLng,
-        destination: LatLng,
+        origin: RouteEndpoint,
+        destination: RouteEndpoint,
         priority_alpha: float = 0.6,
         dynamic_hazards: Sequence[DynamicHazard] = (),
     ) -> RouteResult:

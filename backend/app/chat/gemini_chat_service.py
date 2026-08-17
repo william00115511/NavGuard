@@ -19,6 +19,7 @@ from interfaces import (
     LatLng,
     NoRouteFoundError,
     OutOfCoverageError,
+    RouteEndpoint,
     RouteEngine,
     RouteResult,
     SessionNotFoundError,
@@ -241,9 +242,13 @@ class GeminiChatService(ChatService):
         self,
         origin: str,
         session: _SessionState,
-    ) -> LatLng | None:
+    ) -> RouteEndpoint | None:
         if origin == "current_location":
-            return session.user_location
+            # GPS 定位不是一個有意義的地標，place_id/name 保持 None，只帶座標
+            # （AGENTS.md §6.2 修訂）。
+            if session.user_location is None:
+                return None
+            return RouteEndpoint(lat=session.user_location.lat, lng=session.user_location.lng)
         return await self._route_engine.geocode(origin, bias=session.user_location)
 
     def _append_history(

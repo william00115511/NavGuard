@@ -70,6 +70,11 @@ def test_chat_with_freshly_created_session_succeeds():
         assert "route" in body
         assert body["disclaimer"]  # §1 原則 1：每次提供路線都要附免責聲明
         assert body["google_maps_url"].startswith("https://www.google.com/maps/dir/")
+        # §6.2 修訂：destination 一律是有意義的地點，一定有 name；
+        # 這裡的 origin 用的是 GPS 定位（user_location），不是地標，name 保持 null。
+        assert body["origin"]["place_id"] is None
+        assert body["origin"]["name"] is None
+        assert body["destination"]["name"]
     else:
         assert body["reply_text"]
 
@@ -126,6 +131,23 @@ def test_route_calculate_returns_single_route_with_polyline():
     assert 0 <= metrics["avg_safety_score"] <= 1
     assert metrics["duration_min_est"] > 0
     assert "street_light" in metrics["data_coverage"]
+
+
+def test_route_calculate_returns_origin_and_destination_without_names():
+    """§6.3 修訂：這個端點直接吃座標、不經文字解析，起訖點固定沒有 place_id/name。"""
+    body = _calculate().json()
+
+    for field in ("origin", "destination"):
+        point = body[field]
+        assert point["lat"] is not None
+        assert point["lng"] is not None
+        assert point.get("place_id") is None
+        assert point.get("name") is None
+
+    assert body["origin"]["lat"] == _ORIGIN["lat"]
+    assert body["origin"]["lng"] == _ORIGIN["lng"]
+    assert body["destination"]["lat"] == _DESTINATION["lat"]
+    assert body["destination"]["lng"] == _DESTINATION["lng"]
 
 
 def test_route_calculate_alpha_zero_matches_fastest_route():

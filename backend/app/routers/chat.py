@@ -22,6 +22,7 @@ from app.schemas import (
     ClearContextRequest,
     ClearContextResponse,
     hazard_to_out,
+    route_endpoint_to_out,
     selected_route_to_out,
     warnings_to_out,
 )
@@ -61,6 +62,8 @@ async def chat(request: ChatRequest) -> ChatResponse:
         response.dynamic_hazards_considered = [
             hazard_to_out(h) for h in route_result.dynamic_hazards_considered
         ]
+        response.origin = route_endpoint_to_out(route_result.origin)
+        response.destination = route_endpoint_to_out(route_result.destination)
         response.google_maps_url = route_result.google_maps_url
     return response
 

@@ -446,10 +446,18 @@ Response 依進度分三種 `status`：
       "source_url": "https://..."
     }
   ],
+  "origin": { "place_id": null, "lat": 25.0330, "lng": 121.5654, "name": null },
+  "destination": { "place_id": "xxx", "lat": 25.0170, "lng": 121.5340, "name": "公館夜市" },
   "google_maps_url": "https://www.google.com/maps/dir/?api=1&origin=...&travelmode=walking"
 }
 ```
 `warnings` 是跟 `route` 平行的**頂層欄位**（不是 `route.warnings`），沒有任何缺資料或異常時為空陣列 `[]`。
+
+⚠️ **修訂（起訖點資料）**：`origin`／`destination` 也是跟 `route` 平行的頂層欄位，schema 跟 §4.6 的具體點位列表（`convenience_stores`／`police_stations`／`danger_zones`）一致：`place_id`／`lat`／`lng`／`name`，前端可以直接當一般點位處理（畫 marker、或拿 `place_id` 丟給 Place API 查詳細資訊），不需要另外組欄位。
+
+- **`destination` 一律是有意義的地點**：使用者輸入的終點文字一定先經過 §8.1 的 Google Places Text Search 解析才能走到 `route_ready`（解析失敗會回 `GEOCODING_FAILED`，不會有 `route_ready`），所以 `destination.name`／`destination.place_id` 一定有值，前端才能在地圖上標出終點名稱。
+- **`origin` 不一定是有意義的地點**：使用者若用 `current_location`（GPS 目前位置，見 §5.3）出發，這只是一個座標，本身不是地標，`origin.place_id`／`origin.name` 這時一律是 `null`，只保留座標——**不得為了塞欄位而瞎猜一個地名**（呼應 §1 原則 3「缺資料絕不填 0／假值」的精神）。只有使用者明確講出一個地點描述（一樣經 Places API 解析）當起點時，`origin` 才會跟 `destination` 一樣帶 `place_id`／`name`。
+- `POST /api/route/calculate`（§6.3）直接吃座標、不經文字解析，所以這個端點回傳的 `origin`／`destination` 固定只有座標，`place_id`／`name` 皆為 `null`。
 
 **C. `error`**
 ```json
@@ -462,7 +470,7 @@ Response 依進度分三種 `status`：
 
 常見 `error_code`：`GEOCODING_FAILED`、`OUT_OF_COVERAGE`（起訖點超出路網範圍）、`NO_ROUTE_FOUND`、`UPSTREAM_TIMEOUT`。
 
-**前端行為**：`collecting_info` 與 `error` 把 `reply_text` 當作助手訊息顯示在對話框；`route_ready` 沒有 `reply_text`，前端依 `route.metrics` 與頂層 `warnings`（見上方範例，不是 `route.warnings`）自行組文案、在地圖畫出 `route.path_coordinates` 的 polyline、標出 `convenience_stores`／`police_stations`／`danger_zones` 的 marker，並顯示可展開的路線摘要卡片與「在 Google Maps 開啟導航」按鈕。
+**前端行為**：`collecting_info` 與 `error` 把 `reply_text` 當作助手訊息顯示在對話框；`route_ready` 沒有 `reply_text`，前端依 `route.metrics` 與頂層 `warnings`（見上方範例，不是 `route.warnings`）自行組文案、在地圖畫出 `route.path_coordinates` 的 polyline、標出 `convenience_stores`／`police_stations`／`danger_zones` 的 marker，用頂層 `origin`／`destination` 標出起訖點（`destination` 一定有名稱可顯示；`origin` 若沒有名稱就只畫一個定位點，不強行湊文字），並顯示可展開的路線摘要卡片與「在 Google Maps 開啟導航」按鈕。
 
 ### 6.2.1 `POST /api/chat/clear`
 
@@ -494,7 +502,7 @@ Request：
 ```
 `dynamic_hazards` 此處直接吃**座標**（`DynamicHazard` 內部型別），因為 geocoding 屬於 Function Calling handler 的職責，不屬於引擎。
 
-Response：與 6.2 `route_ready` 的 `route` / `warnings` / `dynamic_hazards_considered` 部分相同結構（外層多一個 `status: "ok"`）。
+Response：與 6.2 `route_ready` 的 `route` / `warnings` / `dynamic_hazards_considered` / `origin` / `destination` 部分相同結構（外層多一個 `status: "ok"`）。這個端點的 `origin`／`destination` 固定只有座標（`place_id`／`name` 皆為 `null`），因為請求本身就是直接吃座標、沒有文字地點可解析。
 
 ### 6.4 `GET /healthz`
 

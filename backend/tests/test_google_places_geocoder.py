@@ -2,7 +2,7 @@ import asyncio
 from typing import Any
 
 from app.geocoding.google_places_geocoder import GooglePlacesGeocoder
-from interfaces import LatLng
+from interfaces import LatLng, RouteEndpoint
 
 
 def run(coro):
@@ -41,7 +41,7 @@ def test_geocode_picks_nearest_candidate_to_bias() -> None:
 
     result = run(geocoder.geocode("新光三越", bias=bias))
 
-    assert result == LatLng(lat=25.04, lng=121.51)
+    assert result == RouteEndpoint(lat=25.04, lng=121.51)
 
 
 def test_geocode_without_bias_returns_first_candidate() -> None:
@@ -50,7 +50,40 @@ def test_geocode_without_bias_returns_first_candidate() -> None:
 
     result = run(geocoder.geocode("台北車站"))
 
-    assert result == LatLng(lat=25.0478, lng=121.5319)
+    assert result == RouteEndpoint(lat=25.0478, lng=121.5319)
+
+
+def test_geocode_returns_place_id_and_display_name() -> None:
+    """文字地點是有意義的地標，回傳的 RouteEndpoint 要帶 place_id/name
+    （AGENTS.md §6.2 修訂），供 route_ready 的 origin/destination 直接使用。"""
+    data = {
+        "places": [
+            {
+                "id": "ChIJ_example_place_id",
+                "location": {"latitude": 25.0478, "longitude": 121.5319},
+                "displayName": {"text": "台北車站", "languageCode": "zh-TW"},
+            }
+        ]
+    }
+    client = FakeHTTPClient(data)
+    geocoder = GooglePlacesGeocoder("key", client=client)
+
+    result = run(geocoder.geocode("台北車站"))
+
+    assert result == RouteEndpoint(
+        lat=25.0478, lng=121.5319, place_id="ChIJ_example_place_id", name="台北車站"
+    )
+
+
+def test_geocode_requests_display_name_and_id_field_mask() -> None:
+    client = FakeHTTPClient(places((25.0478, 121.5319)))
+    geocoder = GooglePlacesGeocoder("key", client=client)
+
+    run(geocoder.geocode("台北車站"))
+
+    field_mask = client.calls[0]["headers"]["X-Goog-FieldMask"]
+    assert "places.id" in field_mask
+    assert "places.displayName" in field_mask
 
 
 def test_geocode_returns_none_for_empty_candidates() -> None:
@@ -73,7 +106,7 @@ def test_geocode_filters_out_of_taiwan_candidates() -> None:
 
     result = run(geocoder.geocode("同名店"))
 
-    assert result == LatLng(lat=25.0330, lng=121.5654)
+    assert result == RouteEndpoint(lat=25.0330, lng=121.5654)
 
 
 def test_geocode_returns_none_for_malformed_response() -> None:

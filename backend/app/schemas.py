@@ -9,7 +9,16 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from interfaces import DynamicHazard, LatLng, NearbyPoint, Route, RouteMetrics, RouteResult, RouteWarning
+from interfaces import (
+    DynamicHazard,
+    LatLng,
+    NearbyPoint,
+    Route,
+    RouteEndpoint,
+    RouteMetrics,
+    RouteResult,
+    RouteWarning,
+)
 
 
 class LatLngIn(BaseModel):
@@ -86,6 +95,20 @@ class RouteMetricsOut(BaseModel):
     danger_zones: Optional[list[NearbyPointOut]] = None
 
 
+class RouteEndpointOut(BaseModel):
+    """路線起點／終點，schema 跟 NearbyPointOut 一致，可比照沿線點位丟進
+    Place API（AGENTS.md §6.2 修訂）。
+
+    place_id/name 只有這個點位對應到一個有意義的地點時才有值；使用者 GPS
+    定位這種純座標起點，兩者一律是 None，不得瞎猜名稱（§1 原則 3）。
+    """
+
+    lat: float
+    lng: float
+    place_id: Optional[str] = None
+    name: Optional[str] = None
+
+
 class RouteOut(BaseModel):
     path_coordinates: list[list[float]]  # [[lat, lng], ...]，前端直接畫 polyline
     alpha_used: float
@@ -105,6 +128,10 @@ class ChatResponse(BaseModel):
     # route_ready 時一律有值（沒有異常時是空陣列 []，不是 null）。
     warnings: Optional[list[RouteWarningOut]] = None
     dynamic_hazards_considered: Optional[list[DynamicHazardOut]] = None
+    # 跟 route 平行的頂層欄位（§6.2 修訂）：destination 一律經文字解析、有意義，
+    # 一定帶 name；origin 若是 GPS 定位（非地標）則 place_id/name 為 null。
+    origin: Optional[RouteEndpointOut] = None
+    destination: Optional[RouteEndpointOut] = None
     google_maps_url: Optional[str] = None
 
 
@@ -154,6 +181,9 @@ class RouteCalculateResponse(BaseModel):
     # 跟 route 平行的頂層欄位，不掛在 route 底下（§4.7／§6.2 修訂）。
     warnings: Optional[list[RouteWarningOut]] = None
     dynamic_hazards_considered: Optional[list[DynamicHazardOut]] = None
+    # §6.3 修訂：這個端點直接吃座標，origin/destination 固定沒有 place_id/name。
+    origin: Optional[RouteEndpointOut] = None
+    destination: Optional[RouteEndpointOut] = None
     google_maps_url: Optional[str] = None
     disclaimer: Optional[str] = None
 
@@ -188,6 +218,12 @@ def metrics_to_out(metrics: RouteMetrics) -> RouteMetricsOut:
 
 def warning_to_out(warning: RouteWarning) -> RouteWarningOut:
     return RouteWarningOut(code=warning.code, category=warning.category, summary=warning.summary)
+
+
+def route_endpoint_to_out(endpoint: RouteEndpoint) -> RouteEndpointOut:
+    return RouteEndpointOut(
+        lat=endpoint.lat, lng=endpoint.lng, place_id=endpoint.place_id, name=endpoint.name
+    )
 
 
 def route_to_out(route: Route) -> RouteOut:

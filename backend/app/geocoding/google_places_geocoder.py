@@ -19,7 +19,7 @@ from typing import Any, Optional, Protocol
 import httpx
 
 from app.engine.geo import haversine_m
-from interfaces import LatLng
+from interfaces import LatLng, RouteEndpoint
 
 _SEARCH_URL = "https://places.googleapis.com/v1/places:searchText"
 _TIMEOUT_S = 8.0
@@ -50,8 +50,12 @@ class GooglePlacesGeocoder:
         self,
         place_description: str,
         bias: Optional[LatLng] = None,
-    ) -> Optional[LatLng]:
-        """查無結果或請求失敗一律回傳 None，交由呼叫方轉成 GEOCODING_FAILED（§6.5）。"""
+    ) -> Optional[RouteEndpoint]:
+        """查無結果或請求失敗一律回傳 None，交由呼叫方轉成 GEOCODING_FAILED（§6.5）。
+
+        文字地點一定是有意義的地標，回傳的 RouteEndpoint 一律帶 place_id／name
+        （§6.2 修訂），供 route_ready 的 origin/destination 欄位直接使用。
+        """
         body: dict[str, Any] = {
             "textQuery": place_description,
             "languageCode": "zh-TW",
@@ -72,7 +76,7 @@ class GooglePlacesGeocoder:
                 headers={
                     "Content-Type": "application/json",
                     "X-Goog-Api-Key": self._api_key,
-                    "X-Goog-FieldMask": "places.location",
+                    "X-Goog-FieldMask": "places.id,places.location,places.displayName",
                 },
                 json=body,
             )
@@ -85,25 +89,25 @@ class GooglePlacesGeocoder:
             return None
         if bias is None:
             return candidates[0]
-        return min(candidates, key=lambda c: haversine_m(bias, c))
+        return min(candidates, key=lambda c: haversine_m(c, bias))
 
     @classmethod
-    def _parse_candidates(cls, data: Any) -> list[LatLng]:
+    def _parse_candidates(cls, data: Any) -> list[RouteEndpoint]:
         if not isinstance(data, dict):
             return []
         places = data.get("places")
         if not isinstance(places, list):
             return []
 
-        candidates: list[LatLng] = []
+        candidates: list[RouteEndpoint] = []
         for item in places:
-            candidate = cls._to_latlng(item)
+            candidate = cls._to_endpoint(item)
             if candidate is not None:
                 candidates.append(candidate)
         return candidates
 
     @staticmethod
-    def _to_latlng(item: Any) -> Optional[LatLng]:
+    def _to_endpoint(item: Any) -> Optional[RouteEndpoint]:
         if not isinstance(item, dict):
             return None
         try:
@@ -116,4 +120,7 @@ class GooglePlacesGeocoder:
             return None
         if not (_TW_LNG_RANGE[0] <= lng <= _TW_LNG_RANGE[1]):
             return None
-        return LatLng(lat=lat, lng=lng)
+        place_id = item.get("id") if isinstance(item.get("id"), str) else None
+        display_name = item.get("displayName")
+        name = display_name.get("text") if isinstance(display_name, dict) else None
+        return RouteEndpoint(lat=lat, lng=lng, place_id=place_id, name=name)
