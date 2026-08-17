@@ -35,11 +35,6 @@ WALK_SPEED_MPS = 1.3
 # 不做外插，直接回 OUT_OF_COVERAGE。
 MAX_SNAP_DISTANCE_M = 500.0
 
-# §4.6 幾個 metric 的固定半徑（與類別自身的影響半徑無關，這是報告口徑）。
-LIT_COVERAGE_RADIUS_M = 30.0
-HELP_POINT_RADIUS_M = 50.0
-POLICE_RADIUS_M = 150.0
-
 # §5.4 規則 2：Gemini 回報了 categories.json 中不存在的類別時的 fallback。
 FALLBACK_DYNAMIC_CATEGORY = "dynamic_unknown"
 

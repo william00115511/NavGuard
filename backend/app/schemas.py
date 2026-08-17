@@ -62,10 +62,12 @@ class RouteWarningOut(BaseModel):
 
 
 class NearbyPointOut(BaseModel):
-    id: str
+    place_id: str
     lat: float
     lng: float
     name: Optional[str] = None
+    # 只有 danger_zones 會帶值（危險原因說明），其餘類別是 null。
+    summary: Optional[str] = None
 
 
 class RouteMetricsOut(BaseModel):
@@ -80,14 +82,14 @@ class RouteMetricsOut(BaseModel):
     # 具體點位列表（見 AGENTS.md §4.6 修訂），前端直接畫 marker；
     # 數量需要的話對列表 len() 即可，不再另外提供統計數字。
     police_stations: Optional[list[NearbyPointOut]] = None
-    help_points: Optional[list[NearbyPointOut]] = None
+    convenience_stores: Optional[list[NearbyPointOut]] = None
+    danger_zones: Optional[list[NearbyPointOut]] = None
 
 
 class RouteOut(BaseModel):
     path_coordinates: list[list[float]]  # [[lat, lng], ...]，前端直接畫 polyline
     alpha_used: float
     metrics: RouteMetricsOut
-    warnings: list[RouteWarningOut]
 
 
 class ChatResponse(BaseModel):
@@ -99,6 +101,9 @@ class ChatResponse(BaseModel):
     # 以下只有 status == "route_ready" 時才有值。
     disclaimer: Optional[str] = None
     route: Optional[RouteOut] = None
+    # 跟 route 平行的頂層欄位，不掛在 route 底下（§4.7／§6.2 修訂）；
+    # route_ready 時一律有值（沒有異常時是空陣列 []，不是 null）。
+    warnings: Optional[list[RouteWarningOut]] = None
     dynamic_hazards_considered: Optional[list[DynamicHazardOut]] = None
     google_maps_url: Optional[str] = None
 
@@ -146,6 +151,8 @@ class RouteCalculateResponse(BaseModel):
     error_code: Optional[str] = None
     message: Optional[str] = None
     route: Optional[RouteOut] = None
+    # 跟 route 平行的頂層欄位，不掛在 route 底下（§4.7／§6.2 修訂）。
+    warnings: Optional[list[RouteWarningOut]] = None
     dynamic_hazards_considered: Optional[list[DynamicHazardOut]] = None
     google_maps_url: Optional[str] = None
     disclaimer: Optional[str] = None
@@ -155,7 +162,13 @@ class RouteCalculateResponse(BaseModel):
 
 
 def nearby_point_to_out(point: NearbyPoint) -> NearbyPointOut:
-    return NearbyPointOut(id=point.id, lat=point.lat, lng=point.lng, name=point.name)
+    return NearbyPointOut(
+        place_id=point.place_id, lat=point.lat, lng=point.lng, name=point.name, summary=point.summary
+    )
+
+
+def _nearby_list_to_out(points: Optional[list[NearbyPoint]]) -> Optional[list[NearbyPointOut]]:
+    return [nearby_point_to_out(p) for p in points] if points is not None else None
 
 
 def metrics_to_out(metrics: RouteMetrics) -> RouteMetricsOut:
@@ -167,12 +180,9 @@ def metrics_to_out(metrics: RouteMetrics) -> RouteMetricsOut:
         detour_vs_fastest_min=metrics.detour_vs_fastest_min,
         data_coverage=metrics.data_coverage,
         lit_coverage_ratio=metrics.lit_coverage_ratio,
-        police_stations=(
-            [nearby_point_to_out(p) for p in metrics.police_stations] if metrics.police_stations is not None else None
-        ),
-        help_points=(
-            [nearby_point_to_out(p) for p in metrics.help_points] if metrics.help_points is not None else None
-        ),
+        police_stations=_nearby_list_to_out(metrics.police_stations),
+        convenience_stores=_nearby_list_to_out(metrics.convenience_stores),
+        danger_zones=_nearby_list_to_out(metrics.danger_zones),
     )
 
 
@@ -185,7 +195,6 @@ def route_to_out(route: Route) -> RouteOut:
         path_coordinates=[[p.lat, p.lng] for p in route.path_coordinates],
         alpha_used=route.alpha_used,
         metrics=metrics_to_out(route.metrics),
-        warnings=[warning_to_out(w) for w in route.warnings],
     )
 
 
@@ -197,6 +206,11 @@ def hazard_to_out(hazard: DynamicHazard) -> DynamicHazardOut:
         expires_at=hazard.expires_at,
         source_url=hazard.source_url,
     )
+
+
+def warnings_to_out(result: RouteResult) -> list[RouteWarningOut]:
+    """§4.7／§6.2 修訂：warnings 是跟 route 平行的頂層欄位。"""
+    return [warning_to_out(w) for w in result.warnings]
 
 
 def selected_route_to_out(result: RouteResult) -> RouteOut:

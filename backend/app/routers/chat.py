@@ -23,6 +23,7 @@ from app.schemas import (
     ClearContextResponse,
     hazard_to_out,
     selected_route_to_out,
+    warnings_to_out,
 )
 from interfaces import ChatStatus
 from interfaces import SessionNotFoundError as ChatSessionNotFoundError
@@ -56,6 +57,7 @@ async def chat(request: ChatRequest) -> ChatResponse:
         route_result = result.route_result
         response.disclaimer = route_result.disclaimer
         response.route = selected_route_to_out(route_result)
+        response.warnings = warnings_to_out(route_result)
         response.dynamic_hazards_considered = [
             hazard_to_out(h) for h in route_result.dynamic_hazards_considered
         ]

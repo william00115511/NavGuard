@@ -39,7 +39,7 @@ _PREFIX_LABELS = {
 
 _REQUIRED_FLOAT_SUFFIXES = ("distance_m", "duration_min_est", "avg_safety_score", "detour_vs_fastest_min")
 _OPTIONAL_FLOAT_SUFFIXES = ("lit_coverage_ratio",)
-_OPTIONAL_INT_SUFFIXES = ("help_points_within_50m", "police_within_150m")
+_OPTIONAL_INT_SUFFIXES = ("convenience_stores_within_80m", "police_within_150m")
 _REQUIRED_INT_SUFFIXES = ("danger_zone_passed",)
 
 
@@ -117,7 +117,7 @@ class Summary:
     delta_safety_ci: tuple[float, float]
     mean_delta_danger_zone_vs_google: float
     mean_delta_lit_coverage_vs_google: Optional[float]
-    mean_delta_help_points_vs_google: Optional[float]
+    mean_delta_convenience_stores_vs_google: Optional[float]
     mean_delta_police_vs_google: Optional[float]
     mean_detour_min_safest_vs_fastest: float
     safety_gain_per_extra_minute: Optional[float]
@@ -151,7 +151,7 @@ def summarize(rows: list[dict], n_failed: int = 0) -> Summary:
 
     danger_deltas = _paired_deltas(rows, "our_safest", "google", "danger_zone_passed")
     lit_deltas = _paired_deltas(rows, "our_safest", "google", "lit_coverage_ratio")
-    help_deltas = _paired_deltas(rows, "our_safest", "google", "help_points_within_50m")
+    convenience_deltas = _paired_deltas(rows, "our_safest", "google", "convenience_stores_within_80m")
     police_deltas = _paired_deltas(rows, "our_safest", "google", "police_within_150m")
 
     detour_minutes = [row["our_safest_detour_vs_fastest_min"] for row in rows]
@@ -170,7 +170,7 @@ def summarize(rows: list[dict], n_failed: int = 0) -> Summary:
         delta_safety_ci=bootstrap_mean_ci(safety_deltas_vs_google),
         mean_delta_danger_zone_vs_google=statistics.mean(danger_deltas) if danger_deltas else 0.0,
         mean_delta_lit_coverage_vs_google=(statistics.mean(lit_deltas) if lit_deltas else None),
-        mean_delta_help_points_vs_google=(statistics.mean(help_deltas) if help_deltas else None),
+        mean_delta_convenience_stores_vs_google=(statistics.mean(convenience_deltas) if convenience_deltas else None),
         mean_delta_police_vs_google=(statistics.mean(police_deltas) if police_deltas else None),
         mean_detour_min_safest_vs_fastest=mean_detour,
         safety_gain_per_extra_minute=(mean_delta_safety / mean_detour if mean_detour > 1e-6 else None),
@@ -226,7 +226,7 @@ def render_markdown(summary: Summary, failures: list[tuple[str, str]]) -> str:
         "|---|---|",
         f"| 危險點位通過數 | {summary.mean_delta_danger_zone_vs_google:+.2f} |",
         f"| 路燈覆蓋率（30m 內有路燈的採樣點比例） | {_fmt_optional(summary.mean_delta_lit_coverage_vs_google, '{:+.3f}')} |",
-        f"| 50m 內可求助據點數 | {_fmt_optional(summary.mean_delta_help_points_vs_google, '{:+.2f}')} |",
+        f"| 80m 內超商數 | {_fmt_optional(summary.mean_delta_convenience_stores_vs_google, '{:+.2f}')} |",
         f"| 150m 內警局數 | {_fmt_optional(summary.mean_delta_police_vs_google, '{:+.2f}')} |",
         "",
         "## 方法論",
@@ -313,7 +313,7 @@ def render_html(summary: Summary, failures: list[tuple[str, str]]) -> str:
         for label, value in (
             ("危險點位通過數（平均差異）", f"{summary.mean_delta_danger_zone_vs_google:+.2f}"),
             ("路燈覆蓋率（平均差異）", _fmt_optional(summary.mean_delta_lit_coverage_vs_google, "{:+.3f}")),
-            ("50m 內可求助據點數（平均差異）", _fmt_optional(summary.mean_delta_help_points_vs_google, "{:+.2f}")),
+            ("80m 內超商數（平均差異）", _fmt_optional(summary.mean_delta_convenience_stores_vs_google, "{:+.2f}")),
             ("150m 內警局數（平均差異）", _fmt_optional(summary.mean_delta_police_vs_google, "{:+.2f}")),
         )
     )

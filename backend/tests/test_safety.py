@@ -20,7 +20,7 @@ _CATEGORIES = {
 
 def _point(point_id: str, category: str, lat: float = 0.0, lng: float = 0.0, **kwargs) -> PointRecord:
     return PointRecord(
-        id=point_id, category=category, lat=lat, lng=lng, source="test",
+        place_id=point_id, category=category, lat=lat, lng=lng, source="test",
         source_type=kwargs.pop("source_type", "static_local"), **kwargs,
     )
 
@@ -96,7 +96,7 @@ def test_filter_active_points_drops_expired():
     expired = _point("e1", "danger_zone", source_type="dynamic_realtime", expires_at="2000-01-01T00:00:00+00:00")
     active = _point("a1", "danger_zone", source_type="dynamic_realtime", expires_at="2999-01-01T00:00:00+00:00")
     result = filter_active_points([static_point, expired, active])
-    assert {p.id for p in result} == {"s1", "a1"}
+    assert {p.place_id for p in result} == {"s1", "a1"}
 
 
 def test_filter_active_points_drops_unparsable_expiry():

@@ -54,11 +54,16 @@ class Failure:
 
 def _metrics_row(prefix: str, metrics: RouteMetrics) -> dict[str, object]:
     row: dict[str, object] = {f"{prefix}_{name}": getattr(metrics, name) for name in _ROUTE_METRIC_FIELDS}
-    row[f"{prefix}_danger_zone_passed"] = metrics.passed_landmarks.get("danger_zone", 0)
+    # AGENTS.md §4.6 修訂：danger_zone 也改回傳具體點位列表，不再計入
+    # passed_landmarks，評估報表改對列表 len()（0 代表這次路線沒經過，
+    # 不是「這區沒有危險點位資料」，跟 police/help 兩欄位一致）。
+    row[f"{prefix}_danger_zone_passed"] = len(metrics.danger_zones) if metrics.danger_zones is not None else 0
     # AGENTS.md §4.6 修訂：route_ready 改回傳具體點位列表而非數量，評估報表
     # 仍需要純數字做統計比較，這裡自己對列表 len()（None 代表無資料，維持
     # §1 原則 3 的「缺資料不填 0」語意）。
-    row[f"{prefix}_help_points_within_50m"] = len(metrics.help_points) if metrics.help_points is not None else None
+    row[f"{prefix}_convenience_stores_within_80m"] = (
+        len(metrics.convenience_stores) if metrics.convenience_stores is not None else None
+    )
     row[f"{prefix}_police_within_150m"] = (
         len(metrics.police_stations) if metrics.police_stations is not None else None
     )

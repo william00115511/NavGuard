@@ -18,7 +18,7 @@ def _row(
             f"{prefix}_duration_min_est": distance / 80,
             f"{prefix}_avg_safety_score": safety,
             f"{prefix}_lit_coverage_ratio": 0.5,
-            f"{prefix}_help_points_within_50m": 1,
+            f"{prefix}_convenience_stores_within_80m": 1,
             f"{prefix}_police_within_150m": 0,
             f"{prefix}_detour_vs_fastest_min": 0.0,
             f"{prefix}_danger_zone_passed": danger,

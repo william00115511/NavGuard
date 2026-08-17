@@ -139,23 +139,23 @@ def test_metrics_use_null_not_zero_for_uncovered_categories():
     """§1 原則 3：沒有覆蓋的類別回 null，不能填 0 或空陣列。"""
     metrics = _calculate().json()["route"]["metrics"]
     assert metrics["lit_coverage_ratio"] is None or metrics["lit_coverage_ratio"] >= 0
-    for field in ("police_stations", "help_points"):
+    for field in ("police_stations", "convenience_stores", "danger_zones"):
         assert metrics[field] is None or isinstance(metrics[field], list)
 
 
 def test_route_ready_returns_concrete_police_and_help_point_locations():
-    """route_ready 沿線警局／可求助據點回傳具體點位（lat/lng），不是統計數量。"""
+    """route_ready 沿線警局／可求助據點／危險點位回傳具體點位（lat/lng），不是統計數量。"""
     metrics = _calculate().json()["route"]["metrics"]
     assert "police_within_150m" not in metrics
     assert "help_points_within_50m" not in metrics
-    for field in ("police_stations", "help_points"):
+    for field in ("police_stations", "convenience_stores", "danger_zones"):
         points = metrics[field]
         if not points:
             continue
         for point in points:
             assert isinstance(point["lat"], float)
             assert isinstance(point["lng"], float)
-            assert "id" in point
+            assert "place_id" in point
 
 
 def test_route_calculate_rejects_out_of_coverage_with_http_200():
@@ -200,7 +200,7 @@ def test_unknown_hazard_category_falls_back_instead_of_being_ignored():
     assert considered[0]["category"] == "dynamic_unknown"
     assert any(
         w["code"] == "unknown_hazard_category" and w["category"] == "alien_invasion"
-        for w in body["route"]["warnings"]
+        for w in body["warnings"]
     )
 
 

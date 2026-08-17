@@ -6,9 +6,15 @@ from typing import Optional
 
 @dataclass(frozen=True)
 class PointRecord:
-    """一筆點位資料，靜態(street_light.json...)與動態(即時新聞回報)共用同一格式。"""
+    """一筆點位資料，靜態(street_light.json...)與動態(即時新聞回報)共用同一格式。
 
-    id: str
+    place_id 是這筆點位的唯一識別碼：Google Places 來源（police_station／
+    convenience_store）用 Google 的真實 place_id；其餘類別用資料轉換腳本／
+    引擎自行產生的穩定字串（例如 streetlight_00001）。不再另外維護一個
+    只在系統內部使用的 id 欄位。
+    """
+
+    place_id: str
     category: str
     lat: float
     lng: float
@@ -16,7 +22,6 @@ class PointRecord:
     source_type: str  # "static_local" | "dynamic_realtime"
     expires_at: Optional[str] = None
     confidence: float = 1.0
-    place_id: Optional[str] = None
     meta: dict = field(default_factory=dict)
 
 

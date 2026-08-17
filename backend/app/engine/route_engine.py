@@ -114,7 +114,6 @@ class LocalDataRouteEngine(RouteEngine):
                 path_coordinates=safest.path_coordinates,
                 alpha_used=alpha,
                 metrics=safest_metrics,
-                warnings=list(warnings),
             ),
             Route(
                 id=_FASTEST_ROUTE_ID,
@@ -122,7 +121,6 @@ class LocalDataRouteEngine(RouteEngine):
                 path_coordinates=fastest.path_coordinates,
                 alpha_used=0.0,
                 metrics=fastest_metrics,
-                warnings=list(warnings),
             ),
         ]
 
@@ -132,6 +130,7 @@ class LocalDataRouteEngine(RouteEngine):
             dynamic_hazards_considered=considered,
             google_maps_url=self._build_maps_url(safest, fastest),
             disclaimer=DISCLAIMER,
+            warnings=list(warnings),
         )
 
 
@@ -196,7 +195,7 @@ class LocalDataRouteEngine(RouteEngine):
     def _hazard_to_point(self, hazard: DynamicHazard) -> PointRecord:
         """把 DynamicHazard（§3.4 / §5.4）轉成統一點位格式（§3.2）。"""
         return PointRecord(
-            id=f"dynamic_{uuid.uuid4().hex[:8]}",
+            place_id=f"dynamic_{uuid.uuid4().hex[:8]}",
             category=hazard.category,
             lat=hazard.location.lat,
             lng=hazard.location.lng,

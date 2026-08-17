@@ -13,7 +13,7 @@ from app.data.schema import CategoryConfig, PointRecord
 
 logger = logging.getLogger(__name__)
 
-_REQUIRED_POINT_FIELDS = {"id", "category", "lat", "lng", "source", "source_type"}
+_REQUIRED_POINT_FIELDS = {"place_id", "category", "lat", "lng", "source", "source_type"}
 
 
 def load_categories(path: Path) -> dict[str, CategoryConfig]:
@@ -38,7 +38,7 @@ def _parse_point(raw: dict, source_file: str) -> Optional[PointRecord]:
         logger.warning("跳過 %s 中不符合 schema 的點位（缺少欄位 %s）: %s", source_file, missing, raw)
         return None
     return PointRecord(
-        id=raw["id"],
+        place_id=raw["place_id"],
         category=raw["category"],
         lat=raw["lat"],
         lng=raw["lng"],
@@ -46,7 +46,6 @@ def _parse_point(raw: dict, source_file: str) -> Optional[PointRecord]:
         source_type=raw["source_type"],
         expires_at=raw.get("expires_at"),
         confidence=raw.get("confidence", 1.0),
-        place_id=raw.get("place_id"),
         meta=raw.get("meta", {}),
     )
 

@@ -6,14 +6,9 @@
 
 import math
 from collections import defaultdict
-from typing import Sequence
+from typing import Optional, Sequence
 
-from app.config import (
-    HELP_POINT_RADIUS_M,
-    LIT_COVERAGE_RADIUS_M,
-    POLICE_RADIUS_M,
-    WALK_SPEED_MPS,
-)
+from app.config import WALK_SPEED_MPS
 from app.data.schema import PointRecord
 from app.engine.geo import haversine_m
 from app.engine.pathfinding import PathComputation, path_sample_points
@@ -23,6 +18,10 @@ from interfaces import LatLng, NearbyPoint, RouteMetrics
 _LIT_CATEGORY = "street_light"
 _HELP_CATEGORY = "convenience_store"
 _POLICE_CATEGORY = "police_station"
+_DANGER_CATEGORY = "danger_zone"
+# 這三類已經有具體點位列表（見下方 _records_near），不再另外計入
+# passed_landmarks 的經過次數統計，避免同一批資料被算兩次。
+_EXCLUDED_FROM_PASSED_LANDMARKS = (_POLICE_CATEGORY, _HELP_CATEGORY, _DANGER_CATEGORY)
 
 _METERS_PER_DEGREE_LAT = 111_320.0
 
@@ -74,16 +73,23 @@ def _records_near(samples: Sequence[LatLng], points: Sequence[PointRecord], radi
     result: list[PointRecord] = []
     for s in samples:
         for p in _nearby_points(s, buckets, lat_deg, lng_deg):
-            if p.id in hit_ids:
+            if p.place_id in hit_ids:
                 continue
             if haversine_m(s, LatLng(lat=p.lat, lng=p.lng)) <= radius_m:
-                hit_ids.add(p.id)
+                hit_ids.add(p.place_id)
                 result.append(p)
     return result
 
 
 def _to_nearby_point(p: PointRecord) -> NearbyPoint:
-    return NearbyPoint(id=p.id, lat=p.lat, lng=p.lng, name=p.meta.get("name"))
+    # summary 只有 danger_zone 的 meta 會帶；其餘類別自然是 None。
+    return NearbyPoint(
+        place_id=p.place_id,
+        lat=p.lat,
+        lng=p.lng,
+        name=p.meta.get("name"),
+        summary=p.meta.get("summary"),
+    )
 
 
 def _coverage_ratio(samples: Sequence[LatLng], points: Sequence[PointRecord], radius_m: float) -> float:
@@ -110,11 +116,11 @@ def build_metrics(
 ) -> RouteMetrics:
     samples = path_sample_points(computation.edges) or list(computation.path_coordinates)
 
-    # 警局／可求助據點下面改回傳具體點位列表，不再在這裡重複統計數量
-    # （§4.6 修訂：數量可由前端對列表 len()，不需要後端另外算一次）。
+    # 警局／可求助據點／危險點位下面改回傳具體點位列表，不再在這裡重複統計
+    # 數量（§4.6 修訂：數量可由前端對列表 len()，不需要後端另外算一次）。
     passed_landmarks: dict[str, int] = {}
     for name, category in profile.categories.items():
-        if name in (_POLICE_CATEGORY, _HELP_CATEGORY):
+        if name in _EXCLUDED_FROM_PASSED_LANDMARKS:
             continue
         count = _count_near(samples, _points_of(points, name), category.radius_m)
         if count:
@@ -123,6 +129,18 @@ def build_metrics(
     present = {p.category for p in points}
     data_coverage = [name for name in profile.categories if name in present]
 
+    def _nearby_for(category_name: str) -> Optional[list[NearbyPoint]]:
+        """具體點位列表；該類別在這區完全沒資料時回 None，不是空陣列（§1 原則 3）。
+
+        半徑一律讀 categories.json 的 radius_m（單一事實來源），不在這裡另外
+        硬編碼一份報表口徑的半徑常數（§4.6：convenience_store 沿線 80m 同
+        categories.json 的 radius_m）。
+        """
+        if category_name not in present:
+            return None
+        radius_m = profile.categories[category_name].radius_m
+        return [_to_nearby_point(p) for p in _records_near(samples, _points_of(points, category_name), radius_m)]
+
     return RouteMetrics(
         distance_m=round(computation.distance_m, 1),
         duration_min_est=round(computation.distance_m / WALK_SPEED_MPS / 60, 1),
@@ -130,20 +148,17 @@ def build_metrics(
         passed_landmarks=passed_landmarks,
         detour_vs_fastest_min=round(detour_vs_fastest_min, 1),
         data_coverage=data_coverage,
-        # 三個 metric 都遵守同一條規則：該類別沒有任何資料時回 None 而非 0／空陣列。
         lit_coverage_ratio=(
-            round(_coverage_ratio(samples, _points_of(points, _LIT_CATEGORY), LIT_COVERAGE_RADIUS_M), 3)
+            round(
+                _coverage_ratio(
+                    samples, _points_of(points, _LIT_CATEGORY), profile.categories[_LIT_CATEGORY].radius_m
+                ),
+                3,
+            )
             if _LIT_CATEGORY in present
             else None
         ),
-        help_points=(
-            [_to_nearby_point(p) for p in _records_near(samples, _points_of(points, _HELP_CATEGORY), HELP_POINT_RADIUS_M)]
-            if _HELP_CATEGORY in present
-            else None
-        ),
-        police_stations=(
-            [_to_nearby_point(p) for p in _records_near(samples, _points_of(points, _POLICE_CATEGORY), POLICE_RADIUS_M)]
-            if _POLICE_CATEGORY in present
-            else None
-        ),
+        convenience_stores=_nearby_for(_HELP_CATEGORY),
+        police_stations=_nearby_for(_POLICE_CATEGORY),
+        danger_zones=_nearby_for(_DANGER_CATEGORY),
     )

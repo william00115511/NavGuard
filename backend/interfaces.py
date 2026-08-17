@@ -41,15 +41,19 @@ class DynamicHazard:
 
 @dataclass(frozen=True)
 class NearbyPoint:
-    """沿路線附近的一個具體點位（警局／可求助據點），供前端直接畫 marker。
+    """沿路線附近的一個具體點位（警局／可求助據點／危險點位），供前端直接畫 marker。
 
     只帶顯示需要的欄位，不是完整 PointRecord（source/confidence 等對前端沒意義）。
+    place_id 直接沿用 PointRecord.place_id（Google 來源是真實 place_id，
+    其餘類別是資料轉換腳本產生的穩定字串）。summary 只有 danger_zones 會用到
+    （危險原因說明），其餘類別是 None。
     """
 
-    id: str
+    place_id: str
     lat: float
     lng: float
     name: Optional[str] = None
+    summary: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -76,11 +80,12 @@ class RouteMetrics:
     detour_vs_fastest_min: float
     data_coverage: list[str]
     lit_coverage_ratio: Optional[float] = None
-    # 警局／可求助據點沿線已有具體點位列表（見下方兩欄），不再另外統計數量；
-    # 需要數量時前端自己 len()。None 代表該類別在此區無資料（§1 原則 3），
-    # 不是 0 筆。
+    # 警局／可求助據點／危險點位沿線已有具體點位列表（見下方三欄），不再另外
+    # 統計數量；需要數量時前端自己 len()。None 代表該類別在此區無資料
+    # （§1 原則 3），不是 0 筆。三者也因此都排除在 passed_landmarks 之外。
     police_stations: Optional[list[NearbyPoint]] = None
-    help_points: Optional[list[NearbyPoint]] = None
+    convenience_stores: Optional[list[NearbyPoint]] = None
+    danger_zones: Optional[list[NearbyPoint]] = None
 
 
 @dataclass(frozen=True)
@@ -90,18 +95,23 @@ class Route:
     path_coordinates: list[LatLng]
     alpha_used: float
     metrics: RouteMetrics
-    warnings: list[RouteWarning] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
 class RouteResult:
-    """對應 §4 引擎輸出 + §7 Google Maps URL"""
+    """對應 §4 引擎輸出 + §7 Google Maps URL。
+
+    warnings 是跟 routes 平行的頂層欄位（§4.7／§6.2 修訂），不掛在個別
+    Route 底下——兩條路線（safest／fastest）本來就共用同一份資料覆蓋狀況，
+    沒有理由各自帶一份重複的 warnings。
+    """
 
     selected_route_id: str
     routes: list[Route]  # 至少含 safest 與 fastest
     dynamic_hazards_considered: list[DynamicHazard]
     google_maps_url: str
     disclaimer: str
+    warnings: list[RouteWarning] = field(default_factory=list)
 
 
 class ChatStatus(str, Enum):

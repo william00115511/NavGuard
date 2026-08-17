@@ -21,7 +21,7 @@ _CATEGORIES = {
 
 def _point(point_id: str, category: str, lat: float = 0.0, lng: float = 0.0, **kwargs) -> PointRecord:
     return PointRecord(
-        id=point_id, category=category, lat=lat, lng=lng, source="test", source_type="static_local", **kwargs
+        place_id=point_id, category=category, lat=lat, lng=lng, source="test", source_type="static_local", **kwargs
     )
 
 
