@@ -40,13 +40,13 @@ class GoogleRoutesClient(Protocol):
 
 
 class HttpGoogleRoutesClient:
-    """真正打 Google Routes API 的實作。需要 ROUTES_API_KEY（app/config.py），
+    """真正打 Google Routes API 的實作。需要 MAPS_API_KEY（app/config.py），
     且該 key 所屬的 GCP 專案要另外啟用 Routes API（跟 Places API 是不同的
-    API，需分別啟用；金鑰可以共用同一把）。"""
+    API，需分別啟用；金鑰共用同一把）。"""
 
     def __init__(self, api_key: str, client: Optional[httpx.AsyncClient] = None) -> None:
         if not api_key:
-            raise ValueError("HttpGoogleRoutesClient 需要 ROUTES_API_KEY，目前是空字串")
+            raise ValueError("HttpGoogleRoutesClient 需要 MAPS_API_KEY，目前是空字串")
         self._api_key = api_key
         self._client = client or httpx.AsyncClient(timeout=GOOGLE_ROUTES_TIMEOUT_S)
 

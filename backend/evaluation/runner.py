@@ -61,10 +61,10 @@ def _metrics_row(prefix: str, metrics: RouteMetrics) -> dict[str, object]:
 
 
 def _default_google_client() -> GoogleRoutesClient:
-    api_key = Settings().routes_api_key.get_secret_value()
+    api_key = Settings().maps_api_key.get_secret_value()
     if not api_key or api_key == "YOUR_API_KEY_HERE":
         raise RuntimeError(
-            "跑真的批次評估需要 ROUTES_API_KEY（.env）；"
+            "跑真的批次評估需要 MAPS_API_KEY（.env）；"
             "測試或 dry-run 請改用 evaluation.google_routes_client.FakeGoogleRoutesClient"
         )
     return CachingGoogleRoutesClient(HttpGoogleRoutesClient(api_key=api_key))

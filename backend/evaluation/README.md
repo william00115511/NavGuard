@@ -15,7 +15,7 @@ cd backend
 .venv/Scripts/python.exe -m evaluation.cli report
 ```
 
-`run` 需要 `.env` 有 `ROUTES_API_KEY`（見根目錄 `.env.example`）；Google API 回應會
+`run` 需要 `.env` 有 `MAPS_API_KEY`（見根目錄 `.env.example`）；Google API 回應會
 快取到 `evaluation/output/google_cache/`，重跑 `report` 不需要再打 API。`report`
 讀 `evaluation/output/results.csv`，產出：
 
