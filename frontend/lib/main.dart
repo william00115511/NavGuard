@@ -3,16 +3,19 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 const _fallbackLocation = LatLng(25.0330, 121.5654);
-const _apiBaseUrl = String.fromEnvironment(
+const _compileTimeApiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: 'https://safeway-backend-288900657769.asia-east1.run.app',
+  defaultValue: '',
 );
+late final String _apiBaseUrl;
 const _demoGoogleMapsUrl =
     'https://www.google.com/maps/dir/%E5%8F%B0%E5%8C%97101%E8%B3%BC%E7%89%A9%E4%B8%AD%E5%BF%83+110%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E8%A5%BF%E6%9D%91%E9%87%8C%E5%B8%82%E5%BA%9C%E8%B7%AF45+%E8%99%9F/%E5%8F%B0%E4%B8%AD+414%E8%87%BA%E4%B8%AD%E5%B8%82%E7%83%8F%E6%97%A5%E5%8D%80/%E6%97%A5%E6%9C%88%E6%BD%AD+555%E5%8D%97%E6%8A%95%E7%B8%A3%E9%AD%9A%E6%B1%A0%E9%84%89/%E9%AB%98%E9%9B%84+%E9%AB%98%E9%9B%84%E5%B8%82%E9%BC%93%E5%B1%B1%E5%8D%80%E9%BE%8D%E5%AD%90%E9%87%8C/@23.8275968,119.5984759,8z/data=!4m26!4m25!1m5!1m1!1s0x3442abb6da80a7ad:0xacc4d11dc963103c!2m2!1d121.5640212!2d25.0341222!1m5!1m1!1s0x34693ea3df35917f:0xc0c95f36683eb0ad!2m2!1d120.61419!2d24.11006!1m5!1m1!1s0x3468d5e076ee0005:0xec17a6fd5312a528!2m2!1d120.9159131!2d23.8573342!1m5!1m1!1s0x346e04fd209f4835:0x54511e7d86c87c09!2m2!1d120.3014375!2d22.6272772!3e2?entry=ttu&g_ep=EgoyMDI2MDgxMi4wIKXMDSoASAFQAw%3D%3D';
 
@@ -27,7 +30,37 @@ int _indexForAlpha(double alpha) {
   return closestIndex;
 }
 
-void main() => runApp(const SafewayApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  _apiBaseUrl = await _loadApiBaseUrl();
+  runApp(const SafewayApp());
+}
+
+/// `API_BASE_URL` 可供 CI 或臨時測試覆寫；一般開發讀取 assets/.env。
+/// 這份前端設定只應含公開的服務網址，不能放 server-side API key。
+Future<String> _loadApiBaseUrl() async {
+  if (_compileTimeApiBaseUrl.isNotEmpty) return _compileTimeApiBaseUrl;
+
+  try {
+    final contents = await rootBundle.loadString('assets/.env');
+    for (final rawLine in contents.split('\n')) {
+      final line = rawLine.trim();
+      if (line.isEmpty || line.startsWith('#')) continue;
+      final separator = line.indexOf('=');
+      if (separator == -1) continue;
+      final key = line.substring(0, separator).trim();
+      if (key == 'API_BASE_URL') {
+        return line
+            .substring(separator + 1)
+            .trim()
+            .replaceAll(RegExp(r'^"|"$'), '');
+      }
+    }
+  } catch (_) {
+    // `.env` 可省略；此時會使用本機示範 response，方便純 UI 開發。
+  }
+  return '';
+}
 
 class SafewayApp extends StatelessWidget {
   const SafewayApp({super.key});
@@ -143,17 +176,18 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
       );
       if (!mounted) return;
       setState(() {
-        _messages.add(ChatMessage.assistant(response.replyText));
+        _messages.add(
+          ChatMessage.assistant(
+            response.replyText,
+            routeResponse: response is RouteReadyResponse ? response : null,
+          ),
+        );
         if (response is RouteReadyResponse) {
           _routeResponse = response;
           _selectedRoute = response.selectedRoute;
         }
       });
       _chatRevision.value++;
-      if (response is RouteReadyResponse) {
-        await _focusRoutes(response.routes);
-        if (_isChatSheetOpen && mounted) Navigator.of(context).pop();
-      }
     } on ChatApiException catch (error) {
       if (mounted) {
         setState(
@@ -186,6 +220,15 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
     await _map?.animateCamera(
       CameraUpdate.newLatLngBounds(_bounds(points), 72),
     );
+  }
+
+  Future<void> _showRecommendedRoute(RouteReadyResponse response) async {
+    setState(() {
+      _routeResponse = response;
+      _selectedRoute = response.selectedRoute;
+    });
+    await _focusRoutes(response.routes);
+    if (_isChatSheetOpen && mounted) Navigator.of(context).pop();
   }
 
   Future<void> _openGoogleMaps() async {
@@ -362,6 +405,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
                 sheetExtent: _chatSheetExtent,
                 onInputTap: _expandChatSheet,
                 onSend: _sendMessage,
+                onShowRecommendedRoute: _showRecommendedRoute,
                 priorityAlpha: _priorityAlpha,
                 onPriorityChanged: (value) => _priorityAlpha = value,
                 onClose: () {
@@ -391,6 +435,7 @@ class _ChatPanel extends StatefulWidget {
     required this.sheetExtent,
     required this.onInputTap,
     required this.onSend,
+    required this.onShowRecommendedRoute,
     required this.priorityAlpha,
     required this.onPriorityChanged,
     required this.onClose,
@@ -402,6 +447,7 @@ class _ChatPanel extends StatefulWidget {
   final ValueNotifier<double> sheetExtent;
   final VoidCallback onInputTap;
   final VoidCallback onSend;
+  final ValueChanged<RouteReadyResponse> onShowRecommendedRoute;
   final double priorityAlpha;
   final ValueChanged<double> onPriorityChanged;
   final VoidCallback onClose;
@@ -655,7 +701,11 @@ class _ChatPanelState extends State<_ChatPanel> {
                               return const _TypingBubble();
                             }
                             final message = widget.messages[index];
-                            return _MessageBubble(message: message);
+                            return _MessageBubble(
+                              message: message,
+                              onShowRecommendedRoute:
+                                  widget.onShowRecommendedRoute,
+                            );
                           },
                         );
                       },
@@ -721,8 +771,13 @@ class _ChatPanelState extends State<_ChatPanel> {
 }
 
 class _MessageBubble extends StatelessWidget {
-  const _MessageBubble({required this.message});
+  const _MessageBubble({
+    required this.message,
+    required this.onShowRecommendedRoute,
+  });
   final ChatMessage message;
+  final ValueChanged<RouteReadyResponse> onShowRecommendedRoute;
+
   @override
   Widget build(BuildContext context) => Align(
     alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -743,19 +798,98 @@ class _MessageBubble extends StatelessWidget {
           bottomRight: const Radius.circular(25),
         ),
       ),
-      child: Text(message.text),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (message.isUser)
+            Text(message.text)
+          else
+            MarkdownBody(
+              data: message.text,
+              selectable: true,
+              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                  .copyWith(
+                    p: const TextStyle(color: Color(0xffeee8db)),
+                    strong: const TextStyle(
+                      color: Color(0xffeee8db),
+                      fontWeight: FontWeight.w700,
+                    ),
+                    a: const TextStyle(
+                      color: Color(0xfff3c765),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+              onTapLink: (_, href, _) {
+                if (href != null) {
+                  launchUrl(
+                    Uri.parse(href),
+                    mode: LaunchMode.externalApplication,
+                  );
+                }
+              },
+            ),
+          if (message.routeResponse?.googleMapsUrl != null) ...[
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: () => onShowRecommendedRoute(message.routeResponse!),
+              icon: const Icon(Icons.route_outlined, size: 18),
+              label: const Text('查看推薦路線'),
+            ),
+          ],
+        ],
+      ),
     ),
   );
 }
 
-class _TypingBubble extends StatelessWidget {
+class _TypingBubble extends StatefulWidget {
   const _TypingBubble();
+
   @override
-  Widget build(BuildContext context) => const Align(
+  State<_TypingBubble> createState() => _TypingBubbleState();
+}
+
+class _TypingBubbleState extends State<_TypingBubble>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _gradientController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1600),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _gradientController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Align(
     alignment: Alignment.centerLeft,
     child: Padding(
-      padding: EdgeInsets.only(bottom: 8),
-      child: Text('Safeway 正在查詢資料與規劃路線…'),
+      padding: const EdgeInsets.only(bottom: 8),
+      // 此時尚未收到後端的 status，不能假設一定會進入 route_ready。
+      // collecting_info 只是在補齊起訖點，不會規劃路線。
+      child: AnimatedBuilder(
+        animation: _gradientController,
+        builder: (context, child) {
+          final shift = _gradientController.value * 3 - 1.5;
+          return ShaderMask(
+            blendMode: BlendMode.srcIn,
+            shaderCallback: (bounds) => LinearGradient(
+              begin: Alignment(shift - 1, 0),
+              end: Alignment(shift + 1, 0),
+              colors: const [
+                Color(0xff8e6a2e),
+                Color(0xffffe09a),
+                Color(0xff8e6a2e),
+              ],
+            ).createShader(bounds),
+            child: child,
+          );
+        },
+        child: const Text('Safeway 正在理解你的需求…'),
+      ),
     ),
   );
 }
@@ -1037,12 +1171,26 @@ class ChatApiException implements Exception {
 }
 
 class ChatMessage {
-  const ChatMessage(this.text, {required this.isUser, this.isError = false});
+  const ChatMessage(
+    this.text, {
+    required this.isUser,
+    this.isError = false,
+    this.routeResponse,
+  });
   factory ChatMessage.user(String text) => ChatMessage(text, isUser: true);
-  factory ChatMessage.assistant(String text, {bool isError = false}) =>
-      ChatMessage(text, isUser: false, isError: isError);
+  factory ChatMessage.assistant(
+    String text, {
+    bool isError = false,
+    RouteReadyResponse? routeResponse,
+  }) => ChatMessage(
+    text,
+    isUser: false,
+    isError: isError,
+    routeResponse: routeResponse,
+  );
   final String text;
   final bool isUser, isError;
+  final RouteReadyResponse? routeResponse;
 }
 
 sealed class ChatResponse {
@@ -1189,8 +1337,10 @@ class RouteMetrics {
   final double avgSafetyScore;
   final double? litCoverageRatio;
   factory RouteMetrics.fromJson(Map<String, dynamic> json) => RouteMetrics(
-    distanceMeters: json['distance_m'] as int? ?? 0,
-    durationMinutes: json['duration_min_est'] as int? ?? 0,
+    // 後端依 API contract 回傳浮點數（例如 455.3m、5.8 分鐘）；
+    // 顯示卡片使用整數，因此在這裡才四捨五入，不能直接 cast 成 int。
+    distanceMeters: (json['distance_m'] as num? ?? 0).round(),
+    durationMinutes: (json['duration_min_est'] as num? ?? 0).round(),
     avgSafetyScore: (json['avg_safety_score'] as num? ?? 0).toDouble(),
     litCoverageRatio: (json['lit_coverage_ratio'] as num?)?.toDouble(),
     helpPoints: json['help_points_within_50m'] as int? ?? 0,
