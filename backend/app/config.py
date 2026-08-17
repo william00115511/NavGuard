@@ -8,7 +8,7 @@ without touching the engine (§4.3).
 
 from pathlib import Path
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
@@ -57,7 +57,10 @@ class Settings(BaseSettings):
     )
 
     chat_service_backend: str = "fake"
-    gemini_api_key: SecretStr = SecretStr("")
+    # Vertex AI 用 service account JSON 金鑰做 OAuth2 驗證，不是字串型 API key；
+    # 檔名對齊 Google Cloud 用戶端函式庫慣用的 GOOGLE_APPLICATION_CREDENTIALS 環境變數。
+    google_application_credentials: Path = PROJECT_ROOT / "google-credentials.json"
+    vertex_location: str = "global"
     gemini_model: str = "gemini-2.5-flash"
     # 同時給 Places Geocoding API（正式 API 用）與 Routes API
     # （backend/evaluation/ 離線驗證子專案用）；該 GCP 專案需分別啟用這兩個 API。
@@ -67,3 +70,10 @@ class Settings(BaseSettings):
     # §6.6：改成 client_id 自動建立 session 後，用固定大小的 LRU pool 取代
     # 「顯式建立/清除」的兩段式流程；超過這個數量時逐出最久未使用的 session。
     max_active_sessions: int = Field(default=50, ge=1)
+
+    @field_validator("google_application_credentials")
+    @classmethod
+    def _resolve_credentials_path(cls, value: Path) -> Path:
+        # 相對路徑一律以 PROJECT_ROOT 為基準，不受執行時 cwd 影響
+        # （例如從 backend/ 目錄啟動 uvicorn 時）。
+        return value if value.is_absolute() else PROJECT_ROOT / value

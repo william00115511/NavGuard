@@ -4,6 +4,7 @@
 """
 
 from google import genai
+from google.oauth2 import service_account
 
 from app.chat.fake_chat_service import FakeChatService
 from app.chat.gemini_chat_service import GeminiChatService
@@ -24,13 +25,25 @@ def get_chat_service() -> ChatService:
         if backend == "fake":
             _chat_service = FakeChatService(max_active_sessions=settings.max_active_sessions)
         elif backend == "gemini":
-            api_key = settings.gemini_api_key.get_secret_value()
-            if not api_key or api_key == "YOUR_API_KEY_HERE":
-                raise RuntimeError("CHAT_SERVICE_BACKEND=gemini requires GEMINI_API_KEY")
+            credentials_path = settings.google_application_credentials
+            if not credentials_path.is_file():
+                raise RuntimeError(
+                    "CHAT_SERVICE_BACKEND=gemini requires a Vertex AI service "
+                    f"account JSON key at {credentials_path}"
+                )
+            credentials = service_account.Credentials.from_service_account_file(
+                str(credentials_path),
+                scopes=["https://www.googleapis.com/auth/cloud-platform"],
+            )
             maps_api_key = settings.maps_api_key.get_secret_value()
             if not maps_api_key or maps_api_key == "YOUR_API_KEY_HERE":
                 raise RuntimeError("CHAT_SERVICE_BACKEND=gemini requires MAPS_API_KEY")
-            client = genai.Client(api_key=api_key)
+            client = genai.Client(
+                vertexai=True,
+                project=credentials.project_id,
+                location=settings.vertex_location,
+                credentials=credentials,
+            )
             gateway = GoogleGenAIGateway(client=client, model=settings.gemini_model)
             route_engine = get_route_engine()
             route_engine.set_geocoder(GooglePlacesGeocoder(api_key=maps_api_key))
