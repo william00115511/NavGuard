@@ -17,7 +17,7 @@ from app.schemas import (
     RouteCalculateRequest,
     RouteCalculateResponse,
     hazard_to_out,
-    route_to_out,
+    selected_route_to_out,
 )
 from interfaces import DynamicHazard, NoRouteFoundError, OutOfCoverageError
 
@@ -67,8 +67,7 @@ async def calculate_route(request: RouteCalculateRequest) -> RouteCalculateRespo
 
     return RouteCalculateResponse(
         status="ok",
-        selected_route_id=result.selected_route_id,
-        routes=[route_to_out(r) for r in result.routes],
+        route=selected_route_to_out(result),
         dynamic_hazards_considered=[hazard_to_out(h) for h in result.dynamic_hazards_considered],
         google_maps_url=result.google_maps_url,
         disclaimer=result.disclaimer,

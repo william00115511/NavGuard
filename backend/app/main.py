@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from app.data.store import get_data_store
 from app.engine.graph import get_road_graph
 from app.errors import ApiError
-from app.routers import chat, route, session
+from app.routers import chat, route
 
 logger = logging.getLogger(__name__)
 
@@ -21,8 +21,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.include_router(session.router)
 app.include_router(chat.router)
 app.include_router(route.router)
 

@@ -6,7 +6,7 @@ from app.engine.safety import (
     raw_score_at,
     sigmoid_safety,
 )
-from interfaces import LatLng
+from interfaces import LatLng, RouteWarning
 
 _CATEGORIES = {
     "street_light": CategoryConfig(
@@ -81,7 +81,7 @@ def test_missing_category_is_removed_and_others_renormalized():
     assert profile.effective_weight["danger_zone"] == 0.0
     # 剩下的 street_light 扛起原本 1.0 + 2.0 的總權重
     assert profile.effective_weight["street_light"] == 3.0
-    assert profile.warnings == ["風險區域資料在此區沒有覆蓋，未納入評分"]
+    assert profile.warnings == [RouteWarning(code="missing_data_category", category="danger_zone")]
 
 
 def test_full_coverage_keeps_original_weights():

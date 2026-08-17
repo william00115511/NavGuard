@@ -7,7 +7,6 @@ from datetime import datetime
 from enum import Enum
 from time import monotonic
 from typing import Any, Callable, Protocol, Sequence
-from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
@@ -21,7 +20,6 @@ from interfaces import (
     OutOfCoverageError,
     RouteEngine,
     RouteResult,
-    SessionNotFoundError,
 )
 
 
@@ -89,42 +87,46 @@ class GeminiChatService(ChatService):
         *,
         session_ttl_seconds: float = 30 * 60,
         max_history_messages: int = 20,
+        client_count: int = 50,
         clock: Callable[[], float] = monotonic,
     ) -> None:
         if session_ttl_seconds <= 0:
             raise ValueError("session_ttl_seconds must be positive")
         if max_history_messages < 4:
             raise ValueError("max_history_messages must be at least 4")
+        if client_count < 1:
+            raise ValueError("client_count must be at least 1")
         self._gateway = gateway
         self._route_engine = route_engine
         self._session_ttl_seconds = session_ttl_seconds
         self._max_history_messages = max_history_messages
         self._clock = clock
-        self._sessions: dict[str, _SessionState] = {}
+        # client_id 固定是 "1".."N"（純數字字串，見 AGENTS.md §6.1），所以直接
+        # 一次配好 N 個 session，不需要 LRU 之類的容量逐出機制。
+        self._sessions: dict[str, _SessionState] = {
+            str(i): _SessionState(last_access_at=self._clock())
+            for i in range(1, client_count + 1)
+        }
 
-    async def create_session(self, user_location: LatLng | None = None) -> str:
-        self._evict_expired()
-        session_id = f"sess_{uuid4().hex[:12]}"
-        self._sessions[session_id] = _SessionState(
-            user_location=user_location,
-            last_access_at=self._clock(),
-        )
-        return session_id
+    async def clear_context(self, client_id: str) -> None:
+        session = self._sessions.get(client_id)
+        if session is None:
+            return
+        session.history.clear()
+        session.user_location = None
+        session.last_access_at = self._clock()
 
     async def handle_message(
         self,
-        session_id: str,
+        client_id: str,
         message: str,
         user_location: LatLng | None = None,
         priority_alpha: float | None = None,
     ) -> ChatResult:
-        session = self._sessions.get(session_id)
-        if session is None or self._is_expired(session):
-            self._sessions.pop(session_id, None)
-            raise SessionNotFoundError(f"session_id 不存在或已過期: {session_id}")
         if not message.strip():
             return self._error("INVALID_MESSAGE", "請輸入路線需求。")
 
+        session = self._get_session(client_id)
         async with session.lock:
             if user_location is not None:
                 session.user_location = user_location
@@ -133,6 +135,19 @@ class GeminiChatService(ChatService):
                 priority_alpha if priority_alpha is not None else DEFAULT_PRIORITY_ALPHA
             )
             return await self._handle_session_message(session, message.strip(), resolved_alpha)
+
+    def _get_session(self, client_id: str) -> _SessionState:
+        session = self._sessions.get(client_id)
+        if session is None:
+            # 理論上不會發生（client_id 固定是 "1".."N"，已在建構時配好），
+            # 保底自動建立，呼應「第一次出現的 client_id 直接可用」的既有
+            # 約定（AGENTS.md §6.1）。
+            session = _SessionState(last_access_at=self._clock())
+            self._sessions[client_id] = session
+        elif self._is_expired(session):
+            session.history.clear()
+            session.user_location = None
+        return session
 
     async def _handle_session_message(
         self,
@@ -218,35 +233,9 @@ class GeminiChatService(ChatService):
             ),
         )
 
-        final_raw_content = None
-        try:
-            final_reply = await self._gateway.generate(
-                session.history,
-                has_user_location=has_user_location,
-            )
-            final_text = final_reply.text.strip()
-            if not final_reply.tool_calls:
-                final_raw_content = final_reply.raw_content
-        except (GeminiGatewayError, TimeoutError):
-            final_reply = None
-            final_text = ""
-
-        if not final_text or (final_reply is not None and final_reply.tool_calls):
-            final_text = self._deterministic_route_summary(route)
-
-        self._append_history(
-            session,
-            ConversationMessage(
-                kind="assistant",
-                text=final_text,
-                raw_content=final_raw_content,
-            ),
-        )
-        return ChatResult(
-            status=ChatStatus.ROUTE_READY,
-            reply_text=final_text,
-            route_result=route,
-        )
+        # route_ready 不需要 Gemini 把數值轉成文字（那份文字已經被結構化 route_result
+        # 取代，見 AGENTS.md §5.1 修訂），所以這裡不再多打一次 Gemini 拿 reply_text。
+        return ChatResult(status=ChatStatus.ROUTE_READY, route_result=route)
 
     async def _resolve_origin(
         self,
@@ -294,11 +283,6 @@ class GeminiChatService(ChatService):
             ),
         )
 
-    def _evict_expired(self) -> None:
-        expired = [sid for sid, session in self._sessions.items() if self._is_expired(session)]
-        for session_id in expired:
-            del self._sessions[session_id]
-
     def _is_expired(self, session: _SessionState) -> bool:
         return self._clock() - session.last_access_at > self._session_ttl_seconds
 
@@ -319,17 +303,4 @@ class GeminiChatService(ChatService):
             status=ChatStatus.ERROR,
             reply_text=reply_text,
             error_code=error_code,
-        )
-
-    @staticmethod
-    def _deterministic_route_summary(route_result: RouteResult) -> str:
-        selected = next(
-            (route for route in route_result.routes if route.id == route_result.selected_route_id),
-            route_result.routes[0],
-        )
-        distance_km = selected.metrics.distance_m / 1000
-        return (
-            f"已完成路線規劃，距離約 {distance_km:.1f} 公里，"
-            f"安全評分約 {selected.metrics.avg_safety_score * 100:.0f} 分。"
-            f"{route_result.disclaimer}"
         )

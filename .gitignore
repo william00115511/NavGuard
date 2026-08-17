@@ -1,6 +1,7 @@
 .env
 .env.*
 !.env.example
+google-credentials.json
 __pycache__/
 *.py[cod]
 .pytest_cache/

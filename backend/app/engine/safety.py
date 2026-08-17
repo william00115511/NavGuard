@@ -19,7 +19,7 @@ from app.config import SAFETY_SIGMOID_K
 from app.data.schema import CategoryConfig, PointRecord
 from app.engine.geo import haversine_m
 from app.engine.graph import Edge, EdgeKey, RoadGraph
-from interfaces import LatLng
+from interfaces import LatLng, RouteWarning
 
 _METERS_PER_DEGREE_LAT = 111_320.0
 
@@ -73,7 +73,7 @@ class ScoringProfile:
     effective_weight: dict[str, float]
     covered_static: list[str]
     missing_static: list[str]
-    warnings: list[str]
+    warnings: list[RouteWarning]
 
     @property
     def static_coverage_ratio(self) -> float:
@@ -102,9 +102,8 @@ def build_scoring_profile(
     for name in missing:
         effective_weight[name] = 0.0
 
-    warnings = [
-        f"{categories[name].display_name}資料在此區沒有覆蓋，未納入評分" for name in missing
-    ]
+    # code="missing_data_category"：category 帶原始類別 key，display_name 由前端自行查表。
+    warnings = [RouteWarning(code="missing_data_category", category=name) for name in missing]
     return ScoringProfile(
         categories=categories,
         effective_weight=effective_weight,
