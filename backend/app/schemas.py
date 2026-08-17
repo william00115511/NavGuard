@@ -9,7 +9,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from interfaces import DynamicHazard, LatLng, Route, RouteMetrics, RouteResult, RouteWarning
+from interfaces import DynamicHazard, LatLng, NearbyPoint, Route, RouteMetrics, RouteResult, RouteWarning
 
 
 class LatLngIn(BaseModel):
@@ -50,6 +50,13 @@ class RouteWarningOut(BaseModel):
     summary: Optional[str] = None
 
 
+class NearbyPointOut(BaseModel):
+    id: str
+    lat: float
+    lng: float
+    name: Optional[str] = None
+
+
 class RouteMetricsOut(BaseModel):
     distance_m: float
     duration_min_est: float
@@ -57,10 +64,12 @@ class RouteMetricsOut(BaseModel):
     passed_landmarks: dict[str, int]
     detour_vs_fastest_min: float
     data_coverage: list[str]
-    # 沒有該類資料時是 null，不是 0（§1 原則 3）。
+    # 沒有該類資料時是 null，不是 0／空陣列（§1 原則 3）。
     lit_coverage_ratio: Optional[float] = None
-    help_points_within_50m: Optional[int] = None
-    police_within_150m: Optional[int] = None
+    # 具體點位列表（見 AGENTS.md §4.6 修訂），前端直接畫 marker；
+    # 數量需要的話對列表 len() 即可，不再另外提供統計數字。
+    police_stations: Optional[list[NearbyPointOut]] = None
+    help_points: Optional[list[NearbyPointOut]] = None
 
 
 class RouteOut(BaseModel):
@@ -135,8 +144,26 @@ class RouteCalculateResponse(BaseModel):
 # ---------- 轉換 ----------
 
 
+def nearby_point_to_out(point: NearbyPoint) -> NearbyPointOut:
+    return NearbyPointOut(id=point.id, lat=point.lat, lng=point.lng, name=point.name)
+
+
 def metrics_to_out(metrics: RouteMetrics) -> RouteMetricsOut:
-    return RouteMetricsOut(**vars(metrics))
+    return RouteMetricsOut(
+        distance_m=metrics.distance_m,
+        duration_min_est=metrics.duration_min_est,
+        avg_safety_score=metrics.avg_safety_score,
+        passed_landmarks=metrics.passed_landmarks,
+        detour_vs_fastest_min=metrics.detour_vs_fastest_min,
+        data_coverage=metrics.data_coverage,
+        lit_coverage_ratio=metrics.lit_coverage_ratio,
+        police_stations=(
+            [nearby_point_to_out(p) for p in metrics.police_stations] if metrics.police_stations is not None else None
+        ),
+        help_points=(
+            [nearby_point_to_out(p) for p in metrics.help_points] if metrics.help_points is not None else None
+        ),
+    )
 
 
 def warning_to_out(warning: RouteWarning) -> RouteWarningOut:

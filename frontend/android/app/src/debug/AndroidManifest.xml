@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 僅供 Debug 連線至同一個 Wi-Fi 的本機 HTTP 後端；Release 不會合併此設定。 -->
+    <application android:usesCleartextTraffic="true" />
 </manifest>

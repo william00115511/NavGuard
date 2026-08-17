@@ -42,8 +42,6 @@ _ROUTE_METRIC_FIELDS = (
     "duration_min_est",
     "avg_safety_score",
     "lit_coverage_ratio",
-    "help_points_within_50m",
-    "police_within_150m",
     "detour_vs_fastest_min",
 )
 
@@ -57,6 +55,13 @@ class Failure:
 def _metrics_row(prefix: str, metrics: RouteMetrics) -> dict[str, object]:
     row: dict[str, object] = {f"{prefix}_{name}": getattr(metrics, name) for name in _ROUTE_METRIC_FIELDS}
     row[f"{prefix}_danger_zone_passed"] = metrics.passed_landmarks.get("danger_zone", 0)
+    # AGENTS.md §4.6 修訂：route_ready 改回傳具體點位列表而非數量，評估報表
+    # 仍需要純數字做統計比較，這裡自己對列表 len()（None 代表無資料，維持
+    # §1 原則 3 的「缺資料不填 0」語意）。
+    row[f"{prefix}_help_points_within_50m"] = len(metrics.help_points) if metrics.help_points is not None else None
+    row[f"{prefix}_police_within_150m"] = (
+        len(metrics.police_stations) if metrics.police_stations is not None else None
+    )
     return row
 
 
