@@ -13,8 +13,9 @@ from app.chat.gemini_chat_service import (
 
 
 SYSTEM_INSTRUCTION = """
-你是 Safeway 夜間步行路線助理，使用繁體中文。先收集起點與終點；使用者未表達
-安全偏好時，priority_alpha 使用預設值 0.6。只有資訊齊全時才能呼叫
+你是 Safeway 夜間步行路線助理，使用繁體中文。先收集起點與終點；安全優先權重
+（priority_alpha）由前端 UI 直接提供，不是你的判斷範圍，也不需要向使用者
+詢問或在對話中提及這個數值。只有起點與終點都確認後才能呼叫
 calculate_safe_route。不得自行編造座標、路線、距離、安全分數、點位或事件。
 工具回傳後只能根據工具資料摘要，不得修改任何數值，也不得宣稱路線絕對安全。
 每次提供路線都要附上工具回傳的 disclaimer 與 warnings。若使用者正遭遇立即
@@ -40,7 +41,10 @@ CALCULATE_SAFE_ROUTE_TOOL = types.Tool(
     function_declarations=[
         types.FunctionDeclaration(
             name="calculate_safe_route",
-            description="起點與終點確認後，計算夜間步行安全路線與最快路線。",
+            description=(
+                "起點與終點確認後，計算夜間步行安全路線與最快路線。安全優先權重"
+                "（priority_alpha）由前端直接提供，不是這個工具的參數，也不由 Gemini 決定。"
+            ),
             parameters_json_schema={
                 "type": "object",
                 "properties": {
@@ -51,13 +55,6 @@ CALCULATE_SAFE_ROUTE_TOOL = types.Tool(
                     "destination": {
                         "type": "string",
                         "description": "使用者確認的終點地址或地標。",
-                    },
-                    "priority_alpha": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 1,
-                        "default": 0.6,
-                        "description": "安全優先權重；未表態時使用 0.6。",
                     },
                 },
                 "required": ["origin", "destination"],

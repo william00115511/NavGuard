@@ -40,6 +40,9 @@ class ChatRequest(BaseModel):
     session_id: str
     message: str
     user_location: Optional[LatLngIn] = None
+    # 安全優先權重，由前端 UI（例如滑桿）提供；不經 Gemini 判斷（AGENTS.md §5.1）。
+    # 選填，未帶時後端使用預設值。
+    priority_alpha: Optional[float] = Field(default=None, ge=0.0, le=1.0)
 
 
 class DynamicHazardOut(BaseModel):

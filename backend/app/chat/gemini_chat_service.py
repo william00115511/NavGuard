@@ -29,12 +29,14 @@ class GeminiGatewayError(RuntimeError):
     """Gemini request failed before a valid model turn was produced."""
 
 
+DEFAULT_PRIORITY_ALPHA = 0.6
+
+
 class CalculateRouteArguments(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
     origin: str = Field(min_length=1)
     destination: str = Field(min_length=1)
-    priority_alpha: float = Field(default=0.6, ge=0, le=1)
 
 
 @dataclass(frozen=True)
@@ -114,6 +116,7 @@ class GeminiChatService(ChatService):
         session_id: str,
         message: str,
         user_location: LatLng | None = None,
+        priority_alpha: float | None = None,
     ) -> ChatResult:
         session = self._sessions.get(session_id)
         if session is None or self._is_expired(session):
@@ -126,12 +129,16 @@ class GeminiChatService(ChatService):
             if user_location is not None:
                 session.user_location = user_location
             session.last_access_at = self._clock()
-            return await self._handle_session_message(session, message.strip())
+            resolved_alpha = (
+                priority_alpha if priority_alpha is not None else DEFAULT_PRIORITY_ALPHA
+            )
+            return await self._handle_session_message(session, message.strip(), resolved_alpha)
 
     async def _handle_session_message(
         self,
         session: _SessionState,
         message: str,
+        priority_alpha: float,
     ) -> ChatResult:
         self._append_history(session, ConversationMessage(kind="user", text=message))
         has_user_location = session.user_location is not None
@@ -190,7 +197,7 @@ class GeminiChatService(ChatService):
             route = await self._route_engine.calculate_route(
                 origin=origin,
                 destination=destination,
-                priority_alpha=arguments.priority_alpha,
+                priority_alpha=priority_alpha,
             )
         except OutOfCoverageError:
             self._record_tool_error(session, tool_call, OUT_OF_COVERAGE)

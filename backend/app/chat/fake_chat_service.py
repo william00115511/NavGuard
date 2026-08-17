@@ -58,6 +58,7 @@ class FakeChatService(ChatService):
         session_id: str,
         message: str,
         user_location: Optional[LatLng] = None,
+        priority_alpha: Optional[float] = None,
     ) -> ChatResult:
         self._evict_expired()
         session = self._sessions.get(session_id)
@@ -69,7 +70,9 @@ class FakeChatService(ChatService):
         origin = session.user_location or _DEMO_ORIGIN
         try:
             result = await get_route_engine().calculate_route(
-                origin=origin, destination=_DEMO_DESTINATION
+                origin=origin,
+                destination=_DEMO_DESTINATION,
+                priority_alpha=priority_alpha if priority_alpha is not None else 0.6,
             )
         except OutOfCoverageError:
             return ChatResult(

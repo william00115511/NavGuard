@@ -27,7 +27,7 @@ async def chat(request: ChatRequest) -> ChatResponse:
     user_location = request.user_location.to_latlng() if request.user_location else None
     try:
         result = await get_chat_service().handle_message(
-            request.session_id, request.message, user_location
+            request.session_id, request.message, user_location, request.priority_alpha
         )
     except ChatSessionNotFoundError as exc:
         raise ApiSessionNotFoundError(f"session_id 不存在: {request.session_id}") from exc

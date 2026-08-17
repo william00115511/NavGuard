@@ -139,10 +139,14 @@ class ChatService(ABC):
         session_id: str,
         message: str,
         user_location: Optional[LatLng] = None,
+        priority_alpha: Optional[float] = None,
     ) -> ChatResult:
         """處理一則使用者訊息（內部含 Gemini 對話與 Function Calling），
         回傳 collecting_info / route_ready / error 三種結果之一。
-        session_id 不存在時 raise SessionNotFoundError。"""
+        session_id 不存在時 raise SessionNotFoundError。
+
+        priority_alpha（安全優先權重）由前端 UI 直接提供，不經 Gemini 判斷；
+        未帶時使用預設值（見實作，AGENTS.md §5.1）。"""
         raise NotImplementedError
 
 

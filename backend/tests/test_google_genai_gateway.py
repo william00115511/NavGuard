@@ -36,7 +36,7 @@ def make_response(*, text="", function_calls=None):
     )
 
 
-def test_gateway_declares_route_tool_with_optional_alpha() -> None:
+def test_gateway_declares_route_tool_without_alpha() -> None:
     function_call = SimpleNamespace(
         id="call-1",
         name="calculate_safe_route",
@@ -51,7 +51,7 @@ def test_gateway_declares_route_tool_with_optional_alpha() -> None:
     config = client.models.calls[0]["config"].model_dump(by_alias=False)
     declaration = config["tools"][0]["function_declarations"][0]
     assert declaration["parameters_json_schema"]["required"] == ["origin", "destination"]
-    assert declaration["parameters_json_schema"]["properties"]["priority_alpha"]["default"] == 0.6
+    assert "priority_alpha" not in declaration["parameters_json_schema"]["properties"]
 
 
 def test_gateway_serializes_function_response() -> None:

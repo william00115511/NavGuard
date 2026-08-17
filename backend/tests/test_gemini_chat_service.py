@@ -128,7 +128,6 @@ def route_call(**overrides) -> ModelReply:
     arguments = {
         "origin": "台北車站",
         "destination": "公館夜市",
-        "priority_alpha": 0.8,
     }
     arguments.update(overrides)
     return ModelReply(
@@ -179,7 +178,23 @@ def test_model_question_returns_collecting_info() -> None:
     assert result.reply_text == "請問目的地是哪裡？"
 
 
-def test_route_tool_passes_continuous_alpha_and_returns_route_result() -> None:
+def test_frontend_priority_alpha_is_passed_to_route_engine() -> None:
+    gateway = ScriptedGateway([route_call(), ModelReply(text="已完成路線規劃。")])
+    engine = FakeRouteEngine()
+    service = GeminiChatService(gateway, engine)
+    session_id = run(service.create_session())
+
+    result = run(
+        service.handle_message(session_id, "幫我規劃路線", priority_alpha=0.8)
+    )
+
+    assert result.status is ChatStatus.ROUTE_READY
+    assert result.route_result is not None
+    assert engine.calculate_calls[0][2] == 0.8
+    assert gateway.histories[-1][-1].kind == "tool_response"
+
+
+def test_priority_alpha_defaults_when_frontend_omits_it() -> None:
     gateway = ScriptedGateway([route_call(), ModelReply(text="已完成路線規劃。")])
     engine = FakeRouteEngine()
     service = GeminiChatService(gateway, engine)
@@ -188,16 +203,25 @@ def test_route_tool_passes_continuous_alpha_and_returns_route_result() -> None:
     result = run(service.handle_message(session_id, "幫我規劃路線"))
 
     assert result.status is ChatStatus.ROUTE_READY
-    assert result.route_result is not None
-    assert engine.calculate_calls[0][2] == 0.8
-    assert gateway.histories[-1][-1].kind == "tool_response"
+    assert engine.calculate_calls[0][2] == 0.6
+
+
+def test_gemini_supplied_priority_alpha_is_rejected() -> None:
+    gateway = ScriptedGateway([route_call(priority_alpha=0.9)])
+    service = GeminiChatService(gateway, FakeRouteEngine())
+    session_id = run(service.create_session())
+
+    result = run(service.handle_message(session_id, "幫我規劃路線"))
+
+    assert result.status is ChatStatus.ERROR
+    assert result.error_code == "INVALID_TOOL_ARGUMENTS"
 
 
 def test_current_location_uses_session_location_and_geocode_bias() -> None:
     user_location = LatLng(lat=25.033, lng=121.5654)
     gateway = ScriptedGateway(
         [
-            route_call(origin="current_location", priority_alpha=0.6),
+            route_call(origin="current_location"),
             ModelReply(text="已完成。"),
         ]
     )
