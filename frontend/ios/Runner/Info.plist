@@ -30,6 +30,14 @@
 	<string>$(DART_DEFINES)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- 僅限本機開發時連線至同一 Wi-Fi 的 HTTP 後端；正式版應使用 HTTPS。 -->
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Safeway 需要連線到同一 Wi-Fi 上的開發導航服務。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Safeway 需要使用目前位置，以提供較安全的步行路線。</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
