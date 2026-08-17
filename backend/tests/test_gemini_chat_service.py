@@ -12,7 +12,6 @@ from app.chat.gemini_chat_service import (
 )
 from interfaces import (
     ChatStatus,
-    Confidence,
     LatLng,
     Route,
     RouteEngine,
@@ -46,7 +45,6 @@ def make_route_result(alpha: float = 0.6) -> RouteResult:
                 ],
                 alpha_used=alpha,
                 metrics=metrics,
-                confidence=Confidence.MEDIUM,
             )
         ],
         dynamic_hazards_considered=[],

@@ -75,7 +75,6 @@ class RouteMetricsOut(BaseModel):
 class RouteOut(BaseModel):
     path_coordinates: list[list[float]]  # [[lat, lng], ...]，前端直接畫 polyline
     alpha_used: float
-    confidence: str
     metrics: RouteMetricsOut
     warnings: list[RouteWarningOut]
 
@@ -174,7 +173,6 @@ def route_to_out(route: Route) -> RouteOut:
     return RouteOut(
         path_coordinates=[[p.lat, p.lng] for p in route.path_coordinates],
         alpha_used=route.alpha_used,
-        confidence=route.confidence.value,
         metrics=metrics_to_out(route.metrics),
         warnings=[warning_to_out(w) for w in route.warnings],
     )

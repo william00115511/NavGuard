@@ -97,7 +97,6 @@ def test_route_calculate_returns_single_route_with_polyline():
     assert 0 <= metrics["avg_safety_score"] <= 1
     assert metrics["duration_min_est"] > 0
     assert "street_light" in metrics["data_coverage"]
-    assert route["confidence"] in {"high", "medium", "low"}
 
 
 def test_route_calculate_alpha_zero_matches_fastest_route():

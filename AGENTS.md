@@ -18,7 +18,7 @@
 
 1. **安全分數是輔助決策，不是安全保證。** UI 必須持續顯示免責聲明與「遇到緊急危險請撥當地緊急電話」。禁止出現「絕對安全」「保證安全」等文案。
 2. **Gemini 不得產生任何安全數值。** 分數、距離、路徑、點位密度一律由後端 deterministic 程式碼計算。Gemini 只負責：聽懂需求、觸發工具、把已算好的結果轉成自然語言。禁止讓 LLM 算數值（避免幻覺）。
-3. **缺資料絕不填 0。** 某類資料在該區域沒有覆蓋時，做法是：移除該項權重並重新正規化其餘權重、降低 `confidence`、在 `warnings` 明確告知使用者，而不是當作「該區沒有風險」。
+3. **缺資料絕不填 0。** 某類資料在該區域沒有覆蓋時，做法是：移除該項權重並重新正規化其餘權重、在 `warnings` 明確告知使用者，而不是當作「該區沒有風險」。
 4. **API Key 只能在後端。** Gemini key 與任何 server-side key 不得出現在 Flutter 程式碼、`--dart-define`、APK 或 Git 中。Flutter 端只保留有 application restriction（Android package + SHA-1 / iOS bundle ID）的 Maps SDK key。
 5. **不處理受害者個資，不在地圖上畫精確歷史犯罪位置。** 犯罪資料一律以 grid／密度形式呈現。
 6. **MVP 只覆蓋一個城市／行政區**，不得宣稱資料覆蓋全世界。範圍外的請求要明確回覆「此區尚未覆蓋」。
@@ -230,12 +230,16 @@ h(n) = haversine(n, goal) × (1 - α)
 
 ⚠️ **修訂**：舊版 `help_points_within_50m`／`police_within_150m` 只回數量，前端沒辦法在地圖上標出實際位置。改成回傳具體點位列表後，前端要顯示數量時自己對列表 `length`，後端不再重複提供一個數字欄位。
 
-### 4.7 confidence 與 warnings
+### 4.7 warnings
 
-- `confidence` 取 `high` / `medium` / `low`：依 `data_coverage` 涵蓋比例與動態點位佔比決定
 - 任何類別無覆蓋 → 該權重從公式移除、其餘權重重新正規化、產生一則結構化 `warning`：
   `{ "code": "missing_data_category", "category": "street_light" }`（前端自行查表組文案，見 §6.2）
 - 起訖點超出路網範圍 → 回錯誤，不做外插
+
+⚠️ **修訂**：拔掉 `route.confidence`（`high`/`medium`/`low`）欄位——這個值只是
+把 `data_coverage` 與動態點位佔比再摘要成一個粗略等級，實際判斷仍要看
+`warnings` 裡的 `missing_data_category`，`confidence` 沒有提供 `warnings`
+給不了的資訊，是多餘的重複表達。`route_ready` 回應不再帶這個欄位。
 
 ---
 

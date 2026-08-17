@@ -20,7 +20,7 @@ from app.config import DEFAULT_ALPHA, DISCLAIMER, FALLBACK_DYNAMIC_CATEGORY, WAL
 from app.data.schema import CategoryConfig, PointRecord
 from app.data.store import DataStore, get_data_store
 from app.engine.graph import RoadGraph, get_road_graph
-from app.engine.metrics import build_metrics, decide_confidence
+from app.engine.metrics import build_metrics
 from app.engine.pathfinding import PathComputation, compute_path
 from app.engine.safety import EdgeSafetyIndex, build_scoring_profile, filter_active_points
 from app.maps.url_builder import build_google_maps_url
@@ -101,7 +101,6 @@ class LocalDataRouteEngine(RouteEngine):
             raise NoRouteFoundError(f"起訖點在路網圖上不連通：{origin_node} -> {destination_node}")
 
         warnings = self._profile.warnings + hazard_warnings
-        confidence = decide_confidence(self._profile, all_points)
 
         fastest_metrics = build_metrics(fastest, all_points, self._profile, detour_vs_fastest_min=0.0)
         detour_min = (safest.distance_m - fastest.distance_m) / WALK_SPEED_MPS / 60
@@ -114,7 +113,6 @@ class LocalDataRouteEngine(RouteEngine):
                 path_coordinates=safest.path_coordinates,
                 alpha_used=alpha,
                 metrics=safest_metrics,
-                confidence=confidence,
                 warnings=list(warnings),
             ),
             Route(
@@ -123,7 +121,6 @@ class LocalDataRouteEngine(RouteEngine):
                 path_coordinates=fastest.path_coordinates,
                 alpha_used=0.0,
                 metrics=fastest_metrics,
-                confidence=confidence,
                 warnings=list(warnings),
             ),
         ]

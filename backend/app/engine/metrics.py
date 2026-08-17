@@ -1,4 +1,4 @@
-"""路線層級的可解釋 metrics 與 confidence（AGENTS.md §4.6 / §4.7）。
+"""路線層級的可解釋 metrics（AGENTS.md §4.6）。
 
 這些是**報告用**指標，不參與路徑選擇。無資料的欄位一律填 None，不填 0
 （§1 原則 3：沒有資料不等於沒有風險）。
@@ -18,7 +18,7 @@ from app.data.schema import PointRecord
 from app.engine.geo import haversine_m
 from app.engine.pathfinding import PathComputation, path_sample_points
 from app.engine.safety import ScoringProfile
-from interfaces import Confidence, LatLng, NearbyPoint, RouteMetrics
+from interfaces import LatLng, NearbyPoint, RouteMetrics
 
 _LIT_CATEGORY = "street_light"
 _HELP_CATEGORY = "help_point"
@@ -147,20 +147,3 @@ def build_metrics(
             else None
         ),
     )
-
-
-def decide_confidence(profile: ScoringProfile, points: Sequence[PointRecord]) -> Confidence:
-    """§4.7：依靜態資料覆蓋比例與動態點位佔比決定。
-
-    動態點位（未經查證的即時新聞）佔比越高，整體結論越不可靠，
-    所以即使靜態覆蓋完整也要降級。
-    """
-    coverage = profile.static_coverage_ratio
-    dynamic_count = sum(1 for p in points if p.source_type == "dynamic_realtime")
-    dynamic_ratio = dynamic_count / len(points) if points else 0.0
-
-    if coverage < 0.5 or dynamic_ratio > 0.5:
-        return Confidence.LOW
-    if coverage >= 0.8 and dynamic_ratio <= 0.2:
-        return Confidence.HIGH
-    return Confidence.MEDIUM

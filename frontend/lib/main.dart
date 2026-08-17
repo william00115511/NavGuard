@@ -1271,12 +1271,11 @@ class SafeRoute {
     required this.label,
     required this.path,
     required this.alpha,
-    required this.confidence,
     required this.metrics,
     required this.reasons,
     required this.warnings,
   });
-  final String id, label, confidence;
+  final String id, label;
   final List<LatLng> path;
   final double alpha;
   final RouteMetrics metrics;
@@ -1286,7 +1285,6 @@ class SafeRoute {
     label: json['label'] as String? ?? '路線',
     path: _coordinates(json['path_coordinates']),
     alpha: (json['alpha_used'] as num? ?? .6).toDouble(),
-    confidence: json['confidence'] as String? ?? 'unknown',
     metrics: RouteMetrics.fromJson(
       json['metrics'] as Map<String, dynamic>? ?? {},
     ),
@@ -1308,7 +1306,6 @@ class SafeRoute {
             LatLng(start.latitude + .006, start.longitude + .005),
           ],
     alpha: safest ? .6 : 0,
-    confidence: 'medium',
     metrics: RouteMetrics(
       distanceMeters: safest ? 1420 : 1180,
       durationMinutes: safest ? 18 : 14,

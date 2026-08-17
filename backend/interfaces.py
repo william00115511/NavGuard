@@ -83,12 +83,6 @@ class RouteMetrics:
     help_points: Optional[list[NearbyPoint]] = None
 
 
-class Confidence(str, Enum):
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
 @dataclass(frozen=True)
 class Route:
     id: str  # "safest" | "fastest"
@@ -96,7 +90,6 @@ class Route:
     path_coordinates: list[LatLng]
     alpha_used: float
     metrics: RouteMetrics
-    confidence: Confidence
     warnings: list[RouteWarning] = field(default_factory=list)
 
 
