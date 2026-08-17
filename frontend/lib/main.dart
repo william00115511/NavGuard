@@ -9,7 +9,10 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 const _fallbackLocation = LatLng(25.0330, 121.5654);
-const _apiBaseUrl = String.fromEnvironment('API_BASE_URL');
+const _apiBaseUrl = String.fromEnvironment(
+  'API_BASE_URL',
+  defaultValue: 'https://safeway-backend-288900657769.asia-east1.run.app',
+);
 const _demoGoogleMapsUrl =
     'https://www.google.com/maps/dir/%E5%8F%B0%E5%8C%97101%E8%B3%BC%E7%89%A9%E4%B8%AD%E5%BF%83+110%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E8%A5%BF%E6%9D%91%E9%87%8C%E5%B8%82%E5%BA%9C%E8%B7%AF45+%E8%99%9F/%E5%8F%B0%E4%B8%AD+414%E8%87%BA%E4%B8%AD%E5%B8%82%E7%83%8F%E6%97%A5%E5%8D%80/%E6%97%A5%E6%9C%88%E6%BD%AD+555%E5%8D%97%E6%8A%95%E7%B8%A3%E9%AD%9A%E6%B1%A0%E9%84%89/%E9%AB%98%E9%9B%84+%E9%AB%98%E9%9B%84%E5%B8%82%E9%BC%93%E5%B1%B1%E5%8D%80%E9%BE%8D%E5%AD%90%E9%87%8C/@23.8275968,119.5984759,8z/data=!4m26!4m25!1m5!1m1!1s0x3442abb6da80a7ad:0xacc4d11dc963103c!2m2!1d121.5640212!2d25.0341222!1m5!1m1!1s0x34693ea3df35917f:0xc0c95f36683eb0ad!2m2!1d120.61419!2d24.11006!1m5!1m1!1s0x3468d5e076ee0005:0xec17a6fd5312a528!2m2!1d120.9159131!2d23.8573342!1m5!1m1!1s0x346e04fd209f4835:0x54511e7d86c87c09!2m2!1d120.3014375!2d22.6272772!3e2?entry=ttu&g_ep=EgoyMDI2MDgxMi4wIKXMDSoASAFQAw%3D%3D';
 
@@ -44,7 +47,7 @@ class SafeNavigationScreen extends StatefulWidget {
 class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
   final _api = SafewayChatApi();
   final _input = TextEditingController();
-  final _chatSheetController = DraggableScrollableController();
+  final _chatSheetExtent = ValueNotifier<double>(.4);
   final _chatRevision = ValueNotifier<int>(0);
   final _messages = <ChatMessage>[
     ChatMessage.assistant('晚上好，我是 Safeway。告訴我你想從哪裡走到哪裡；我會依公開資料提供較安全的步行建議。'),
@@ -67,7 +70,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
   @override
   void dispose() {
     _input.dispose();
-    _chatSheetController.dispose();
+    _chatSheetExtent.dispose();
     _chatRevision.dispose();
     _map?.dispose();
     super.dispose();
@@ -101,6 +104,11 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
       if (mounted) setState(() => _sessionId = session.id);
     } on ChatApiException catch (error) {
       if (mounted && _api.isConfigured) _showSnackbar(error.message);
+    } catch (_) {
+      // Session 建立失敗不能讓初始化流程未捕捉例外；使用者仍可重試。
+      if (mounted && _api.isConfigured) {
+        _showSnackbar('無法連線至導航服務，請確認手機與後端在同一個 Wi-Fi。');
+      }
     }
   }
 
@@ -281,12 +289,14 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
 
   Future<void> _showChatSheet() async {
     if (_isChatSheetOpen || !mounted) return;
+    _chatSheetExtent.value = .4;
     setState(() => _isChatSheetOpen = true);
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       isDismissible: true,
-      enableDrag: true,
+      // 拖曳只由可見的 sheet 把手處理，避免透明上方區域也能拖動 modal。
+      enableDrag: false,
       useSafeArea: false,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => GestureDetector(
@@ -310,9 +320,13 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
                 controller: _input,
                 chatRevision: _chatRevision,
                 isWaiting: () => _waiting,
-                sheetController: _chatSheetController,
+                sheetExtent: _chatSheetExtent,
                 onInputTap: _expandChatSheet,
                 onSend: _sendMessage,
+                onClose: () {
+                  FocusScope.of(sheetContext).unfocus();
+                  Navigator.of(sheetContext).pop();
+                },
               ),
             ),
           ),
@@ -323,167 +337,288 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
   }
 
   void _expandChatSheet() {
-    if (!_chatSheetController.isAttached) return;
-    _chatSheetController.animateTo(
-      .9,
-      duration: const Duration(milliseconds: 220),
-      curve: Curves.easeOut,
-    );
+    _chatSheetExtent.value = .9;
   }
 }
 
-class _ChatPanel extends StatelessWidget {
+class _ChatPanel extends StatefulWidget {
   const _ChatPanel({
     required this.messages,
     required this.controller,
     required this.chatRevision,
     required this.isWaiting,
-    required this.sheetController,
+    required this.sheetExtent,
     required this.onInputTap,
     required this.onSend,
+    required this.onClose,
   });
   final List<ChatMessage> messages;
   final TextEditingController controller;
   final ValueListenable<int> chatRevision;
   final bool Function() isWaiting;
-  final DraggableScrollableController sheetController;
+  final ValueNotifier<double> sheetExtent;
   final VoidCallback onInputTap;
   final VoidCallback onSend;
+  final VoidCallback onClose;
 
   @override
-  Widget build(BuildContext context) {
-    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
-    void resizeSheet(DragUpdateDetails details) {
-      if (!sheetController.isAttached || details.primaryDelta == null) return;
-      if (keyboardVisible) {
-        if (details.primaryDelta! > 0) FocusScope.of(context).unfocus();
-        return;
-      }
-      final height = MediaQuery.sizeOf(context).height;
-      final next = (sheetController.size - details.primaryDelta! / height)
-          .clamp(.4, .9)
-          .toDouble();
-      sheetController.jumpTo(next);
-    }
+  State<_ChatPanel> createState() => _ChatPanelState();
+}
 
-    void settleSheet(DragEndDetails details) {
-      if (!sheetController.isAttached || keyboardVisible) return;
-      final velocity = details.primaryVelocity ?? 0;
-      final target =
-          velocity < -350 ||
-              (velocity.abs() <= 350 && sheetController.size >= .65)
-          ? .9
-          : .4;
-      sheetController.animateTo(
-        target,
+class _ChatPanelState extends State<_ChatPanel> {
+  int? _lastScrolledRevision;
+  final _messageScrollController = ScrollController();
+  double _downwardDragAtMin = 0;
+  double _dismissDragOffset = 0;
+  late double _extent;
+  bool _isDraggingSheet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _extent = widget.sheetExtent.value;
+    widget.sheetExtent.addListener(_handleRequestedExtent);
+  }
+
+  @override
+  void didUpdateWidget(covariant _ChatPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.sheetExtent != widget.sheetExtent) {
+      oldWidget.sheetExtent.removeListener(_handleRequestedExtent);
+      _extent = widget.sheetExtent.value;
+      widget.sheetExtent.addListener(_handleRequestedExtent);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.sheetExtent.removeListener(_handleRequestedExtent);
+    _messageScrollController.dispose();
+    super.dispose();
+  }
+
+  void _handleRequestedExtent() {
+    final requested = widget.sheetExtent.value.clamp(.4, .9).toDouble();
+    if (!mounted || requested == _extent) return;
+    setState(() {
+      _isDraggingSheet = false;
+      _extent = requested;
+      _dismissDragOffset = 0;
+    });
+  }
+
+  void _setExtent(double size) {
+    final next = size.clamp(.4, .9).toDouble();
+    if (size == .4) FocusScope.of(context).unfocus();
+    setState(() {
+      _isDraggingSheet = false;
+      _extent = next;
+      _dismissDragOffset = 0;
+    });
+    if (widget.sheetExtent.value != next) widget.sheetExtent.value = next;
+  }
+
+  void _startSheetDrag(DragStartDetails details) {
+    _downwardDragAtMin = 0;
+    _dismissDragOffset = 0;
+    FocusScope.of(context).unfocus();
+    setState(() => _isDraggingSheet = true);
+  }
+
+  void _resizeSheet(DragUpdateDetails details) {
+    if (details.primaryDelta == null) return;
+    final delta = details.primaryDelta!;
+    if (_dismissDragOffset > 0) {
+      setState(() {
+        _dismissDragOffset = (_dismissDragOffset + delta)
+            .clamp(0, 240)
+            .toDouble();
+        _downwardDragAtMin = _dismissDragOffset;
+      });
+      return;
+    }
+    if (_extent <= .401 && delta > 0) {
+      setState(() {
+        _dismissDragOffset = (_dismissDragOffset + delta)
+            .clamp(0, 240)
+            .toDouble();
+        _downwardDragAtMin = _dismissDragOffset;
+      });
+      return;
+    }
+    if (delta < 0) _downwardDragAtMin = 0;
+    final height = MediaQuery.sizeOf(context).height;
+    setState(() {
+      _extent = (_extent - delta / height).clamp(.4, .9).toDouble();
+    });
+  }
+
+  void _settleSheet(DragEndDetails details) {
+    final velocity = details.primaryVelocity ?? 0;
+    if (_extent <= .401 && (_downwardDragAtMin >= 48 || velocity > 350)) {
+      widget.onClose();
+      return;
+    }
+    final target = velocity < -350
+        ? .9
+        : velocity > 350
+        ? .4
+        : _extent >= .65
+        ? .9
+        : .4;
+    _setExtent(target);
+  }
+
+  void _scrollToLatest(ScrollController scrollController, int revision) {
+    if (_lastScrolledRevision == revision) return;
+    _lastScrolledRevision = revision;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !scrollController.hasClients) return;
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 180),
         curve: Curves.easeOut,
       );
-    }
+    });
+  }
 
-    return DraggableScrollableSheet(
-      controller: sheetController,
-      expand: false,
-      initialChildSize: .4,
-      minChildSize: .4,
-      maxChildSize: .9,
-      snap: true,
-      snapSizes: const [.4, .9],
-      builder: (context, scrollController) => GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onVerticalDragUpdate: resizeSheet,
-        onVerticalDragEnd: settleSheet,
-        child: Container(
-          padding: EdgeInsets.fromLTRB(
-            16,
-            8,
-            16,
-            MediaQuery.paddingOf(context).bottom + 10,
-          ),
-          decoration: const BoxDecoration(
-            color: Color(0xff17150f),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          child: Column(
-            children: [
-              Row(
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => TweenAnimationBuilder<double>(
+        tween: Tween<double>(end: _dismissDragOffset),
+        duration: _isDraggingSheet
+            ? Duration.zero
+            : const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        builder: (context, animatedOffset, child) => Transform.translate(
+          offset: Offset(0, animatedOffset),
+          child: child,
+        ),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: TweenAnimationBuilder<double>(
+            tween: Tween<double>(end: _extent),
+            duration: _isDraggingSheet
+                ? Duration.zero
+                : const Duration(milliseconds: 220),
+            curve: Curves.easeOut,
+            builder: (context, animatedExtent, child) => SizedBox(
+              width: double.infinity,
+              height: constraints.maxHeight * animatedExtent,
+              child: child,
+            ),
+            child: Container(
+              padding: EdgeInsets.fromLTRB(
+                16,
+                0,
+                16,
+                MediaQuery.paddingOf(context).bottom + 10,
+              ),
+              decoration: const BoxDecoration(
+                color: Color(0xff17150f),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+              ),
+              child: Column(
                 children: [
+                  SizedBox(
+                    height: 42,
+                    width: double.infinity,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onVerticalDragStart: _startSheetDrag,
+                          onVerticalDragUpdate: _resizeSheet,
+                          onVerticalDragEnd: _settleSheet,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 42,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Center(
+                                child: Container(
+                                  width: 42,
+                                  height: 4,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white38,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Expanded(
-                    child: Center(
-                      child: Container(
-                        width: 42,
-                        height: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white38,
-                          borderRadius: BorderRadius.circular(4),
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: widget.chatRevision,
+                      builder: (context, revision, _) {
+                        _scrollToLatest(_messageScrollController, revision);
+                        final waiting = widget.isWaiting();
+                        return ListView.builder(
+                          controller: _messageScrollController,
+                          itemCount: widget.messages.length + (waiting ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (waiting && index == widget.messages.length) {
+                              return const _TypingBubble();
+                            }
+                            final message = widget.messages[index];
+                            return _MessageBubble(message: message);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: widget.controller,
+                          onTap: widget.onInputTap,
+                          onSubmitted: (_) {
+                            if (!widget.isWaiting()) widget.onSend();
+                          },
+                          textInputAction: TextInputAction.send,
+                          decoration: const InputDecoration(
+                            hintText: '例如：從台北車站走到公館夜市',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(999),
+                              ),
+                            ),
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 14,
+                            ),
+                          ),
                         ),
                       ),
+                      const SizedBox(width: 8),
+                      ValueListenableBuilder<int>(
+                        valueListenable: widget.chatRevision,
+                        builder: (context, _, _) => IconButton.filled(
+                          onPressed: widget.isWaiting() ? null : widget.onSend,
+                          icon: const Icon(Icons.arrow_upward),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 7),
+                    child: Text(
+                      '夜間步行輔助建議，無法保證安全；緊急狀況請撥 110 或 119。',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10, color: Color(0xffb7ae96)),
                     ),
                   ),
                 ],
               ),
-              Expanded(
-                child: ValueListenableBuilder<int>(
-                  valueListenable: chatRevision,
-                  builder: (context, _, _) {
-                    final waiting = isWaiting();
-                    return ListView.builder(
-                      controller: scrollController,
-                      itemCount: messages.length + (waiting ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (waiting && index == messages.length) {
-                          return const _TypingBubble();
-                        }
-                        final message = messages[index];
-                        return _MessageBubble(message: message);
-                      },
-                    );
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: controller,
-                      onTap: onInputTap,
-                      onSubmitted: (_) {
-                        if (!isWaiting()) onSend();
-                      },
-                      textInputAction: TextInputAction.send,
-                      decoration: const InputDecoration(
-                        hintText: '例如：從台北車站走到公館夜市',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(999)),
-                        ),
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  ValueListenableBuilder<int>(
-                    valueListenable: chatRevision,
-                    builder: (context, _, _) => IconButton.filled(
-                      onPressed: isWaiting() ? null : onSend,
-                      icon: const Icon(Icons.arrow_upward),
-                    ),
-                  ),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 7),
-                child: Text(
-                  '夜間步行輔助建議，無法保證安全；緊急狀況請撥 110 或 119。',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 10, color: Color(0xffb7ae96)),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

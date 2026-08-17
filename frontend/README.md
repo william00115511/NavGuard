@@ -18,14 +18,14 @@ cp ios/Flutter/Local.xcconfig.example ios/Flutter/Local.xcconfig
 
 在 Google Cloud Console 將 Android key 限制為此 app 的 package + SHA-1、只允許 Maps SDK for Android；iOS key 限制為 bundle ID `com.safeway.safewayFrontend`、只允許 Maps SDK for iOS。
 
-後端 URL 是公開設定，可由 Dart define 提供：
+預設後端為已部署的 Cloud Run 服務，也可由 Dart define 覆寫：
 
 ```bash
 flutter pub get
 flutter run --dart-define=API_BASE_URL=https://YOUR_CLOUD_RUN_URL
 ```
 
-未提供 `API_BASE_URL` 時，app 使用本機示範 response，方便獨立驗證 UI；真實 API contract 請參考根目錄 `AGENTS.md` 的 `/api/session` 和 `/api/chat`。
+若需獨立驗證 UI，可傳入空值 `--dart-define=API_BASE_URL=` 以使用本機示範 response；真實 API contract 請參考根目錄 `AGENTS.md` 的 `/api/session` 和 `/api/chat`。
 
 ## 行為
 
