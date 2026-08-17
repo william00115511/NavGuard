@@ -9,8 +9,8 @@ from typing import Sequence
 from app.maps.simplify import simplify_preserving_divergence
 from interfaces import LatLng
 
-# §7.2：中繼點在一般消費端網頁／App 實測穩定支援約 9~10 個，保守取 9。
-MAX_WAYPOINTS = 9
+# §7.2：中繼點在一般消費端網頁／App 實測最多穩定支援 8 個（不含起訖點）。
+MAX_WAYPOINTS = 8
 MAX_URL_POINTS = MAX_WAYPOINTS + 2  # 起點 + 中繼點 + 終點
 
 
