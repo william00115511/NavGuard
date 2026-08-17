@@ -26,11 +26,6 @@ class BadRequestError(ApiError):
     error_code = "BAD_REQUEST"
 
 
-class SessionNotFoundError(ApiError):
-    status_code = 404
-    error_code = "SESSION_NOT_FOUND"
-
-
 class UpstreamTimeoutError(ApiError):
     """Gemini 或 geocoding 逾時。"""
 
