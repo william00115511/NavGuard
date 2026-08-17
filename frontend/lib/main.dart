@@ -3,20 +3,64 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 const _fallbackLocation = LatLng(25.0330, 121.5654);
-const _apiBaseUrl = String.fromEnvironment(
+const _compileTimeApiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: 'https://safeway-backend-288900657769.asia-east1.run.app',
+  defaultValue: '',
 );
+late final String _apiBaseUrl;
 const _demoGoogleMapsUrl =
     'https://www.google.com/maps/dir/%E5%8F%B0%E5%8C%97101%E8%B3%BC%E7%89%A9%E4%B8%AD%E5%BF%83+110%E8%87%BA%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E8%A5%BF%E6%9D%91%E9%87%8C%E5%B8%82%E5%BA%9C%E8%B7%AF45+%E8%99%9F/%E5%8F%B0%E4%B8%AD+414%E8%87%BA%E4%B8%AD%E5%B8%82%E7%83%8F%E6%97%A5%E5%8D%80/%E6%97%A5%E6%9C%88%E6%BD%AD+555%E5%8D%97%E6%8A%95%E7%B8%A3%E9%AD%9A%E6%B1%A0%E9%84%89/%E9%AB%98%E9%9B%84+%E9%AB%98%E9%9B%84%E5%B8%82%E9%BC%93%E5%B1%B1%E5%8D%80%E9%BE%8D%E5%AD%90%E9%87%8C/@23.8275968,119.5984759,8z/data=!4m26!4m25!1m5!1m1!1s0x3442abb6da80a7ad:0xacc4d11dc963103c!2m2!1d121.5640212!2d25.0341222!1m5!1m1!1s0x34693ea3df35917f:0xc0c95f36683eb0ad!2m2!1d120.61419!2d24.11006!1m5!1m1!1s0x3468d5e076ee0005:0xec17a6fd5312a528!2m2!1d120.9159131!2d23.8573342!1m5!1m1!1s0x346e04fd209f4835:0x54511e7d86c87c09!2m2!1d120.3014375!2d22.6272772!3e2?entry=ttu&g_ep=EgoyMDI2MDgxMi4wIKXMDSoASAFQAw%3D%3D';
 
-void main() => runApp(const SafewayApp());
+int _indexForAlpha(double alpha) {
+  const values = [0.0, 0.3, 0.6, 0.8, 1.0];
+  var closestIndex = 0;
+  for (var index = 1; index < values.length; index++) {
+    if ((values[index] - alpha).abs() < (values[closestIndex] - alpha).abs()) {
+      closestIndex = index;
+    }
+  }
+  return closestIndex;
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  _apiBaseUrl = await _loadApiBaseUrl();
+  runApp(const SafewayApp());
+}
+
+/// `API_BASE_URL` 可供 CI 或臨時測試覆寫；一般開發讀取 assets/.env。
+/// 這份前端設定只應含公開的服務網址，不能放 server-side API key。
+Future<String> _loadApiBaseUrl() async {
+  if (_compileTimeApiBaseUrl.isNotEmpty) return _compileTimeApiBaseUrl;
+
+  try {
+    final contents = await rootBundle.loadString('assets/.env');
+    for (final rawLine in contents.split('\n')) {
+      final line = rawLine.trim();
+      if (line.isEmpty || line.startsWith('#')) continue;
+      final separator = line.indexOf('=');
+      if (separator == -1) continue;
+      final key = line.substring(0, separator).trim();
+      if (key == 'API_BASE_URL') {
+        return line
+            .substring(separator + 1)
+            .trim()
+            .replaceAll(RegExp(r'^"|"$'), '');
+      }
+    }
+  } catch (_) {
+    // `.env` 可省略；此時會使用本機示範 response，方便純 UI 開發。
+  }
+  return '';
+}
 
 class SafewayApp extends StatelessWidget {
   const SafewayApp({super.key});
@@ -59,6 +103,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
   SafeRoute? _selectedRoute;
   bool _waiting = false;
   bool _isChatSheetOpen = false;
+  double _priorityAlpha = .6;
 
   @override
   void initState() {
@@ -127,20 +172,22 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
         sessionId: _sessionId,
         message: text,
         location: _location,
+        priorityAlpha: _priorityAlpha,
       );
       if (!mounted) return;
       setState(() {
-        _messages.add(ChatMessage.assistant(response.replyText));
+        _messages.add(
+          ChatMessage.assistant(
+            response.replyText,
+            routeResponse: response is RouteReadyResponse ? response : null,
+          ),
+        );
         if (response is RouteReadyResponse) {
           _routeResponse = response;
           _selectedRoute = response.selectedRoute;
         }
       });
       _chatRevision.value++;
-      if (response is RouteReadyResponse) {
-        await _focusRoutes(response.routes);
-        if (_isChatSheetOpen && mounted) Navigator.of(context).pop();
-      }
     } on ChatApiException catch (error) {
       if (mounted) {
         setState(
@@ -175,6 +222,15 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
     );
   }
 
+  Future<void> _showRecommendedRoute(RouteReadyResponse response) async {
+    setState(() {
+      _routeResponse = response;
+      _selectedRoute = response.selectedRoute;
+    });
+    await _focusRoutes(response.routes);
+    if (_isChatSheetOpen && mounted) Navigator.of(context).pop();
+  }
+
   Future<void> _openGoogleMaps() async {
     final url = _routeResponse?.googleMapsUrl ?? _demoGoogleMapsUrl;
     final accepted = await showDialog<bool>(
@@ -204,6 +260,16 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
         mounted) {
       _showSnackbar('無法開啟 Google Maps。');
     }
+  }
+
+  /// 透過系統撥號介面處理緊急電話；不要求 CALL_PHONE 權限，避免 App
+  /// 在使用者不知情的情況下直接發話。
+  Future<void> _callEmergency() async {
+    final opened = await launchUrl(
+      Uri(scheme: 'tel', path: '0986620369'),
+      mode: LaunchMode.externalApplication,
+    );
+    if (!opened && mounted) _showSnackbar('無法開啟撥號功能，請直接撥打 110 或 119。');
   }
 
   void _showSnackbar(String message) => ScaffoldMessenger.of(
@@ -255,7 +321,23 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
           ),
           Positioned(
             right: 16,
-            top: 110,
+            top: 56,
+            child: Semantics(
+              button: true,
+              label: '緊急撥號',
+              child: FloatingActionButton.small(
+                heroTag: 'emergency-call',
+                tooltip: '緊急撥號',
+                backgroundColor: const Color(0xffbd3030),
+                foregroundColor: Colors.white,
+                onPressed: _callEmergency,
+                child: const Icon(Icons.phone_in_talk),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 16,
+            top: 112,
             child: FloatingActionButton.small(
               onPressed: _getLocationAndSession,
               child: const Icon(Icons.my_location),
@@ -274,7 +356,7 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
             ),
           Positioned(
             right: 16,
-            top: 170,
+            top: 168,
             child: FloatingActionButton.small(
               heroTag: 'chat',
               tooltip: '開啟對話',
@@ -323,6 +405,9 @@ class _SafeNavigationScreenState extends State<SafeNavigationScreen> {
                 sheetExtent: _chatSheetExtent,
                 onInputTap: _expandChatSheet,
                 onSend: _sendMessage,
+                onShowRecommendedRoute: _showRecommendedRoute,
+                priorityAlpha: _priorityAlpha,
+                onPriorityChanged: (value) => _priorityAlpha = value,
                 onClose: () {
                   FocusScope.of(sheetContext).unfocus();
                   Navigator.of(sheetContext).pop();
@@ -350,6 +435,9 @@ class _ChatPanel extends StatefulWidget {
     required this.sheetExtent,
     required this.onInputTap,
     required this.onSend,
+    required this.onShowRecommendedRoute,
+    required this.priorityAlpha,
+    required this.onPriorityChanged,
     required this.onClose,
   });
   final List<ChatMessage> messages;
@@ -359,6 +447,9 @@ class _ChatPanel extends StatefulWidget {
   final ValueNotifier<double> sheetExtent;
   final VoidCallback onInputTap;
   final VoidCallback onSend;
+  final ValueChanged<RouteReadyResponse> onShowRecommendedRoute;
+  final double priorityAlpha;
+  final ValueChanged<double> onPriorityChanged;
   final VoidCallback onClose;
 
   @override
@@ -372,11 +463,13 @@ class _ChatPanelState extends State<_ChatPanel> {
   double _dismissDragOffset = 0;
   late double _extent;
   bool _isDraggingSheet = false;
+  late int _preferenceIndex;
 
   @override
   void initState() {
     super.initState();
     _extent = widget.sheetExtent.value;
+    _preferenceIndex = _indexForAlpha(widget.priorityAlpha);
     widget.sheetExtent.addListener(_handleRequestedExtent);
   }
 
@@ -387,6 +480,9 @@ class _ChatPanelState extends State<_ChatPanel> {
       oldWidget.sheetExtent.removeListener(_handleRequestedExtent);
       _extent = widget.sheetExtent.value;
       widget.sheetExtent.addListener(_handleRequestedExtent);
+    }
+    if (oldWidget.priorityAlpha != widget.priorityAlpha) {
+      _preferenceIndex = _indexForAlpha(widget.priorityAlpha);
     }
   }
 
@@ -416,6 +512,44 @@ class _ChatPanelState extends State<_ChatPanel> {
       _dismissDragOffset = 0;
     });
     if (widget.sheetExtent.value != next) widget.sheetExtent.value = next;
+  }
+
+  void _setPreference(int value) {
+    const alphaByIndex = [0.0, 0.3, 0.6, 0.8, 1.0];
+    setState(() => _preferenceIndex = value);
+    widget.onPriorityChanged(alphaByIndex[value]);
+  }
+
+  Future<void> _showPreferencePicker() async {
+    var selected = _preferenceIndex;
+    await showDialog<void>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('設定路線偏好'),
+          content: SizedBox(
+            width: 280,
+            child: _RoutePreferenceBar(
+              value: selected,
+              onChanged: (value) => setDialogState(() => selected = value),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('取消'),
+            ),
+            FilledButton(
+              onPressed: () {
+                _setPreference(selected);
+                Navigator.pop(context);
+              },
+              child: const Text('套用'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _startSheetDrag(DragStartDetails details) {
@@ -567,7 +701,11 @@ class _ChatPanelState extends State<_ChatPanel> {
                               return const _TypingBubble();
                             }
                             final message = widget.messages[index];
-                            return _MessageBubble(message: message);
+                            return _MessageBubble(
+                              message: message,
+                              onShowRecommendedRoute:
+                                  widget.onShowRecommendedRoute,
+                            );
                           },
                         );
                       },
@@ -575,6 +713,12 @@ class _ChatPanelState extends State<_ChatPanel> {
                   ),
                   Row(
                     children: [
+                      IconButton.outlined(
+                        tooltip: '設定路線偏好',
+                        onPressed: _showPreferencePicker,
+                        icon: const Icon(Icons.tune),
+                      ),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: TextField(
                           controller: widget.controller,
@@ -627,8 +771,13 @@ class _ChatPanelState extends State<_ChatPanel> {
 }
 
 class _MessageBubble extends StatelessWidget {
-  const _MessageBubble({required this.message});
+  const _MessageBubble({
+    required this.message,
+    required this.onShowRecommendedRoute,
+  });
   final ChatMessage message;
+  final ValueChanged<RouteReadyResponse> onShowRecommendedRoute;
+
   @override
   Widget build(BuildContext context) => Align(
     alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -649,19 +798,150 @@ class _MessageBubble extends StatelessWidget {
           bottomRight: const Radius.circular(25),
         ),
       ),
-      child: Text(message.text),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (message.isUser)
+            Text(message.text)
+          else
+            MarkdownBody(
+              data: message.text,
+              selectable: true,
+              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                  .copyWith(
+                    p: const TextStyle(color: Color(0xffeee8db)),
+                    strong: const TextStyle(
+                      color: Color(0xffeee8db),
+                      fontWeight: FontWeight.w700,
+                    ),
+                    a: const TextStyle(
+                      color: Color(0xfff3c765),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+              onTapLink: (_, href, _) {
+                if (href != null) {
+                  launchUrl(
+                    Uri.parse(href),
+                    mode: LaunchMode.externalApplication,
+                  );
+                }
+              },
+            ),
+          if (message.routeResponse?.googleMapsUrl != null) ...[
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: () => onShowRecommendedRoute(message.routeResponse!),
+              icon: const Icon(Icons.route_outlined, size: 18),
+              label: const Text('查看推薦路線'),
+            ),
+          ],
+        ],
+      ),
     ),
   );
 }
 
-class _TypingBubble extends StatelessWidget {
+class _TypingBubble extends StatefulWidget {
   const _TypingBubble();
+
   @override
-  Widget build(BuildContext context) => const Align(
+  State<_TypingBubble> createState() => _TypingBubbleState();
+}
+
+class _TypingBubbleState extends State<_TypingBubble>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _gradientController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1600),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _gradientController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Align(
     alignment: Alignment.centerLeft,
     child: Padding(
-      padding: EdgeInsets.only(bottom: 8),
-      child: Text('Safeway 正在查詢資料與規劃路線…'),
+      padding: const EdgeInsets.only(bottom: 8),
+      // 此時尚未收到後端的 status，不能假設一定會進入 route_ready。
+      // collecting_info 只是在補齊起訖點，不會規劃路線。
+      child: AnimatedBuilder(
+        animation: _gradientController,
+        builder: (context, child) {
+          final shift = _gradientController.value * 3 - 1.5;
+          return ShaderMask(
+            blendMode: BlendMode.srcIn,
+            shaderCallback: (bounds) => LinearGradient(
+              begin: Alignment(shift - 1, 0),
+              end: Alignment(shift + 1, 0),
+              colors: const [
+                Color(0xff8e6a2e),
+                Color(0xffffe09a),
+                Color(0xff8e6a2e),
+              ],
+            ).createShader(bounds),
+            child: child,
+          );
+        },
+        child: const Text('Safeway 正在理解你的需求…'),
+      ),
+    ),
+  );
+}
+
+class _RoutePreferenceBar extends StatelessWidget {
+  const _RoutePreferenceBar({required this.value, required this.onChanged});
+
+  final int value;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    slider: true,
+    label: '路線偏好：${['快速', '偏快', '平衡', '偏安全', '安全'][value]}',
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('路線偏好', style: TextStyle(fontSize: 12)),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: const Color(0xffc39a4b),
+            inactiveTrackColor: const Color(0xff4c4738),
+            thumbColor: const Color(0xffe3bd70),
+            overlayColor: const Color(0x33e3bd70),
+            trackHeight: 5,
+          ),
+          child: Slider(
+            value: value.toDouble(),
+            min: 0,
+            max: 4,
+            divisions: 4,
+            onChanged: (next) => onChanged(next.round()),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('快速', style: TextStyle(fontSize: 11, color: Colors.white70)),
+              Text('偏快', style: TextStyle(fontSize: 11, color: Colors.white70)),
+              Text('平衡', style: TextStyle(fontSize: 11, color: Colors.white70)),
+              Text(
+                '偏安全',
+                style: TextStyle(fontSize: 11, color: Colors.white70),
+              ),
+              Text('安全', style: TextStyle(fontSize: 11, color: Colors.white70)),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }
@@ -823,6 +1103,7 @@ class SafewayChatApi {
     required String? sessionId,
     required String message,
     required LatLng location,
+    required double priorityAlpha,
   }) async {
     if (!isConfigured) return RouteReadyResponse.demo(location, message);
     if (sessionId == null) throw const ChatApiException('無法建立對話，請稍後再試。');
@@ -834,6 +1115,7 @@ class SafewayChatApi {
             'session_id': sessionId,
             'message': message,
             'user_location': _locationJson(location),
+            'priority_alpha': priorityAlpha,
           }),
         )
         .timeout(const Duration(seconds: 60));
@@ -889,12 +1171,26 @@ class ChatApiException implements Exception {
 }
 
 class ChatMessage {
-  const ChatMessage(this.text, {required this.isUser, this.isError = false});
+  const ChatMessage(
+    this.text, {
+    required this.isUser,
+    this.isError = false,
+    this.routeResponse,
+  });
   factory ChatMessage.user(String text) => ChatMessage(text, isUser: true);
-  factory ChatMessage.assistant(String text, {bool isError = false}) =>
-      ChatMessage(text, isUser: false, isError: isError);
+  factory ChatMessage.assistant(
+    String text, {
+    bool isError = false,
+    RouteReadyResponse? routeResponse,
+  }) => ChatMessage(
+    text,
+    isUser: false,
+    isError: isError,
+    routeResponse: routeResponse,
+  );
   final String text;
   final bool isUser, isError;
+  final RouteReadyResponse? routeResponse;
 }
 
 sealed class ChatResponse {
@@ -1041,8 +1337,10 @@ class RouteMetrics {
   final double avgSafetyScore;
   final double? litCoverageRatio;
   factory RouteMetrics.fromJson(Map<String, dynamic> json) => RouteMetrics(
-    distanceMeters: json['distance_m'] as int? ?? 0,
-    durationMinutes: json['duration_min_est'] as int? ?? 0,
+    // 後端依 API contract 回傳浮點數（例如 455.3m、5.8 分鐘）；
+    // 顯示卡片使用整數，因此在這裡才四捨五入，不能直接 cast 成 int。
+    distanceMeters: (json['distance_m'] as num? ?? 0).round(),
+    durationMinutes: (json['duration_min_est'] as num? ?? 0).round(),
     avgSafetyScore: (json['avg_safety_score'] as num? ?? 0).toDouble(),
     litCoverageRatio: (json['lit_coverage_ratio'] as num?)?.toDouble(),
     helpPoints: json['help_points_within_50m'] as int? ?? 0,
